@@ -102,11 +102,11 @@ body,html{height:100%}
 .tcLayer .tcLayerMain .closeBt em::after{ content:""; display: block; position: absolute; width: 2px; height: 16px; background: #0096ff;  left: 0; top: 0; right: 0; bottom: 0; margin: auto; border-radius: 50px; transform:rotate(-45deg);}
 
 .tcLayerRight{ position: absolute; left: 0; top: 3rem; right: 0; bottom: 0; margin: auto; z-index: 1000; background:rgba(0,0,0,0.3);}
-.tcLayerRight .tcLayerMain{ position: absolute; left: auto; top: 0; right: 0; bottom: 0; margin: auto; width:80%; height: 100%; background: #FFFFFF;}
-.tcLayerRight .tcLayerMain ul{ padding: 0 10px;}
-.tcLayerRight .tcLayerMain ul li{padding: 20px 0 0;}
-.tcLayerRight .tcLayerMain ul li em{ float: left; width: 5rem;}
-.tcLayerRight .tcLayerRightBottom{ height: 4rem; line-height: 4rem; border-top: 1px solid #eaeaea; top: auto; text-align: center;}
+.tcLayerMain{ position: absolute; left: auto; top: 0; right: 0; bottom: 0; margin: auto; width:100%; height: 100%; background: #FFFFFF;}
+.tcLayerMain ul{ padding: 0 10px;}
+.tcLayerMain ul li{padding: 20px 0 0;}
+.tcLayerMain ul li em{ float: left; width: 5rem;}
+.tcLayerRightBottom{ height: 4rem; line-height: 4rem; border-top: 1px solid #eaeaea; top: auto; text-align: center;}
 
 .establish{ overflow: hidden; overflow-y: auto; bottom: 4rem;}
 .establishBox h4{ height: 40px; line-height: 40px; padding: 0 10px;}

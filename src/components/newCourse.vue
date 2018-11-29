@@ -77,7 +77,7 @@ export default {
             checkList:[]
         }
     },
-    modules:{
+    methods:{
         handleChange(value) {
             console.log(value);
         },
