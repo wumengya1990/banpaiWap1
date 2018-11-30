@@ -1,5 +1,5 @@
 <template>
-    <div class="screenPage mianScroll bgmain">
+    <div class="screenPage mianScroll bgmain" v-show="$store.state.rightLayerEstate">
         <!-- <mt-picker :slots="slots" @change="onValuesChange"></mt-picker> -->
         <div class="tcLayerMain">
                     <ul class="selectList">
@@ -30,24 +30,28 @@
                         <li>
                             <em>教材目录</em>
                             <div class="overHide">
-                            <el-select v-model="teachingMaterialValue" placeholder="请选择" size="small">
-                                <el-option v-for="item in teachingMaterialOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                            </el-select>
+                                <div class="selectBox">
+                                    <el-select v-model="teachingMaterialValue" placeholder="请选择" size="small" @change="getChildren()">
+                                        <el-option v-for="item in teachingMaterialOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                    </el-select>
+
+                                    <el-select v-model="teachingMaterialValue1" placeholder="请选择" size="small" @change="getChildren1()">
+                                        <el-option v-for="item1 in teachingMaterialOptions1" :key="item1.value" :label="item1.label" :value="item1.value"></el-option>
+                                    </el-select>
+    
+                                    <el-select v-model="teachingMaterialValue2" placeholder="请选择" size="small">
+                                        <el-option v-for="item2 in teachingMaterialOptions2" :key="item2.value" :label="item2.label" :value="item2.value"></el-option>
+                                    </el-select>
+
+                                </div>
                             </div>
                         </li>
-                        <li>
-                            <em>教师</em>
-                            <div class="overHide">
-                            <el-select v-model="teacherValue" placeholder="请选择" size="small">
-                                <el-option v-for="item in teacherOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                            </el-select>
-                            </div>
-                        </li>
+                        
                     </ul>
 
                 <div class="tcLayerRightBottom psnA psnAC">
                         <el-button-group>
-                        <el-button style=" width:120px;">取消</el-button>
+                        <el-button @click="quxiao()" style=" width:120px;">取消</el-button>
                         <el-button @click="submitCondition()" style=" width:120px;" type="primary">确定</el-button>
                         </el-button-group>
                 </div>
@@ -61,69 +65,78 @@ export default {
     name:'screenPage',
     data(){
         return{
-             slots: [
+            semesterValue:'',
+            semesterOptions:[{value:'xq1', label:'2017~2018第一学期'},{value:'xq2', label:'2017~2018第二学期'}],
+            subjectValue:'',
+            subjectOptions:[{value:'xk1', label:'语文'},{value:'xk2', label:'数学'}],
+            gradeValue:'',
+            gradeOptions: [
+                { value:'gd1', label:'一年级'}, 
+                { value:'gd2', label:'二年级'}, 
+                { value:'gd3', label:'三年级'}
+            ],
+            teachingMaterialValue:'',
+            teachingMaterialValue1:'',
+            teachingMaterialValue2:'',
+            teachingMaterialOptions1:[],
+            teachingMaterialOptions2:[],
+            teachingMaterialOptions:[
                 {
-                flex: 1,
-                values: ['2015-01', '2015-02', '2015-03', '2015-04', '2015-05', '2015-06'],
-                className: 'slot1',
-                textAlign: 'center'
-                }, {
-                divider: true,
-                content: '-',
-                className: 'slot2'
-                }, {
-                flex: 1,
-                values: ['2015-01', '2015-02', '2015-03', '2015-04', '2015-05', '2015-06'],
-                className: 'slot3',
-                textAlign: 'center'
-                }, {
-                divider: true,
-                content: '-',
-                className: 'slot4'
-                }, {
-                flex: 1,
-                values: ['2015-01', '2015-02', '2015-03', '2015-04', '2015-05', '2015-06'],
-                className: 'slot5',
-                textAlign: 'center'
+                    valeu:'renjiaoaban',
+                    label:'人教版',
+                    children:[
+                        {
+                            valeu:'yinianji',
+                            label:'一年级',
+                            children:[
+                                {valeu:'unit1',label:'第1单元',},
+                                {valeu:'unit2',label:'第2单元',},
+                                {valeu:'unit3',label:'第3单元',},
+                                {valeu:'unit4',label:'第4单元',}
+                            ]
+                        },{
+                            valeu:'ernianji',
+                            label:'二年级',
+                            children:[
+                                {valeu:'unit1',label:'第1单元',},
+                                {valeu:'unit2',label:'第2单元',},
+                                {valeu:'unit3',label:'第3单元',},
+                                {valeu:'unit4',label:'第4单元',}
+                            ]
+                        }
+                    ]
+                },{
+                    valeu:'sujiaoban',
+                    label:'苏教版',
+                    children:[
+                        {
+                            valeu:'yinianji',
+                            label:'一年级',
+                            children:[
+                                {valeu:'unit1',label:'第1单元',},
+                                {valeu:'unit2',label:'第2单元',},
+                                {valeu:'unit3',label:'第3单元',},
+                                {valeu:'unit4',label:'第4单元',}
+                            ]
+                        },{
+                            valeu:'ernianji',
+                            label:'二年级',
+                            children:[
+                                {valeu:'unit1',label:'第1单元',},
+                                {valeu:'unit2',label:'第2单元',},
+                                {valeu:'unit3',label:'第3单元',},
+                                {valeu:'unit4',label:'第4单元',}
+                            ]
+                        }
+                    ]
                 }
             ],
-            dataOptions: [],
-            semesterOptions:[{value:'xq1', label:'2017~2018第一学期'},{value:'xq2', label:'2017~2018第二学期'}],
-            subjectOptions:[{value:'xk1', label:'语文'},{value:'xk2', label:'数学'}],
-            teachingMaterialOptions:[{value:'jc1', label:'人教版'},{value:'jc2', label:'苏教版'}],
-            teacherOptions:[{value:'js1', label:'张洋 '},{value:'js2', label:'张婷'}],
-            jieciOptions: ['第一节','第二节','第三节','第四节','第五节','第六节','第七节','第八节'],
-             gradeOptions: [{
-                        value: 'gd1',
-                        label: '一年级'
-                        }, {
-                        value: 'gd2',
-                        label: '二年级'
-                        }, {
-                        value: 'gd3',
-                        label: '三年级'
-                    }],
-                    classOptions: [{
-                        value: 'bj1',
-                        label: '(1)班'
-                        }, {
-                        value: 'bj2',
-                        label: '(2)班'
-                        }, {
-                        value: 'bj3',
-                        label: '(3)班'
-                    }],
-                    gradeValue: '',
-                    classValue: '',
-                    dataValue: '',
-                    jieciValue: '',
-                    teacherValue:'',
-                    semesterValue:'',
-                    subjectValue:'',
-                    teachingMaterialValue:''
+
         }
     },
-    props:["message"],
+    mounted() {
+        console.log(123);
+    },
     methods:{
         onValuesChange(picker, values) {
         if (values[0] > values[1]) {
@@ -131,7 +144,18 @@ export default {
         }
         },
         submitCondition:function(){
-            this.$emit('headCallBack', '子组件的参数内容');
+            console.log(this.teachingMaterialValue);
+            // this.$emit('headCallBack', '子组件的参数内容');
+             this.$store.commit('switch_dialog');
+        },
+        quxiao:function(){
+              this.$store.commit('switch_dialog');
+        },
+        getChildren:function(){
+            console.log(this.teachingMaterialValue);
+        },
+        getChildren1:function(){
+            console.log(321);
         }
     }
 }

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import login from '@/components/login'
 import HelloWorld from '@/components/HelloWorld'
 import links from '@/components/links'
 import top from '@/components/top'
@@ -19,6 +20,10 @@ export default new Router({
     {
       path: '/',
       redirect:'links'
+    },{
+      path:'/login',
+      name:'login',
+      component: login
     },{
       path:'/HelloWorld',
       name:'HelloWorld',

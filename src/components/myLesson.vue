@@ -1,10 +1,14 @@
 <template>
     <div class="myLesson bgmain mianScroll">
-        <top></top>
-        <searchTop></searchTop>
+        <data-top></data-top>
+        <top-search></top-search>
+        <div class="rightLayer" :class="{laeryleft:$store.state.rightLayerEstate}">
+             <right-screen style="z-index:10;"></right-screen>
+        </div>
+
         <div class="suspendTool">
             <router-link to="/newCourse"><i class="el-icon-plus"></i></router-link>
-            <a><i class="el-icon-more"></i></a>
+            <a @click="$store.commit('switch_dialog')"><i class="el-icon-more"></i></a>
         </div>
 
         <div class="lessonList">
@@ -35,15 +39,17 @@
 <script>
 import top from '@/components/top'
 import searchTop from '@/components/searchTop'
-// import axios  from 'axios'
+import screenPage from '@/components/screenPage'
 export default {
     name:'myLesson',
-    components:{top,searchTop},
+    components:{
+        'data-top':top,
+        'top-search':searchTop,
+        'right-screen':screenPage
+        },
     data(){
         return{
-            tab:{
-                popupMoreTrigger: false
-            },
+            show:false,
             courseList:[
                         {
                             imgUrl:require('./../assets/images/runtu.jpg'),
@@ -121,26 +127,28 @@ export default {
         loadList:function(){
            var url = "/cao/api/Plan/GetTermList";
            var _this = this;
-           _this.$ajax.post(url,{
-               params:{termId:1}
-           }).then(res=>{
-                console.log(res.data);
-           }).catch(error=>{
+           _this.$ajax.post(url,{termId:2}).then((res)=>{
+                console.log(res);
+           }).catch((error)=>{
                 console.log(error);
            })
-        },
-        loadList1:function(){
-           this.$ajax.get('/cao/api/Plan/GetTermList').then(res=>{
-               console.log(res);
-           }).catch(error=>{
-               console.log(error);
-           })
-
         }
+        // ,
+        // loadList1:function(){
+        //    this.$ajax.get('/cao/api/Plan/GetTermList').then(res=>{
+        //        console.log(res);
+        //    }).catch(error=>{
+        //        console.log(error);
+        //    })
+
+        // }
     }
 }
 </script>
 
 <style>
+.rightLayerW{ position: absolute; left:0; top: 0; right: 0; bottom: 0; margin: auto;  background: rgba(0,0,0,0.5);}
+.rightLayer{ position: absolute; left:100%; top: 0; right: 0; bottom: 0; margin: auto; z-index:20;}
+.laeryleft{ left:20%;}
 
 </style>

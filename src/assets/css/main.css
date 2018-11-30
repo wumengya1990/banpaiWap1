@@ -126,7 +126,7 @@ body,html{height:100%}
 .bottomNav span i{ font-size: 2rem; color: #bababa;}
 .bottomNav span em{ display: block; font-size: 0.9rem; padding:0;}
 .bottomNav span.on{ color: #0096ff;}
-.bottomNav span.on i{ background: linear-gradient( #00c8d0, #0096ff); -webkit-background-clip: text; color: transparent;}
+.bottomNav span.on i{ background: linear-gradient( #00c8d0, #0096ff); -webkit-background-clip:text; color:transparent;}
 
 .rightSuspension{ position: absolute; right: 0; bottom: 4.5rem; z-index: 10;}
 .rightSuspension a{ display: block; width: 3rem; height: 3rem; line-height: 3rem; margin: 5px; background: rgba(255,255,255,0.6); border-radius: 50%; overflow: hidden; text-align: center; box-shadow: 0 1px 2px #c5c5c5; color: #0097fe; font-size: 1.8rem;}

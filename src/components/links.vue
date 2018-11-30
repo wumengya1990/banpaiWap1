@@ -1,5 +1,6 @@
 <template>
 <div class="links">
+    <router-link to="/login">登录界面</router-link>
     <router-link to="/HelloWorld">欢迎页面</router-link>
     <router-link to="/top">顶部页面</router-link>
     <router-link to="/searchTop">顶部搜索</router-link>
