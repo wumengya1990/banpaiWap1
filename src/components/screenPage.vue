@@ -30,7 +30,8 @@
                         <li>
                             <em>教材目录</em>
                             <div class="overHide">
-                                <div class="selectBox">
+                                <el-cascader :options="teachingMaterialOptions" v-model="teachingMaterialValue"  @change="handleChange"></el-cascader>
+                                <!-- <div class="selectBox">
                                     <el-select v-model="teachingMaterialValue" placeholder="请选择" size="small" @change="getChildren()">
                                         <el-option v-for="item in teachingMaterialOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                     </el-select>
@@ -43,7 +44,7 @@
                                         <el-option v-for="item2 in teachingMaterialOptions2" :key="item2.value" :label="item2.label" :value="item2.value"></el-option>
                                     </el-select>
 
-                                </div>
+                                </div> -->
                             </div>
                         </li>
                         
@@ -63,69 +64,76 @@
 <script>
 export default {
     name:'screenPage',
+    props:['chaundishuju'],
     data(){
         return{
+            subFormData:{
+                subSemester:'',
+                subSubject:'',
+                subGrade:'',
+                subTeachingMaterial:''
+            },
             semesterValue:'',
-            semesterOptions:[{value:'xq1', label:'2017~2018第一学期'},{value:'xq2', label:'2017~2018第二学期'}],
+            semesterOptions:[{value:'2017~2018第一学期', label:'2017~2018第一学期'},{value:'2017~2018第二学期', label:'2017~2018第二学期'}],
             subjectValue:'',
-            subjectOptions:[{value:'xk1', label:'语文'},{value:'xk2', label:'数学'}],
+            subjectOptions:[{value:'语文', label:'语文'},{value:'数学', label:'数学'}],
             gradeValue:'',
             gradeOptions: [
-                { value:'gd1', label:'一年级'}, 
-                { value:'gd2', label:'二年级'}, 
-                { value:'gd3', label:'三年级'}
+                { value:'一年级', label:'一年级'}, 
+                { value:'二年级', label:'二年级'}, 
+                { value:'三年级', label:'三年级'}
             ],
-            teachingMaterialValue:'',
+            teachingMaterialValue:[],
             teachingMaterialValue1:'',
             teachingMaterialValue2:'',
             teachingMaterialOptions1:[],
             teachingMaterialOptions2:[],
             teachingMaterialOptions:[
                 {
-                    valeu:'renjiaoaban',
+                    value:'renjiaoaban',
                     label:'人教版',
                     children:[
                         {
-                            valeu:'yinianji',
+                            value:'yinianji',
                             label:'一年级',
                             children:[
-                                {valeu:'unit1',label:'第1单元',},
-                                {valeu:'unit2',label:'第2单元',},
-                                {valeu:'unit3',label:'第3单元',},
-                                {valeu:'unit4',label:'第4单元',}
+                                {value:'unit1',label:'第1单元',},
+                                {value:'unit2',label:'第2单元',},
+                                {value:'unit3',label:'第3单元',},
+                                {value:'unit4',label:'第4单元',}
                             ]
                         },{
-                            valeu:'ernianji',
+                            value:'ernianji',
                             label:'二年级',
                             children:[
-                                {valeu:'unit1',label:'第1单元',},
-                                {valeu:'unit2',label:'第2单元',},
-                                {valeu:'unit3',label:'第3单元',},
-                                {valeu:'unit4',label:'第4单元',}
+                                {value:'unit1',label:'第1单元',},
+                                {value:'unit2',label:'第2单元',},
+                                {value:'unit3',label:'第3单元',},
+                                {value:'unit4',label:'第4单元',}
                             ]
                         }
                     ]
                 },{
-                    valeu:'sujiaoban',
+                    value:'sujiaoban',
                     label:'苏教版',
                     children:[
                         {
-                            valeu:'yinianji',
+                            value:'yinianji',
                             label:'一年级',
                             children:[
-                                {valeu:'unit1',label:'第1单元',},
-                                {valeu:'unit2',label:'第2单元',},
-                                {valeu:'unit3',label:'第3单元',},
-                                {valeu:'unit4',label:'第4单元',}
+                                {value:'unit1',label:'第1单元',},
+                                {value:'unit2',label:'第2单元',},
+                                {value:'unit3',label:'第3单元',},
+                                {value:'unit4',label:'第4单元',}
                             ]
                         },{
-                            valeu:'ernianji',
+                            value:'ernianji',
                             label:'二年级',
                             children:[
-                                {valeu:'unit1',label:'第1单元',},
-                                {valeu:'unit2',label:'第2单元',},
-                                {valeu:'unit3',label:'第3单元',},
-                                {valeu:'unit4',label:'第4单元',}
+                                {value:'unit1',label:'第1单元',},
+                                {value:'unit2',label:'第2单元',},
+                                {value:'unit3',label:'第3单元',},
+                                {value:'unit4',label:'第4单元',}
                             ]
                         }
                     ]
@@ -133,6 +141,21 @@ export default {
             ],
 
         }
+    },
+    watch:{
+        semesterValue:function(val){
+            this.subFormData.subSemester = val;
+        },
+        subjectValue:function(val){
+            this.subFormData.subSubject = val;
+        },
+        gradeValue:function(val){
+            this.subFormData.subGrade = val;
+        },
+        teachingMaterialValue:function(val){
+            this.subFormData.subTeachingMaterial=val;
+        }
+
     },
     mounted() {
         console.log(123);
@@ -143,10 +166,15 @@ export default {
             picker.setSlotValue(1, values[0]);
         }
         },
+        handleChange:function(val){
+            console.log(val)
+        },
         submitCondition:function(){
-            console.log(this.teachingMaterialValue);
-            // this.$emit('headCallBack', '子组件的参数内容');
-             this.$store.commit('switch_dialog');
+            console.log(this.subFormData);
+            
+            this.$emit('headCallBack',this.subFormData);
+
+            this.$store.commit('switch_dialog');
         },
         quxiao:function(){
               this.$store.commit('switch_dialog');

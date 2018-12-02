@@ -3,7 +3,9 @@
         <data-top></data-top>
         <top-search></top-search>
         <div class="rightLayer" :class="{laeryleft:$store.state.rightLayerEstate}">
-             <right-screen style="z-index:10;"></right-screen>
+            <!-- 右侧弹层筛选内容 -->
+             <right-screen :chaundishuju="chaundishuju" v-on:headCallBack="headCall" style="z-index:10;"></right-screen>  
+            <!-- 右侧弹层筛选内容 -->
         </div>
 
         <div class="suspendTool">
@@ -49,6 +51,7 @@ export default {
         },
     data(){
         return{
+            chaundishuju:'',
             show:false,
             courseList:[
                         {
@@ -113,7 +116,8 @@ export default {
                 page:1,
                 rows:10,
                 schoolStateList:[],
-                schoolStateDetail:{}
+                schoolStateDetail:{},
+                receive:''
         }
     },
     mounted(){
@@ -121,6 +125,10 @@ export default {
         // this.loadList1();
     },
     methods:{
+        headCall:function(mes){
+            this.receive = mes;
+            console.log(this.receive);
+        },
         TogglePopupMore(){
             this.tab.popupMoreTrigger = !this.tab.popupMoreTrigger;
         },
