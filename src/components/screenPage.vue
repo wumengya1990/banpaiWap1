@@ -29,22 +29,10 @@
                         </li>
                         <li>
                             <em>教材目录</em>
-                            <div class="overHide">
-                                <el-cascader :options="teachingMaterialOptions" v-model="teachingMaterialValue"  @change="handleChange"></el-cascader>
-                                <!-- <div class="selectBox">
-                                    <el-select v-model="teachingMaterialValue" placeholder="请选择" size="small" @change="getChildren()">
-                                        <el-option v-for="item in teachingMaterialOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                                    </el-select>
-
-                                    <el-select v-model="teachingMaterialValue1" placeholder="请选择" size="small" @change="getChildren1()">
-                                        <el-option v-for="item1 in teachingMaterialOptions1" :key="item1.value" :label="item1.label" :value="item1.value"></el-option>
-                                    </el-select>
-    
-                                    <el-select v-model="teachingMaterialValue2" placeholder="请选择" size="small">
-                                        <el-option v-for="item2 in teachingMaterialOptions2" :key="item2.value" :label="item2.label" :value="item2.value"></el-option>
-                                    </el-select>
-
-                                </div> -->
+                            <div>
+                                <!-- <el-cascader :options="teachingMaterialOptions" v-model="teachingMaterialValue"  @change="handleChange"></el-cascader> -->
+                                <treeselect style="margin:25px 0 0;" v-model="teachingMaterialValue" :multiple="true" :options="teachingMaterialOptions" />
+                               
                             </div>
                         </li>
                         
@@ -62,8 +50,13 @@
 </template>
 
 <script>
+// import the component
+  import Treeselect from '@riophae/vue-treeselect'
+  // import the styles
+  import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 export default {
     name:'screenPage',
+    components: { Treeselect },
     props:['chaundishuju'],
     data(){
         return{
@@ -90,50 +83,50 @@ export default {
             teachingMaterialOptions2:[],
             teachingMaterialOptions:[
                 {
-                    value:'renjiaoaban',
+                    id:'renjiaoaban',
                     label:'人教版',
                     children:[
                         {
-                            value:'yinianji',
-                            label:'一年级',
+                            id:'yinianji1',
+                            label:'一年级1',
                             children:[
-                                {value:'unit1',label:'第1单元',},
-                                {value:'unit2',label:'第2单元',},
-                                {value:'unit3',label:'第3单元',},
-                                {value:'unit4',label:'第4单元',}
+                                {id:'runit1',label:'r第1单元s',},
+                                {id:'runit2',label:'r第2单x元',},
+                                {id:'runit3',label:'r第3单x元',},
+                                {id:'cccc',label:'第四单元',}
                             ]
                         },{
-                            value:'ernianji',
-                            label:'二年级',
+                            id:'ernianji',
+                            label:'二年级2',
                             children:[
-                                {value:'unit1',label:'第1单元',},
-                                {value:'unit2',label:'第2单元',},
-                                {value:'unit3',label:'第3单元',},
-                                {value:'unit4',label:'第4单元',}
+                                {id:'sunit1',label:'r第1单s元s',},
+                                {id:'sunit2',label:'r第2a单元s',},
+                                {id:'sunit3',label:'r第3x单元s',},
+                                {id:'sunit4',label:'r第4单x元s',}
                             ]
                         }
                     ]
                 },{
-                    value:'sujiaoban',
-                    label:'苏教版',
+                    id:'sujiaoban2',
+                    label:'苏教版3',
                     children:[
                         {
-                            value:'yinianji',
-                            label:'一年级',
+                            id:'yinianji',
+                            label:'一年级1',
                             children:[
-                                {value:'unit1',label:'第1单元',},
-                                {value:'unit2',label:'第2单元',},
-                                {value:'unit3',label:'第3单元',},
-                                {value:'unit4',label:'第4单元',}
+                                {id:'rrrunit1',label:'第1单元d',},
+                                {id:'rrrrunit2',label:'第2单元d',},
+                                {id:'rrrrunit3',label:'第3单元d',},
+                                {id:'rrrrunit4',label:'第4单元d',}
                             ]
                         },{
-                            value:'ernianji',
-                            label:'二年级',
+                            id:'ernianji1',
+                            label:'二年级3',
                             children:[
-                                {value:'unit1',label:'第1单元',},
-                                {value:'unit2',label:'第2单元',},
-                                {value:'unit3',label:'第3单元',},
-                                {value:'unit4',label:'第4单元',}
+                                {id:' rrrrunrrrit21',label:'第1单元',},
+                                {id:'rrrrunrrrit2',label:'第2单元',},
+                                {id:'rrrrunist3',label:'第3单元',},
+                                {id:'ccc',label:'第四单元',}
                             ]
                         }
                     ]
@@ -158,7 +151,6 @@ export default {
 
     },
     mounted() {
-        console.log(123);
     },
     methods:{
         onValuesChange(picker, values) {

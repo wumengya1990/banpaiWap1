@@ -15,14 +15,14 @@
 
         <div class="lessonList">
             <ul>
-                <li v-for="(course,index) in courseList" :key="index">
-                        <em v-if="course.shareState == true" class="shareState have">
+                <li v-for="(course,index) in myPlanList" :key="index">
+                        <em v-if="course.isCountyShare == true" class="shareState have">
                             已校共享
                         </em>
-                        <div class="lessonImg"><img v-bind:src="course.imgUrl"></div>
+                        <div class="lessonImg"><img v-bind:src="myPlanList.planImg"></div>
                         <div class="lessonContent">
-                            <h4>{{course.title}}<i class="el-icon-star-off"></i></h4>
-                            <p class="synopsis"><span><i class="icon bpMobile bpMobile-wode2"></i>{{course.formPeo}}</span><span><i class="icon bpMobile bpMobile-hs_h_Clock_h-naozhong"></i>{{course.time}}</span>   
+                            <h4>{{course.planTitle}}<i class="el-icon-star-off"></i></h4>
+                            <p class="synopsis"><span><i class="icon bpMobile bpMobile-wode2"></i>{{course.authorUserName}}</span><span><i class="icon bpMobile bpMobile-hs_h_Clock_h-naozhong"></i>{{course.createTime}}</span>   
                             </p>
                             <div class="operate">
                                 <a v-if="course.haveReflect == false" @click="tcshow1 =! tcshow1"><i class="el-icon-edit"></i>添加反思</a>
@@ -117,12 +117,13 @@ export default {
                 rows:10,
                 schoolStateList:[],
                 schoolStateDetail:{},
-                receive:''
+                receive:'',
+                myPlanList:[]
         }
     },
     mounted(){
-        this.loadList();
-        // this.loadList1();
+        // this.loadList();
+        this.loadList1();
     },
     methods:{
         headCall:function(mes){
@@ -132,24 +133,24 @@ export default {
         TogglePopupMore(){
             this.tab.popupMoreTrigger = !this.tab.popupMoreTrigger;
         },
-        loadList:function(){
-           var url = "/cao/api/Plan/GetTermList";
-           var _this = this;
-           _this.$ajax.post(url,{termId:2}).then((res)=>{
-                console.log(res);
-           }).catch((error)=>{
-                console.log(error);
-           })
-        }
-        // ,
-        // loadList1:function(){
-        //    this.$ajax.get('/cao/api/Plan/GetTermList').then(res=>{
-        //        console.log(res);
-        //    }).catch(error=>{
-        //        console.log(error);
+        // loadList:function(){
+        //    var url = "/cao/api/Plan/GetTermList";
+        //    var _this = this;
+        //    _this.$ajax.post(url,{termId:2}).then((res)=>{
+        //         console.log(res);
+        //    }).catch((error)=>{
+        //         console.log(error);
         //    })
-
-        // }
+        // },
+        loadList1:function(){
+            let that = this;
+            let url = "/cao/api/Plan/GetMyPlanList";
+            that.$api.get(url,{ userid:2, pageindex:1},res => {
+                console.log(res);
+                this.myPlanList = res ;
+                console.log( this.myPlanList);
+            });
+        }
     }
 }
 </script>
