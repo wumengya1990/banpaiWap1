@@ -51,16 +51,17 @@ body,html{height:100%}
 .topNav a.on{ color: #0096ff; border-bottom: 2px solid #0096ff; font-weight: bold;}
 
 /* 备课列表内容 */
-.lessonList{ background: #FFFFFF; position: absolute; left: 0; top: 10.4rem; right: 0; bottom: 0; margin: auto; overflow: hidden; overflow-y: auto;}
+.lessonList{ background: #FFFFFF; position: absolute; left: 0; top: 10rem; right: 0; bottom: 0; margin: auto; overflow: hidden; overflow-y: auto;}
 .lessonList ul li{ padding: 10px; border-bottom:1px solid #eaeaea; position: relative;}
 .lessonList ul li em.shareState{ position: absolute; width: 2rem; background:rgba(23, 150, 255,0.7); color: #FFFFFF; line-height: 1rem; padding: 5px; border-radius: 6px;}
 .lessonList ul li .lessonImg{ float:left; width: 8rem; height: 6rem; overflow: hidden; border-radius: 6px; margin: 0 10px 0 0;}
 .lessonList ul li .lessonImg img{ width: 100%; height: 100%;}
 .lessonList ul li .lessonContent{ overflow: hidden;}
-.lessonList ul li .lessonContent h4{ color: #333333; font-size:1.2rem; padding: 0 3rem 0 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; position: relative;}
-.lessonList ul li .lessonContent h4 i{position: absolute; right: 0; left: auto; top: 0; bottom: 0; margin:auto}
-.lessonList ul li .lessonContent p.synopsis{ padding:7px 0 0;}
-.lessonList ul li .lessonContent p.synopsis span{ color: #666666; padding: 0 15px 0 0; display: inline-block; max-width: 50%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; box-sizing: border-box;}
+.lessonList ul li .lessonContent h4{ color: #333333; font-size:1.2rem; padding:0 2rem 0 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; position: relative;}
+.lessonList ul li .lessonContent h4 em{position: absolute; right: 0; left: auto; top:5px; bottom: 0; margin:auto; width:25px; height: 25px; line-height: 25px; text-align: center;}
+.lessonList ul li .lessonContent h4 em i{ font-size: 1.2em;}
+.lessonList ul li .lessonContent p.synopsis{ padding:8px 0 3px;}
+.lessonList ul li .lessonContent p.synopsis span{ color: #666666; padding: 0 15px 0 0; display: inline-block; max-width: 70%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; box-sizing: border-box;}
 .lessonList ul li .lessonContent p.synopsis em{  background: #eaeaea; color: #666666; border-radius: 3px; padding: 1px 5px;}
 .lessonList ul li .lessonContent p.synopsis em.have{  background: #0096ff; color: #FFFFFF;}
 .lessonList ul li .lessonContent p.synopsis span i{color: #666666; font-size: 1.3rem; vertical-align: middle; margin: 0 5px 0 0;}
@@ -133,5 +134,5 @@ body,html{height:100%}
 .rightSuspension a{ display: block; width: 3rem; height: 3rem; line-height: 3rem; margin: 5px; background: rgba(255,255,255,0.6); border-radius: 50%; overflow: hidden; text-align: center; box-shadow: 0 1px 2px #c5c5c5; color: #0097fe; font-size: 1.8rem;}
 
 .suspendTool{ position: absolute; right: 0; bottom: 4rem; z-index: 10;}
-.suspendTool a{ display: block; background: rgba(255,255,255,0.2); box-shadow: 0 1px 2px #c5c5c5; width:2.5rem; height:2.5rem; line-height:2.8rem; text-align: center; border-radius: 50%; margin: 10px;}
+.suspendTool a{ display: block; background: rgba(255,255,255,0.8); box-shadow: 0 1px 2px #c5c5c5; width:2.5rem; height:2.5rem; line-height:2.8rem; text-align: center; border-radius: 50%; margin: 10px;}
 .suspendTool a i{ font-size:16px; color: #007AFF;}

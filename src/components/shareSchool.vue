@@ -70,11 +70,20 @@ export default {
                     ]
         }
     },
+    mounted(){
+        this.loadList1();
+    },
     methods:{
-        getClass:function(){
-            let _this = this;
-            
+        loadList1:function(){
+            let that = this;
+            let url = "/cao/api/Plan/GetSchoolSharingPlanList";
+            that.$api.get(url,{ userid:2, pageindex:1},res => {
+                console.log(res);
+                this.myPlanList = res ;
+                console.log(this.myPlanList);
+            });
         }
+        
     }
 }
 </script>
