@@ -1,11 +1,11 @@
 <template>
     <div class="myLesson bgmain mianScroll">
         <data-top></data-top>
-        <top-search></top-search>
+        <top-search :searchData="searchData" v-on:searchBack="searchCall"></top-search>
         <div class="rightLayer" :class="{laeryleft:$store.state.rightLayerEstate}">
-            <!-- 右侧弹层筛选内容 -->
-             <right-screen :chaundishuju="chaundishuju" v-on:headCallBack="headCall" style="z-index:10;"></right-screen>  
-            <!-- 右侧弹层筛选内容 -->
+        <!-- 右侧弹层筛选内容 -->
+            <right-screen :chaundishuju="chaundishuju" v-on:headCallBack="headCall" style="z-index:10;"></right-screen>  
+        <!-- 右侧弹层筛选内容 -->
         </div>
 
         <div class="suspendTool">
@@ -133,13 +133,19 @@ export default {
         },
     data(){
         return{
+            searchData:'',
             xuancengimg:require('./../assets/images/gongnengTb_03.png'),   //教学反思的弹层公共的额图片导入
             chaundishuju:'',
             show:false,
+            tcshow:false,
             tcshow1:false,        //填写教学反思的弹层显示隐藏
             tcshow2:false,          //查看教学反思的弹层显示隐藏
             myPlanList:[],       //装载读取的我的备课列表内容
             planThinkCon:'',     //装载点击的的备课的教学反思的内
+            gradeValue:'',
+            classValue:'',
+            dataValue:'',
+            jieciValue:'',
             gradeOptions: [{
                         value: 'gd1',
                         label: '一年级'
@@ -162,6 +168,7 @@ export default {
                     }],
                     jieciOptions: ['第一节','第二节','第三节','第四节','第五节','第六节','第七节','第八节'],
                     dataOptions: [],
+                    searchDataBox:''
         }
     },
     mounted(){
@@ -169,6 +176,10 @@ export default {
         this.loadList1();
     },
     methods:{
+        searchCall:function(mes){
+            this.searchDataBox = mes;
+            console.log(this.searchDataBox);
+        },
         headCall:function(mes){
             this.receive = mes;
             console.log(this.receive);
@@ -177,24 +188,21 @@ export default {
             this.tab.popupMoreTrigger = !this.tab.popupMoreTrigger;
         },
 
-        loadList1:function(){
+        loadList1:function(){         //加载我的备课里诶表
             let that = this;
             let url = "/cao/api/Plan/GetMyPlanList";
-            // let url1 = "/cao/api/Plan/GetPlanByPlanID";
-            // let url = "/cao/api/Plan/GetMyPlanList";
-            // let url = "/cao/api/Plan/GetPlanByPlanID";
             that.$api.get(url,null,res => {
                 console.log(res);
                 this.myPlanList = res ;
                 console.log( this.myPlanList);
             });
         },
-        writeThink:function(planID){
+        writeThink:function(planID){    //输入教学反思
             console.log(planID);
             this.tcshow1 = true;
             
         },
-        watchThink:function(mes){
+        watchThink:function(mes){        //查看教学反思
             console.log(mes);
             let that = this;
             let kwd = {planId:mes};
@@ -205,6 +213,17 @@ export default {
                 console.log( this.planThinkCon);
             });
             this.tcshow2 = true;
+        }
+    },
+    watch:{
+        searchDataBox:function(val){
+            let that = this;
+            let url = "/cao/api/Plan/GetMyPlanList";
+            that.$api.get(url,{authorUserName:val},res => {
+                console.log(res);
+                this.myPlanList = res ;
+                console.log( this.myPlanList);
+            });
         }
     }
 }

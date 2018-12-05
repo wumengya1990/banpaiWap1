@@ -3,9 +3,8 @@
         <div class="topBox">
             <div class="searchBox">
                 <div class="searchBoxN"> 
-                <!-- <el-input suffix-icon="el-icon-search" v-model="inputnr" placeholder="按照教案名称/作者搜素"></el-input> -->
                 <el-input placeholder="请输入内容" v-model="input5" size="medium" class="input-with-select">
-                    <el-button slot="append" icon="el-icon-search"></el-button>
+                    <el-button slot="append" icon="el-icon-search" @click="searchSub()"></el-button>
                 </el-input>
                 </div>
             </div>
@@ -22,10 +21,16 @@
 <script>
 export default {
     name:'searchTop',
+    // props:['searchData'],
     data(){
         return{
             inputnr:'',
             input5:''
+        }
+    },
+    methods:{
+        searchSub:function(){
+            this.$emit('searchBack',this.input5);
         }
     }
 }
