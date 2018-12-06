@@ -6,6 +6,7 @@ import links from '@/components/links'
 import top from '@/components/top'
 import searchTop from '@/components/searchTop'
 import myLesson from '@/components/myLesson'
+import detailsPage from '@/components/detailsPage'
 import myCollect from '@/components/myCollect'
 import shareSchool from '@/components/shareSchool'
 import shareCounty from '@/components/shareCounty'
@@ -49,7 +50,12 @@ const router = new Router({
     component: myLesson,
     meta: {
       Authorize: true // 添加该字段，表示进入这个路由是需要登录的
-    }
+    },
+    children:[{       //进入详情页面
+      name:'detailsPage',
+      path: 'detailsPage',
+      component: detailsPage,
+    }],
   }, {
     path: '/myCollect',
     name: 'myCollect',

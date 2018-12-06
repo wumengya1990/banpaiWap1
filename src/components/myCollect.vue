@@ -1,7 +1,17 @@
 <template>
     <div class="myCollect">
-        <top></top>
-        <searchTop></searchTop>
+        <!-- <top></top> -->
+        <top-search :searchData="searchData" v-on:searchBack="searchCall" v-bind:pageType="pageType"></top-search>
+        <div class="rightLayer" :class="{laeryleft:$store.state.rightLayerEstate}">
+        <!-- 右侧弹层筛选内容 -->
+            <right-screen :chaundishuju="chaundishuju" v-on:headCallBack="headCall" style="z-index:10;"></right-screen>  
+        <!-- 右侧弹层筛选内容 -->
+        </div>
+        <div class="suspendTool">
+            <router-link to="/newCourse"><i class="el-icon-plus"></i></router-link>
+            <a @click="$store.commit('switch_dialog')"><i class="el-icon-more"></i></a>
+        </div>
+
         <div class="lessonList">
             <ul>
                 <li v-for="(course,index) in myPlanList" :key="index">
@@ -29,62 +39,46 @@
 <script>
 import top from '@/components/top'
 import searchTop from '@/components/searchTop'
+import screenPage from '@/components/screenPage'
 import $ from 'jquery'
 export default {
     name:'myCollect',
-    components:{top,searchTop},
+    components:{
+        'data-top':top,
+        'top-search':searchTop,
+        'right-screen':screenPage
+    },
     data(){
         return{
+            pageType:'我的收藏',
+            searchData:'',
+            pageindex:1,
+            chaundishuju:'',
             myPlanList:[]
-            // courseList:[
-            //             {
-            //                 imgUrl:require('./../assets/images/runtu.jpg'),
-            //                 title:'少年闰土——鲁迅1',
-            //                 formPeo:'王艳丽',
-            //                 time:'2018-10-22',
-            //                 shareState:true,
-            //                 haveReflect:true
-            //             },
-            //             {
-            //                 imgUrl:require('./../assets/images/runtu.jpg'),
-            //                 title:'少年闰土——鲁迅2',
-            //                 formPeo:'张洋',
-            //                 time:'2018-10-22',
-            //                 shareState:false,
-            //                 haveReflect:false
-            //             },
-            //             {
-            //                 imgUrl:require('./../assets/images/runtu.jpg'),
-            //                 title:'少年闰土——鲁迅3',
-            //                 formPeo:'王帅',
-            //                 time:'2018-10-22',
-            //                 shareState:false,
-            //                 haveReflect:true
-            //             },
-            //             {
-            //                 imgUrl:require('./../assets/images/runtu.jpg'),
-            //                 title:'少年闰土——鲁迅4',
-            //                 formPeo:'李炜',
-            //                 time:'2018-10-22',
-            //                 shareState:true,
-            //                 haveReflect:false
-            //             }
-            //         ]
+            
         }
     },
     mounted(){
-        
         this.loadList1();
     },
     methods:{
-        loadList1:function(){
+        loadList1:function(){       //加载我的收藏
             let that = this;
-            let url = "/cao/api/Plan/GetMyCollectPlanList";
-            that.$api.get(url,{ userid:2, pageindex:1},res => {
-                console.log(res);
+            let url = "/beike/api/Plan/GetMyCollectPlanList";
+            let param = {pageindex:1};
+            that.$api.get(url,param,res => {
                 this.myPlanList = res ;
                 console.log(this.myPlanList);
+                console.log("我的收藏");
             });
+        },
+        searchCall:function(mes){
+            this.searchDataBox = mes;
+            console.log(this.searchDataBox);
+        },
+        headCall:function(mes){
+            this.receive = mes;
+            console.log(this.receive);
         }
     }
 }

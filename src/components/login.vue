@@ -74,7 +74,7 @@ export default {
       let that = this;
       this.$refs[formName].validate(valid => {
         if (valid) {
-          let url = "/cao/api/Account/Login";
+          let url = "/beike/api/Account/Login";
           //let pars = { userid: 20, pageindex: 1 };
           that.$api.get(url, that.loginForm, data => {
             if (data.success) {
@@ -102,12 +102,12 @@ export default {
   padding: 6rem 3rem 0;
 }
 .login .logo {
-  width: 10rem;
-  height: 10rem;
-  line-height: 10rem;
+  width: 12rem;
+  height: 12rem;
+  line-height: 12rem;
   display: block;
   color: #ffffff;
-  font-size: 7rem;
+  font-size: 8rem;
   text-align: center;
   border-radius: 50%;
   overflow: hidden;
@@ -127,7 +127,7 @@ export default {
   ); /* Firefox 3.6 - 15 */
   background: linear-gradient(to bottom, #00c8d0, #0096ff); /* 标准的语法 */
 }
-.el-form-item__label {
+.login >>> .el-form-item__label {
   line-height: 10px;
   margin: 0;
   font-size: 16px;

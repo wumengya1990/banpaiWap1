@@ -21,12 +21,15 @@
 <script>
 export default {
     name:'searchTop',
-    // props:['searchData'],
+    props:['pageType'],    //接收父页面传来的数据
     data(){
         return{
             inputnr:'',
             input5:''
         }
+    },
+    mounted(){
+        
     },
     methods:{
         searchSub:function(){

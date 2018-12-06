@@ -11,12 +11,16 @@ import 'mint-ui/lib/style.css'
 import './assets/css/main.css'
 import axios from 'axios'
 import store from "./vuex/store.js"
+import VueScroller from 'vue-scroller'
 require('./assets/fonts/iconfont.css')
+
+
 
 Vue.config.productionTip = false
 Vue.use(ElementUI);
 Vue.use(vuex);
 Vue.use(Mint);
+Vue.use(VueScroller);
 
 // 处理ajax请求
 // axios.defaults.baseURL = process.env.NODE_ENV==='production'?'':'/api/api'

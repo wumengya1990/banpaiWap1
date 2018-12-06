@@ -11,13 +11,13 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/cao': {
+      '/beike': {
         //target: 'https://localhost:44336',
         target: 'http://192.168.0.113:8080/',
         secure: false,
         changeOrigin: true,
         pathRewrite: {
-          '^/cao': ''
+          '^/beike': ''
         }
       }
     },

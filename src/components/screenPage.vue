@@ -7,7 +7,15 @@
                             <em>学期</em>
                             <div class="overHide">
                             <el-select v-model="semesterValue" placeholder="请选择" size="small">
-                                <el-option v-for="item in semesterOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                <el-option v-for="item in myPlanList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
+                            </div>
+                        </li>
+                         <li>
+                            <em>学段</em>
+                            <div class="overHide">
+                            <el-select v-model="periodValue" placeholder="请选择" size="small">
+                                <el-option v-for="item in myPlanList" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
                             </div>
                         </li>
@@ -15,7 +23,7 @@
                             <em>学科</em>
                             <div class="overHide">
                                 <el-select v-model="subjectValue" placeholder="请选择" size="small">
-                                    <el-option v-for="item in subjectOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                    <el-option v-for="item in myPlanList" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </div>
                         </li>
@@ -23,15 +31,24 @@
                             <em>年级</em>
                             <div class="overHide">
                             <el-select v-model="gradeValue" placeholder="请选择" size="small">
-                                <el-option v-for="item in gradeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                <el-option v-for="item in myPlanList" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
                             </div>
                         </li>
                         <li>
                             <em>教材目录</em>
-                            <div>
-                                <!-- <el-cascader :options="teachingMaterialOptions" v-model="teachingMaterialValue"  @change="handleChange"></el-cascader> -->
-                                <treeselect style="margin:25px 0 0;" v-model="teachingMaterialValue" :multiple="true" :options="teachingMaterialOptions" />
+                            <div class="overHide">
+                                 <el-treeselect
+                                    :multiple="false"
+                                    :data="treeNodes"
+                                    :props="treeprops"
+                                    placeholder="请选择教案位置"
+                                    :search="nodeSearch"
+                                    :clickParent="selParent"
+                                    v-model="teachPlan.PlanRemark"
+                                    @nodeClick="nodeClick"
+                                    style="width:100%;"
+                                ></el-treeselect>
                                
                             </div>
                         </li>
@@ -50,88 +67,54 @@
 </template>
 
 <script>
-// import the component
-  import Treeselect from '@riophae/vue-treeselect'
-  // import the styles
-  import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+import elTreeselect from "el-tree-select";
+
 export default {
     name:'screenPage',
-    components: { Treeselect },
+    components: { elTreeselect },
     props:['chaundishuju'],
     data(){
         return{
-            subFormData:{
-                subSemester:'',
-                subSubject:'',
-                subGrade:'',
-                subTeachingMaterial:''
-            },
-            semesterValue:'',
-            semesterOptions:[{value:'2017~2018第一学期', label:'2017~2018第一学期'},{value:'2017~2018第二学期', label:'2017~2018第二学期'}],
-            subjectValue:'',
-            subjectOptions:[{value:'语文', label:'语文'},{value:'数学', label:'数学'}],
-            gradeValue:'',
-            gradeOptions: [
-                { value:'一年级', label:'一年级'}, 
-                { value:'二年级', label:'二年级'}, 
-                { value:'三年级', label:'三年级'}
+        semesterValue:'',
+        periodValue:'',
+        subjectValue:'',
+        gradeValue:'',
+        selTeaPlan: "",
+        treeNodes: [],
+        treeprops: { label: "nodeLabel", value: "nodeData" },
+        nodeSearch: false,
+        selParent: false,
+        teachPlan: {
+            PlanId: 0,
+            StageId: 0,
+            VersionId: 0,
+            StudyId: 0,
+            GradeId: 0,
+            VolumeId: 0,
+            UnitId: 0,
+            LessonId: 0,
+            TimeId: 1,
+            PlanTitle: "",
+            PlanRemark: "",
+            FlagSchool: 0,
+            FlagArea: 0,
+            PlanFileType: 1,
+            PlanDesign: "",
+            PlanDesignPath: "",
+            PlanFileList: []
+        },
+        rules: {
+            PlanRemark: [
+            { required: true, message: "请选择教案位置", trigger: "blur" }
             ],
-            teachingMaterialValue:[],
-            teachingMaterialValue1:'',
-            teachingMaterialValue2:'',
-            teachingMaterialOptions1:[],
-            teachingMaterialOptions2:[],
-            teachingMaterialOptions:[
-                {
-                    id:'renjiaoaban',
-                    label:'人教版',
-                    children:[
-                        {
-                            id:'yinianji1',
-                            label:'一年级1',
-                            children:[
-                                {id:'runit1',label:'r第1单元s',},
-                                {id:'runit2',label:'r第2单x元',},
-                                {id:'runit3',label:'r第3单x元',},
-                                {id:'cccc',label:'第四单元',}
-                            ]
-                        },{
-                            id:'ernianji',
-                            label:'二年级2',
-                            children:[
-                                {id:'sunit1',label:'r第1单s元s',},
-                                {id:'sunit2',label:'r第2a单元s',},
-                                {id:'sunit3',label:'r第3x单元s',},
-                                {id:'sunit4',label:'r第4单x元s',}
-                            ]
-                        }
-                    ]
-                },{
-                    id:'sujiaoban2',
-                    label:'苏教版3',
-                    children:[
-                        {
-                            id:'yinianji',
-                            label:'一年级1',
-                            children:[
-                                {id:'rrrunit1',label:'第1单元d',},
-                                {id:'rrrrunit2',label:'第2单元d',},
-                                {id:'rrrrunit3',label:'第3单元d',},
-                                {id:'rrrrunit4',label:'第4单元d',}
-                            ]
-                        },{
-                            id:'ernianji1',
-                            label:'二年级3',
-                            children:[
-                                {id:' rrrrunrrrit21',label:'第1单元',},
-                                {id:'rrrrunrrrit2',label:'第2单元',},
-                                {id:'rrrrunist3',label:'第3单元',},
-                                {id:'ccc',label:'第四单元',}
-                            ]
-                        }
-                    ]
-                }
-            ],
+            password: [{ required: true, message: "请输入密码", trigger: "blur" }]
+        },
+        dialogImageUrl: "",
+        dialogVisible: false,
+        filePics: [],
+        importLoading: "",
+        myPlanList:[]
+           
 
         }
     },
@@ -151,8 +134,19 @@ export default {
 
     },
     mounted() {
+        this.loadcondition();
+        this.loadTeachPlanSiteTree();
     },
     methods:{
+        loadcondition:function(){
+            let that = this;
+            let url = "/beike/api/Plan/ScreeningPlan";
+            that.$api.get(url,{termId:0},res => {
+                console.log(res);
+                this.myPlanList = res ;
+                console.log( this.myPlanList);
+            });
+        },
         onValuesChange(picker, values) {
         if (values[0] > values[1]) {
             picker.setSlotValue(1, values[0]);
@@ -171,12 +165,55 @@ export default {
         quxiao:function(){
               this.$store.commit('switch_dialog');
         },
-        getChildren:function(){
-            console.log(this.teachingMaterialValue);
+        //加载教案位置的树
+        loadTeachPlanSiteTree: function() {
+        let url = "/beike/api/Plan/GetTeachPlanSiteTree";
+        let the = this;
+        the.$api.get(url, null, data => {
+            the.treeNodes = data;
+        });
         },
-        getChildren1:function(){
-            console.log(321);
+        //点击教案位置的Tree节点
+        nodeClick(data, node) {
+        //console.log(node);
+        let the = this;
+        if (node.level == 3) {
+            the.teachPlan.LessonId = 0;
         }
+        the.setTeachPlanProp(node);
+        let selTitle = "/" + node.label;
+        while (node.level > 1) {
+            let parNode = node.parent;
+            selTitle = parNode.label + "/" + selTitle;
+            the.setTeachPlanProp(parNode);
+            node = parNode;
+        }
+        the.teachPlan.PlanRemark = selTitle;
+        },
+        //根据选中的节点设置教案信息属性
+        setTeachPlanProp(node) {
+        let the = this;
+        switch (node.level) {
+            case 1:
+            the.teachPlan.StageId = node.data.nodeData.stageId;
+            the.teachPlan.VersionId = node.data.nodeData.versionId;
+            the.teachPlan.StudyId = node.data.nodeData.studyId;
+            break;
+            case 2:
+            the.teachPlan.GradeId = node.data.nodeData.gradeId;
+            the.teachPlan.VolumeId = node.data.nodeData.volumeId;
+            break;
+            case 3:
+            the.teachPlan.UnitId = node.data.nodeData.unitId;
+            break;
+            case 4:
+            the.teachPlan.LessonId = node.data.nodeData.lessonId;
+            break;
+            default:
+            break;
+        }
+        },
+        
     }
 }
 </script>

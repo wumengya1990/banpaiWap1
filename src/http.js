@@ -72,7 +72,7 @@ axios.interceptors.response.use(
   主要是，不同的接口的成功标识和失败提示是不一致的。
   另外，不同的项目的处理方法也是不一致的，这里出错就是简单的alert
 */
-
+//接口访问
 function apiAxios(method, url, params, success, failure) {
   if (params) {
     params = filterNull(params);
@@ -91,13 +91,54 @@ function apiAxios(method, url, params, success, failure) {
     })
     .catch(err => {
       if (failure == undefined) {
-        let res = err.response;
-        if (err) {
-          console.log("api error, HTTP CODE: " + res.status);
-          console.log(error);
+        if (err.hasOwnProperty("response")) {
+          let res = err.response;
+          if (err.hasOwnProperty("status")) {
+            console.log("Api接口错误, HTTP CODE: " + res.status);
+          }
+          console.log(res);
+        } else {
+          console.log(err);
         }
       } else {
-        failure(res);
+        failure(err);
+      }
+    });
+}
+//上传文件
+function axiosFile(url, params, success, failure) {
+  let formParam = new FormData();
+  for (const key in params) {
+    if (params.hasOwnProperty(key)) {
+      formParam.append(key, params[key]);
+    }
+  }
+  axios({
+      method: 'post',
+      url: url,
+      data: formParam,
+      baseURL: root,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      withCredentials: false
+    })
+    .then(res => {
+      success(res.data);
+    })
+    .catch(err => {
+      if (failure == undefined) {
+        if (err.hasOwnProperty("response")) {
+          let res = err.response;
+          if (err.hasOwnProperty("status")) {
+            console.log("Api接口错误, HTTP CODE: " + res.status);
+          }
+          console.log(res);
+        } else {
+          console.log(err);
+        }
+      } else {
+        failure(err);
       }
     });
 }
@@ -115,5 +156,8 @@ export default {
   },
   delete: function (url, params, success, failure) {
     return apiAxios("DELETE", url, params, success, failure);
+  },
+  uploadFile: function (url, params, success, failure) {
+    return axiosFile(url, params, success, failure);
   }
 };

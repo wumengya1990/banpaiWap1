@@ -1,13 +1,13 @@
 <template>
     <div class="myLesson bgmain mianScroll">
-        <data-top></data-top>
-        <top-search :searchData="searchData" v-on:searchBack="searchCall"></top-search>
+        <router-view></router-view>
+        <!-- <data-top></data-top> -->
+        <top-search :searchData="searchData" v-on:searchBack="searchCall" v-bind:pageType="pageType"></top-search>
         <div class="rightLayer" :class="{laeryleft:$store.state.rightLayerEstate}">
         <!-- 右侧弹层筛选内容 -->
             <right-screen :chaundishuju="chaundishuju" v-on:headCallBack="headCall" style="z-index:10;"></right-screen>  
         <!-- 右侧弹层筛选内容 -->
         </div>
-
         <div class="suspendTool">
             <router-link to="/newCourse"><i class="el-icon-plus"></i></router-link>
             <a @click="$store.commit('switch_dialog')"><i class="el-icon-more"></i></a>
@@ -19,9 +19,16 @@
                         <em v-if="course.isCountyShare == true" class="shareState have">
                             已校共享
                         </em>
-                        <div class="lessonImg"><img v-bind:src="course.planImg"></div>
+
+                        <div v-if="course.fileType == 2 " class="lessonImg">
+                            <img v-bind:src="Imgtype">
+                        </div>
+                        <div v-else>
+                            <img v-bind:src="wordtype" class="lessonImg">
+                        </div>
+                        
                         <div class="lessonContent">
-                            <h4>{{course.planTitle}}<em><i class="el-icon-star-off"></i></em></h4>
+                            <h4 @click="init()">{{course.planTitle}}<em><i class="el-icon-star-off"></i></em></h4>
                             <p class="synopsis"><span><i class="icon bpMobile bpMobile-wode2"></i>{{course.authorUserName}}</span><span><i class="icon bpMobile bpMobile-hs_h_Clock_h-naozhong"></i>{{course.createTime}}</span>   
                             </p>
                             <div class="operate">
@@ -34,7 +41,7 @@
                 </li>
              </ul>
         </div>
-
+         
         <!-- 填写教学反思 -->
         <div class="tcLayer" v-show="tcshow1">
             <div class="tcLayerMain">
@@ -99,6 +106,7 @@
                         </li>
                         <li>
                             <em><i>*</i>日期</em>
+                            <div class=""></div>
                             <el-select v-model="dataValue" placeholder="请选择" size="small">
                                 <el-option v-for="item in dataOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
@@ -133,7 +141,10 @@ export default {
         },
     data(){
         return{
+            pageType:'我的备课',
             searchData:'',
+            Imgtype:require('./../assets/images/imgTyle.png'),
+            wordtype:require('./../assets/images/wordTyle.png'),
             xuancengimg:require('./../assets/images/gongnengTb_03.png'),   //教学反思的弹层公共的额图片导入
             chaundishuju:'',
             show:false,
@@ -176,6 +187,9 @@ export default {
         this.loadList1();
     },
     methods:{
+        init:function(){
+            this.$router.push({path:'/myLesson/detailsPage'});
+        },
         searchCall:function(mes){
             this.searchDataBox = mes;
             console.log(this.searchDataBox);
@@ -190,11 +204,11 @@ export default {
 
         loadList1:function(){         //加载我的备课里诶表
             let that = this;
-            let url = "/cao/api/Plan/GetMyPlanList";
+            let url = "/beike/api/Plan/GetMyPlanList";
             that.$api.get(url,null,res => {
-                console.log(res);
                 this.myPlanList = res ;
                 console.log( this.myPlanList);
+                console.log("加载我的备课");
             });
         },
         writeThink:function(planID){    //输入教学反思
@@ -206,7 +220,7 @@ export default {
             console.log(mes);
             let that = this;
             let kwd = {planId:mes};
-            let url = "/cao/api/Plan/GetPlanByPlanID";
+            let url = "/beike/api/Plan/GetPlanByPlanID";
             that.$api.get(url,kwd,res => {
                 console.log(res);
                 this.planThinkCon = res ;
@@ -218,9 +232,8 @@ export default {
     watch:{
         searchDataBox:function(val){
             let that = this;
-            let url = "/cao/api/Plan/GetMyPlanList";
+            let url = "/beike/api/Plan/GetMyPlanList";
             that.$api.get(url,{authorUserName:val},res => {
-                console.log(res);
                 this.myPlanList = res ;
                 console.log( this.myPlanList);
             });
@@ -230,8 +243,5 @@ export default {
 </script>
 
 <style>
-.rightLayerW{ position: absolute; left:0; top: 0; right: 0; bottom: 0; margin: auto;  background: rgba(0,0,0,0.5);}
-.rightLayer{ position: absolute; left:100%; top: 0; right: 0; bottom: 0; margin: auto; z-index:20;}
-.laeryleft{ left:20%;}
 
 </style>
