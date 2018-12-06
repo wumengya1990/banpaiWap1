@@ -81,6 +81,7 @@ export default {
               let token = data.token;
               that.$store.commit("saveToken", token); //保存 token
               that.$router.replace(
+                // that.$route.query.redirect ? that.$route.query.redirect : "/"
                 that.$route.query.redirect ? that.$route.query.redirect : "/"
               );
             } else {

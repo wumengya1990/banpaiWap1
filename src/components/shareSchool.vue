@@ -38,9 +38,9 @@
                                 <span><i class="icon bpMobile bpMobile-duihuakuang"></i>{{course.planForumNum}}</span>
                             </div>
                             <div class="checkBox">
-                                <el-checkbox v-model="course.isSchoolShare">校共享</el-checkbox>
-                                <el-checkbox v-model="course.isCountyShare">区共享</el-checkbox>
-                                <el-checkbox v-model="course.isCollection">收藏</el-checkbox>  
+                                <el-checkbox v-model="course.isSchoolShare" @change="schoolshare(course.planID)">校共享</el-checkbox>
+                                <el-checkbox v-model="course.isCountyShare" @change="areashare(course.planID)">区共享</el-checkbox>
+                                <el-checkbox v-model="course.isCollection"  @change="mycollect(course.planID)">收藏</el-checkbox>  
                             </div>
                         </div>
                         <div class="clear"></div>
@@ -92,6 +92,30 @@ export default {
         headCall:function(mes){
             this.receive = mes;
             console.log(this.receive);
+        },
+        schoolshare:function(obg){
+             let that = this;
+            let url = "/beike/api/Plan/GetAreaSharingPlanList";
+            let primar= obg
+            that.$api.get(url,primar,res => {
+                console.log(res);
+            });
+        },
+        areashare:function(obg){
+            let that = this;
+            let url = "/beike/api/Plan/GetAreaSharingPlanList";
+            let primar= obg
+            that.$api.get(url,primar,res => {
+                console.log(res);
+            });
+        },
+        mycollect:function(obg){
+            let that = this;
+            let url = "/beike/api/Plan/GetAreaSharingPlanList";
+            let primar= obg
+            that.$api.get(url,primar,res => {
+                console.log(res);
+            });
         }
     }
 }

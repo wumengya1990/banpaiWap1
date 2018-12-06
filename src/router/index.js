@@ -92,6 +92,10 @@ const router = new Router({
     path: '/screenPage',
     name: 'screenPage',
     component: screenPage
+  }, {
+    path: '/load',
+    name: 'load',
+    component: load
   }]
 })
 
