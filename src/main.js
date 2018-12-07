@@ -3,7 +3,8 @@
 import Vue from 'vue'
 import index from './index'
 import router from './router'
-import vuex from 'vuex'
+import Vant from 'vant';
+import 'vant/lib/index.css';
 import ElementUI from 'element-ui'
 import Mint from 'mint-ui'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -18,8 +19,8 @@ require('./assets/fonts/iconfont.css')
 
 Vue.config.productionTip = false
 Vue.use(ElementUI);
-Vue.use(vuex);
 Vue.use(Mint);
+Vue.use(Vant);
 Vue.use(VueScroller);
 
 // 处理ajax请求

@@ -16,13 +16,11 @@
                 <i class="el-icon-more"></i>
             </a>
         </div>
-
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadPlanList" class="lessonList">
             <!-- <van-cell v-for="item in list" :key="item" :title="item"/> -->
             <ul>
                 <li v-for="(course,index) in myPlanList" :key="index">
                     <em v-if="course.isCountyShare == true" class="shareState have">已校共享</em>
-
                     <div v-if="course.fileType == 1 " class="lessonImg">
                         <img v-bind:src="Imgtype">
                     </div>
@@ -31,7 +29,7 @@
                     </div>
 
                     <div class="lessonContent">
-                        <h4 @click="init(course.planId)">
+                        <h4 @click="init()">
                             {{course.planTitle}}
                             <em>
                                 <i class="el-icon-star-off"></i>
@@ -48,10 +46,7 @@
                             </span>
                         </p>
                         <div class="operate">
-                            <a
-                                v-if="course.hasPlanThink == false"
-                                @click="writeThink(course.planId)"
-                            >
+                            <a v-if="course.hasPlanThink == false" @click="writeThink(course.planId)">
                                 <i class="el-icon-edit"></i>添加反思
                             </a>
                             <a v-else @click="watchThink(course.planId)">
@@ -137,30 +132,78 @@
                             <em>
                                 <i>*</i>年级
                             </em>
+<<<<<<< .mine
                             <div class="overHide">
                             <el-select v-model="gradeValue" disabled placeholder="请选择" size="small"></el-select>
                             </div>
+||||||| .r76
+                            <el-select v-model="gradeValue" placeholder="请选择" size="small">
+                                <el-option
+                                    v-for="item in gradeOptions"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                                ></el-option>
+                            </el-select>
+=======
+                            <el-select v-model="gradeValue" placeholder="请选择" size="small">
+                                <el-option v-for="item in gradeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
+>>>>>>> .r88
                         </li>
                         <li>
                             <em>
                                 <i>*</i>班级
                             </em>
+<<<<<<< .mine
                              <div class="overHide">
                                  <el-input-number v-model="classNumberDW" :min="1" label="描述文字" size="small" style="float:left; overflow:hidden;"></el-input-number>
                             </div>
+||||||| .r76
+                            <el-select v-model="classValue" placeholder="请选择" size="small">
+                                <el-option
+                                    v-for="item in classOptions"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                                ></el-option>
+                            </el-select>
+=======
+                            <el-select v-model="classValue" placeholder="请选择" size="small">
+                                <el-option v-for="item in classOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
+>>>>>>> .r88
                         </li>
                         <li>
                             <em>
                                 <i>*</i>日期
                             </em>
+<<<<<<< .mine
                             <div class="overHide">
                                 <el-date-picker v-model="setTime" size="small" type="date" placeholder="选择日期"></el-date-picker>
                             </div>
+||||||| .r76
+                            <div class></div>
+                            <el-select v-model="dataValue" placeholder="请选择" size="small">
+                                <el-option
+                                    v-for="item in dataOptions"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                                ></el-option>
+                            </el-select>
+=======
+                            <div class></div>
+                            <el-select v-model="dataValue" placeholder="请选择" size="small">
+                                <el-option v-for="item in dataOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
+>>>>>>> .r88
                         </li>
                         <li>
                             <em>
                                 <i>*</i>节次
                             </em>
+<<<<<<< .mine
                             <div class="overHide">
                                 <el-select v-model="jieciValue" placeholder="请选择" size="small">
                                     <el-option
@@ -171,6 +214,20 @@
                                     ></el-option>
                                 </el-select>
                             </div> 
+||||||| .r76
+                            <el-select v-model="jieciValue" placeholder="请选择" size="small">
+                                <el-option
+                                    v-for="item in jieciOptions"
+                                    :key="item"
+                                    :label="item"
+                                    :value="item"
+                                ></el-option>
+                            </el-select>
+=======
+                            <el-select v-model="jieciValue" placeholder="请选择" size="small">
+                                <el-option v-for="item in jieciOptions" :key="item" :label="item" :value="item"></el-option>
+                            </el-select>
+>>>>>>> .r88
                         </li>
                     </ul>
                 </div>
@@ -236,11 +293,11 @@ export default {
         };
     },
     mounted() {
-        this.loadPlanList();
+        this.loadPlanList(true);
     },
     methods: {
-        init:function(mes) {
-            this.$router.push({ name:"detailsPage", params:{planId:mes}});
+        init: function() {
+            this.$router.push({ path: "/myLesson/detailsPage" });
         },
         searchCall: function(mes) {
             this.searchDataBox = mes;
@@ -326,10 +383,8 @@ export default {
             that.$api.get(url, kwd, res => {
                 console.log("保存成功");
                 that.editPlan.planThink = res.planThink;
-                
                 //console.log(this.planThinkCon);
             });
-            this.tcshow1 = false;
         },
         classOrentation:function(jiaoanid){       //课程定位打开
             this.tcshow =! this.tcshow
@@ -356,7 +411,6 @@ export default {
             that.$api.post(url,Orientates,res => {
                 console.log(res);
             });
-            this.tcshow = false;
         }
     },
     watch: {

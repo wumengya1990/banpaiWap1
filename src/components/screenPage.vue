@@ -2,222 +2,296 @@
     <div class="screenPage mianScroll bgmain" v-show="$store.state.rightLayerEstate">
         <!-- <mt-picker :slots="slots" @change="onValuesChange"></mt-picker> -->
         <div class="tcLayerMain">
-                    <ul class="selectList">
-                        <li>
-                            <em>学期</em>
-                            <div class="overHide">
-                            <el-select v-model="semesterValue" placeholder="请选择" size="small">
-                                <el-option v-for="item in myPlanList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                            </el-select>
-                            </div>
-                        </li>
-                         <li>
-                            <em>学段</em>
-                            <div class="overHide">
-                            <el-select v-model="periodValue" placeholder="请选择" size="small">
-                                <el-option v-for="item in myPlanList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                            </el-select>
-                            </div>
-                        </li>
-                        <li>
-                            <em>学科</em>
-                            <div class="overHide">
-                                <el-select v-model="subjectValue" placeholder="请选择" size="small">
-                                    <el-option v-for="item in myPlanList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                                </el-select>
-                            </div>
-                        </li>
-                        <li>
-                            <em>年级</em>
-                            <div class="overHide">
-                            <el-select v-model="gradeValue" placeholder="请选择" size="small">
-                                <el-option v-for="item in myPlanList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                            </el-select>
-                            </div>
-                        </li>
-                        <li>
-                            <em>教材目录</em>
-                            <div class="overHide">
-                                 <el-treeselect
-                                    :multiple="false"
-                                    :data="treeNodes"
-                                    :props="treeprops"
-                                    placeholder="请选择教案位置"
-                                    :search="nodeSearch"
-                                    :clickParent="selParent"
-                                    v-model="teachPlan.PlanRemark"
-                                    @nodeClick="nodeClick"
-                                    style="width:100%;"
-                                ></el-treeselect>
-                               
-                            </div>
-                        </li>
-                        
-                    </ul>
-
-                <div class="tcLayerRightBottom psnA psnAC">
-                        <el-button-group>
-                        <el-button @click="quxiao()" style=" width:120px;">取消</el-button>
-                        <el-button @click="submitCondition()" style=" width:120px;" type="primary">确定</el-button>
-                        </el-button-group>
-                </div>
+            <ul class="selectList">
+                <li>
+                    <em>学期</em>
+                    <div class="overHide">
+                        <el-select v-model="selTerm" @change="changeTerm" placeholder="请选择" size="small">
+                            <el-option v-for="item in TermList" :key="item.termId" :label="item.termName" :value="item.termId"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+                <li v-if="thePage!=1">
+                    <em>学段</em>
+                    <div class="overHide">
+                        <el-select v-model="selStage" @change="changeStage" placeholder="请选择" size="small">
+                            <el-option v-for="item in StageList" :key="item.stageId" :label="item.stageName" :value="item.stageId"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+                <li>
+                    <em>学科</em>
+                    <div class="overHide">
+                        <el-select v-model="selStudy" @change="changeStudy" clearable placeholder="请选择" size="small">
+                            <el-option v-for="item in StudyList" :key="item.studyId" :label="item.studyName" :value="item.studyId"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+                <li>
+                    <em>年级</em>
+                    <div class="overHide">
+                        <el-select v-model="selGrade" @change="changeGrade" clearable placeholder="请选择" size="small">
+                            <el-option v-for="item in GradeList" :key="item.gradeId" :label="item.gradeName" :value="item.gradeId"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+                <li>
+                    <em>册次</em>
+                    <div class="overHide">
+                        <el-select v-model="selVolume" @change="changeVolume" clearable placeholder="请选择" size="small">
+                            <el-option v-for="item in VolumeList" :key="item.volumeId" :label="item.volumeName" :value="item.volumeId"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+                <li>
+                    <em>章节</em>
+                    <div class="overHide">
+                        <el-select v-model="selUnit" clearable placeholder="请选择" size="small">
+                            <el-option v-for="item in UnitList" :key="item.unitId" :label="item.unitName" :value="item.unitId"></el-option>
+                        </el-select>
+                    </div>
+                </li>
+            </ul>
+            <div class="tcLayerRightBottom psnA psnAC">
+                <el-button-group>
+                    <el-button @click="quxiao()" style=" width:120px;">取消</el-button>
+                    <el-button @click="submitCondition()" style=" width:120px;" type="primary">确定</el-button>
+                </el-button-group>
             </div>
-
+        </div>
     </div>
 </template>
 
 <script>
-import elTreeselect from "el-tree-select";
-
+// import the component
+// import Treeselect from "@riophae/vue-treeselect";
+// import elTreeselect from "el-tree-select";
+// // import the styles
+// import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 export default {
-    name:'screenPage',
-    components: { elTreeselect },
-    props:['chaundishuju'],
-    data(){
-        return{
-        semesterValue:'',
-        periodValue:'',
-        subjectValue:'',
-        gradeValue:'',
-        selTeaPlan: "",
-        treeNodes: [],
-        treeprops: { label: "nodeLabel", value: "nodeData" },
-        nodeSearch: false,
-        selParent: false,
-        teachPlan: {
-            PlanId: 0,
-            StageId: 0,
-            VersionId: 0,
-            StudyId: 0,
-            GradeId: 0,
-            VolumeId: 0,
-            UnitId: 0,
-            LessonId: 0,
-            TimeId: 1,
-            PlanTitle: "",
-            PlanRemark: "",
-            FlagSchool: 0,
-            FlagArea: 0,
-            PlanFileType: 1,
-            PlanDesign: "",
-            PlanDesignPath: "",
-            PlanFileList: []
-        },
-        rules: {
-            PlanRemark: [
-            { required: true, message: "请选择教案位置", trigger: "blur" }
-            ],
-            password: [{ required: true, message: "请输入密码", trigger: "blur" }]
-        },
-        dialogImageUrl: "",
-        dialogVisible: false,
-        filePics: [],
-        importLoading: "",
-        myPlanList:[]
-           
-
-        }
+    name: "screenPage",
+    // components: { Treeselect, elTreeselect },
+    props: ["thePage"],
+    data() {
+        return {
+            selTeaPlan: "",
+            treeNodes: [],
+            treeprops: { label: "nodeLabel", value: "nodeData" },
+            nodeSearch: false,
+            selParent: false,
+            subFormData: {
+                termId: "",
+                stageId: "",
+                studyId: "",
+                gradeId: "",
+                volumeId: "",
+                unitId: ""
+            },
+            TermList: [],
+            selTerm: "",
+            StageList: [],
+            selStage: "",
+            StudyList: [],
+            selStudy: "",
+            GradeList: [],
+            selGrade: "",
+            VolumeList: [],
+            selVolume: "",
+            UnitList: [],
+            selUnit: ""
+        };
     },
-    watch:{
-        semesterValue:function(val){
-            this.subFormData.subSemester = val;
+    watch: {
+        selTerm: function(val) {
+            this.subFormData.termId = val;
         },
-        subjectValue:function(val){
-            this.subFormData.subSubject = val;
+        selStage: function(val) {
+            this.subFormData.stageId = val;
         },
-        gradeValue:function(val){
-            this.subFormData.subGrade = val;
+        selStudy: function(val) {
+            this.subFormData.studyId = val;
         },
-        teachingMaterialValue:function(val){
-            this.subFormData.subTeachingMaterial=val;
+        selGrade: function(val) {
+            this.subFormData.gradeId = val;
+        },
+        selVolume: function(val) {
+            this.subFormData.volumeId = val;
+        },
+        selUnit: function(val) {
+            this.subFormData.unitId = val;
         }
-
     },
     mounted() {
-        this.loadcondition();
-        this.loadTeachPlanSiteTree();
+        this.loadTermList();
+        if (this.thePage != 1) {
+            this.loadStageList();
+        }
     },
-    methods:{
-        loadcondition:function(){
+    methods: {
+        //初始化加载学期
+        loadTermList: function() {
             let that = this;
-            let url = "/beike/api/Plan/ScreeningPlan";
-            that.$api.get(url,{termId:0},res => {
-                console.log(res);
-                this.myPlanList = res ;
-                console.log( this.myPlanList);
+            let url = "/beike/api/Plan/GetTermList";
+            that.$api.get(url, null, res => {
+                console.log("学期加载成功");
+                that.TermList = res.terms;
+                // that.selTerm = res.curTerm;
+                // if (that.thePage == 1) {
+                //     that.loadStudyList();
+                // }
             });
         },
-        onValuesChange(picker, values) {
-        if (values[0] > values[1]) {
-            picker.setSlotValue(1, values[0]);
+        //学期变化
+        changeTerm() {
+            if (this.thePage == 1) {
+                this.loadStudyList();
+            }
+            this.selStudy = "";
+            this.selGrade = "";
+            this.selVolume = "";
+            this.selUnit = "";
+        },
+        //初始化加载学段
+        loadStageList: function() {
+            let that = this;
+            let url = "/beike/api/Plan/GetStageList";
+            that.$api.get(url, null, res => {
+                console.log("学段加载成功");
+                that.StageList = res;
+            });
+        },
+        //学段变化
+        changeStage() {
+            this.loadStudyList();
+            this.selStudy = "";
+            this.selGrade = "";
+            this.selVolume = "";
+            this.selUnit = "";
+        },
+        //加载学科
+        loadStudyList: function() {
+            let that = this;
+            let url = "/beike/api/Plan/GetStudyList";
+            let param = {};
+            if (that.thePage == 1) {
+                if (that.selTerm == "") {
+                    that.$message("请选择学期");
+                    return false;
+                }
+                url = "/beike/api/Plan/GetTeaStudyList";
+                param = { termId: that.selTerm };
+            } else {
+                if (that.selStage == "") {
+                    that.$message("请选择学段");
+                    return false;
+                }
+                param = { stageid: that.selStage };
+                url = "/beike/api/Plan/GetStudyList";
+            }
+            that.$api.get(url, param, res => {
+                console.log("学科加载成功");
+                that.StudyList = res;
+            });
+        },
+        //学科变化
+        changeStudy() {
+            this.loadGradeList();
+            this.selGrade = "";
+            this.selVolume = "";
+            this.selUnit = "";
+        },
+        //加载年级
+        loadGradeList: function() {
+            let that = this;
+            let url = "/beike/api/Plan/GetGradeList";
+            let param = {};
+            if (that.thePage == 3) {
+                if (that.selStage == "") {
+                    that.$message("请选择学段");
+                    return false;
+                }
+                if (that.selStudy == "") {
+                    that.$message("请选择学科");
+                    return false;
+                }
+                param = { stageid: that.selStage, studyId: that.selStudy };
+                url = "/beike/api/Plan/GetGradeList";
+            } else {
+                if (that.selStudy == "") {
+                    that.$message("请选择学科");
+                    return false;
+                }
+                url = "/beike/api/Plan/GetTeaGradeList";
+                param = { termId: that.selTerm, studyId: that.selStudy };
+            }
+            that.$api.get(url, param, res => {
+                console.log("年级加载成功");
+                that.GradeList = res;
+            });
+        },
+        //年级变化
+        changeGrade() {
+            this.loadVolumeList();
+            this.selVolume = "";
+            this.selUnit = "";
+        },
+        //加载册次
+        loadVolumeList: function() {
+            let that = this;
+            if (that.selGrade == "") {
+                that.$message("请选择年级");
+                return false;
+            }
+            let url = "/beike/api/Plan/GetVolumeList";
+            let param = { gradeId: that.selGrade, studyId: that.selStudy };
+            that.$api.get(url, param, res => {
+                console.log("册次加载成功");
+                console.log(res);
+                that.VolumeList = res;
+            });
+        },
+        //册次变化
+        changeVolume() {
+            this.loadUnitList();
+            this.selUnit = "";
+        },
+        //加载教材章节目录
+        loadUnitList: function() {
+            let that = this;
+            if (that.selVolume == "") {
+                that.$message("请选择册次");
+                return false;
+            }
+            let url = "/beike/api/Plan/GetUnitList";
+            let param = { volumeId: that.selVolume };
+            that.$api.get(url, param, res => {
+                console.log("章节目录加载成功");
+                that.UnitList = res;
+            });
+        },
+        loadcondition: function() {
+            let that = this;
+            let url = "/beike/api/Plan/ScreeningPlan";
+            that.$api.get(url, null, res => {
+                console.log(res);
+                that.myPlanList.concat(res);
+                console.log(that.myPlanList);
+            });
+        },
+        //点击确定回传参数
+        submitCondition: function() {
+            console.log("开始回传参数");
+            //console.log(this.subFormData);
+            this.$emit("headCallBack", this.subFormData);
+            this.$store.commit("switch_dialog");
+        },
+        //点击取消
+        quxiao: function() {
+            this.$store.commit("switch_dialog");
         }
-        },
-        handleChange:function(val){
-            console.log(val)
-        },
-        submitCondition:function(){
-            console.log(this.subFormData);
-            
-            this.$emit('headCallBack',this.subFormData);
-
-            this.$store.commit('switch_dialog');
-        },
-        quxiao:function(){
-              this.$store.commit('switch_dialog');
-        },
-        //加载教案位置的树
-        loadTeachPlanSiteTree: function() {
-        let url = "/beike/api/Plan/GetTeachPlanSiteTree";
-        let the = this;
-        the.$api.get(url, null, data => {
-            the.treeNodes = data;
-        });
-        },
-        //点击教案位置的Tree节点
-        nodeClick(data, node) {
-        //console.log(node);
-        let the = this;
-        if (node.level == 3) {
-            the.teachPlan.LessonId = 0;
-        }
-        the.setTeachPlanProp(node);
-        let selTitle = "/" + node.label;
-        while (node.level > 1) {
-            let parNode = node.parent;
-            selTitle = parNode.label + "/" + selTitle;
-            the.setTeachPlanProp(parNode);
-            node = parNode;
-        }
-        the.teachPlan.PlanRemark = selTitle;
-        },
-        //根据选中的节点设置教案信息属性
-        setTeachPlanProp(node) {
-        let the = this;
-        switch (node.level) {
-            case 1:
-            the.teachPlan.StageId = node.data.nodeData.stageId;
-            the.teachPlan.VersionId = node.data.nodeData.versionId;
-            the.teachPlan.StudyId = node.data.nodeData.studyId;
-            break;
-            case 2:
-            the.teachPlan.GradeId = node.data.nodeData.gradeId;
-            the.teachPlan.VolumeId = node.data.nodeData.volumeId;
-            break;
-            case 3:
-            the.teachPlan.UnitId = node.data.nodeData.unitId;
-            break;
-            case 4:
-            the.teachPlan.LessonId = node.data.nodeData.lessonId;
-            break;
-            default:
-            break;
-        }
-        },
-        
     }
-}
+};
 </script>
 
 <style>
-
 </style>

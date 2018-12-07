@@ -51,8 +51,8 @@ const router = new Router({
     meta: {
       Authorize: true // 添加该字段，表示进入这个路由是需要登录的
     },
-    children:[{       //进入详情页面
-      name:'detailsPage',
+    children: [{ //进入详情页面
+      name: 'detailsPage',
       path: 'detailsPage',
       component: detailsPage,
     }],
@@ -92,10 +92,6 @@ const router = new Router({
     path: '/screenPage',
     name: 'screenPage',
     component: screenPage
-  }, {
-    path: '/load',
-    name: 'load',
-    component: load
   }]
 })
 
