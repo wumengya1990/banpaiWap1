@@ -158,8 +158,8 @@ export default {
         this.loadTeachPlanSiteTree();
     },
     methods: {
-        pageBack:function(){
-            this.$router.back(-1)
+        pageBack: function() {
+            this.$router.back(-1);
         },
         //加载教案位置的树
         loadTeachPlanSiteTree: function() {

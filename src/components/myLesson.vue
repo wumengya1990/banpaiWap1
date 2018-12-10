@@ -12,30 +12,29 @@
             <router-link to="/newCourse">
                 <i class="el-icon-plus"></i>
             </router-link>
-            <a @click="$store.commit('switch_dialog')">
-                <i class="el-icon-more"></i>
+            <a class="more" @click="$store.commit('switch_dialog')">
+                <i class="icon bpMobile bpMobile-shaixuan"></i>
             </a>
         </div>
-
-        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadPlanList" class="lessonList">
+        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :offset="100" @load="loadPlanList" class="lessonList">
             <!-- <van-cell v-for="item in list" :key="item" :title="item"/> -->
             <ul>
                 <li v-for="(course,index) in myPlanList" :key="index">
                     <em v-if="course.isCountyShare == true" class="shareState have">已校共享</em>
-
                     <div v-if="course.fileType == 1 " class="lessonImg">
-                        <img v-bind:src="Imgtype">
+                        <img :src="Imgtype" @click="planDetail(course.planId)">
                     </div>
                     <div v-else>
-                        <img v-bind:src="wordtype" class="lessonImg">
+                        <img :src="wordtype" @click="planDetail(course.planId)" class="lessonImg">
                     </div>
 
                     <div class="lessonContent">
-                        <h4 @click="init(course.planId)">
-                            {{course.planTitle}}
-                            <em>
-                                <i class="el-icon-star-off"></i>
-                            </em>
+                        <h4>
+                            <span @click="planDetail(course.planId)">{{course.planTitle}}</span>
+                            <!-- <em>
+                                <i v-if="course.isFavor==true" class="el-icon-star-on"></i>
+                                <i v-else @click="collectPlan(course)" class="el-icon-star-off"></i>
+                            </em> -->
                         </h4>
                         <p class="synopsis">
                             <span>
@@ -48,16 +47,13 @@
                             </span>
                         </p>
                         <div class="operate">
-                            <a
-                                v-if="course.hasPlanThink == false"
-                                @click="writeThink(course.planId)"
-                            >
+                            <a v-if="course.hasPlanThink == false" @click="writeThink(course)">
                                 <i class="el-icon-edit"></i>添加反思
                             </a>
                             <a v-else @click="watchThink(course.planId)">
                                 <i class="el-icon-view"></i>查看反思
                             </a>
-                            <a @click="classOrentation(course.planId)">
+                            <a @click="showOrentation(course.planId)">
                                 <i class="el-icon-location-outline"></i>课程定位
                             </a>
                         </div>
@@ -138,15 +134,15 @@
                                 <i>*</i>年级
                             </em>
                             <div class="overHide">
-                            <el-select v-model="gradeValue" disabled placeholder="请选择" size="small"></el-select>
+                                <el-select v-model="lessonOntime.gradeName" disabled placeholder="请选择" size="small" style="width:90%;"></el-select>
                             </div>
                         </li>
                         <li>
                             <em>
                                 <i>*</i>班级
                             </em>
-                             <div class="overHide">
-                                 <el-input-number v-model="classNumberDW" :min="1" label="描述文字" size="small" style="float:left; overflow:hidden;"></el-input-number>
+                            <div class="overHide">
+                                <el-input v-model="lessonOntime.className" label="班级名称" size="small" style=" width:90%; overflow:hidden;"></el-input>
                             </div>
                         </li>
                         <li>
@@ -154,7 +150,7 @@
                                 <i>*</i>日期
                             </em>
                             <div class="overHide">
-                                <el-date-picker v-model="setTime" size="small" type="date" placeholder="选择日期"></el-date-picker>
+                                <el-date-picker v-model="lessonOntime.lessonDate" size="small" type="date" placeholder="选择日期" style="width:90%;"></el-date-picker>
                             </div>
                         </li>
                         <li>
@@ -162,15 +158,10 @@
                                 <i>*</i>节次
                             </em>
                             <div class="overHide">
-                                <el-select v-model="jieciValue" placeholder="请选择" size="small">
-                                    <el-option
-                                        v-for="item in jieciOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"
-                                    ></el-option>
+                                <el-select v-model="lessonOntime.lessonId" placeholder="请选择" size="small" style="width:90%;">
+                                    <el-option v-for="item in lessonOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
-                            </div> 
+                            </div>
                         </li>
                     </ul>
                 </div>
@@ -205,46 +196,55 @@ export default {
             thePage: 1, //1：我的备课,2：学校共享,3：区县贡献
             receive: "",
             show: false,
-            tcshow: false,          //课程定位显示隐藏
-            tcshow1: false,         //填写教学反思的弹层显示隐藏
-            tcshow2: false,         //查看教学反思的弹层显示隐藏
-            myPlanList: [],         //装载读取的我的备课列表内容
-            loading: false,
-            finished: false,
+            tcshow: false, //课程定位显示隐藏
+            tcshow1: false, //填写教学反思的弹层显示隐藏
+            tcshow2: false, //查看教学反思的弹层显示隐藏
+            myPlanList: [], //装载读取的我的备课列表内容
+            isLoading: false, //列表数据加载中
+            loading: false, //列表加载数据
+            finished: false, //列表中是否加载了所有数据
             editPlan: "",
-            planThinkCon: "",       //装载点击的的备课的教学反思的内
-            orientate:[],           //课程定位列表
-            setTime:'',             //课程定位设置课程时间
-            gradeValue: "",         //课程定位年级内容     
-            classValue: "",         //课程内定位班级内容
-            dataValue: "",         
-            jieciValue: "",         //课程定位节次内容
-            classNumberDW:'',
-            jieciOptions: [
-                { value: 'jieci1', label: '第一节'},
-                { value: 'jieci2', label: '第二节'},
-                { value: 'jieci3', label: '第三节'},
-                { value: 'jieci4', label: '第四节'},
-                { value: 'jieci5', label: '第五节'},
-                { value: 'jieci6', label: '第六节'},
-                { value: 'jieci7', label: '第七节'},
-                { value: 'jieci8', label: '第八节'}
+            planThinkCon: "", //装载点击的的备课的教学反思的内
+            //课程定位列表
+            lessonOntime: {
+                planId: "",
+                gradeId: "",
+                gradeName: "", //课程定位年级内容
+                className: "", //课程内定位班级内容
+                lessonDate: "", //课程定位设置课程时间
+                LessonId: "" //课程定位节次内容
+            },
+            classNumberDW: "",
+            lessonOptions: [
+                { value: "1", label: "第一节" },
+                { value: "2", label: "第二节" },
+                { value: "3", label: "第三节" },
+                { value: "4", label: "第四节" },
+                { value: "5", label: "第五节" },
+                { value: "6", label: "第六节" },
+                { value: "7", label: "第七节" },
+                { value: "8", label: "第八节" }
             ],
             dataOptions: [],
-            searchDataBox: "",
-            addfasiId:''            //要添加定位的教案ID
+            searchDataBox: ""
         };
     },
     mounted() {
-        this.loadPlanList();
+        //this.loadPlanList(true);
     },
     methods: {
-        init:function(mes) {
-            this.$router.push({ name:"detailsPage", params:{planId:mes}});
+        //跳转到详情页面
+        planDetail: function(planId) {
+            this.$router.push({
+                path: "/detailsPage",
+                query: { planId: planId }
+            });
         },
+        //点击搜索框查询
         searchCall: function(mes) {
-            this.searchDataBox = mes;
-            console.log(this.searchDataBox);
+            this.searchData = mes;
+            this.loadPlanList(true);
+            // console.log(this.searchDataBox);
         },
         //筛选后的查询
         headCall: function(mes) {
@@ -256,15 +256,21 @@ export default {
         },
         //加载我的备课列表(isInit:是否清空后重新加载数据)
         loadPlanList: function(isInit) {
-            //加载我的备课列表
             let that = this;
+            //判断是否正在加载数据
+            if (that.isLoading == false) {
+                that.isLoading = true;
+            } else {
+                return false;
+            }
             if (isInit == true) {
+                that.finished = false;
                 that.pageIndex = 1;
             }
             let url = "/beike/api/Plan/GetMyPlanList";
             let param = { pageindex: that.pageIndex, val: that.searchData };
             let mes = that.receive;
-            if (mes != "") {
+            if (that.$isNull(mes) == false) {
                 for (const key in mes) {
                     if (mes[key] == null || mes[key] == "") {
                         continue;
@@ -276,6 +282,7 @@ export default {
             that.$api.get(url, param, res => {
                 let resCount = res.length;
                 console.log("成功加载备课:" + resCount);
+                // console.log(res);
                 if (isInit == true) {
                     that.myPlanList = res;
                 } else {
@@ -284,26 +291,41 @@ export default {
                 that.pageIndex++;
                 // 加载状态结束
                 that.loading = false;
+                that.isLoading = false;
                 if (resCount < 10) {
                     that.finished = true;
                 }
             });
         },
+        //收藏教案
+        collectPlan(plan) {
+            let that = this;
+            if (plan.isFavor == true) {
+                that.$vnotify("已经收藏过该教案");
+                return;
+            }
+            let kwd = { planid: plan.planId };
+            let url = "/beike/api/Plan/CollectionPlan";
+            that.$api.get(url, kwd, res => {
+                console.log("添加收藏成功");
+                plan.isFavor = res;
+            });
+        },
         //查看教学反思
         watchThink: function(mes) {
-            //查看教学反思
-            //this.editPlanId = mes;
             let that = this;
+            that.planThinkCon = "";
             let kwd = { planId: mes };
             let url = "/beike/api/Plan/GetPlanByPlanID";
             that.$api.get(url, kwd, res => {
                 console.log("教学反思加载成功");
-                this.planThinkCon = res.planThink;
+                that.planThinkCon = res.planThink;
             });
-            this.tcshow2 = true;
+            that.tcshow2 = true;
         },
         //弹出教学反思输入框
         writeThink: function(plan) {
+            this.planThinkCon = "";
             this.editPlan = plan;
             this.tcshow1 = true;
         },
@@ -315,7 +337,7 @@ export default {
                 that.planThinkCon == null ||
                 that.planThinkCon == undefined
             ) {
-                that.$message("请输入教学反思");
+                that.$vnotify("请输入教学反思");
                 return false;
             }
             let pt = {
@@ -323,38 +345,52 @@ export default {
                 planthink: that.planThinkCon
             };
             let url = "/beike/api/Plan/AddPlanThink";
-            that.$api.get(url, kwd, res => {
-                console.log("保存成功");
+            that.$api.post(url, pt, res => {
+                console.log("保存反思成功");
                 that.editPlan.planThink = res.planThink;
-                
-                //console.log(this.planThinkCon);
+                that.editPlan.hasPlanThink = true;
+                that.planThinkCon = "";
             });
             this.tcshow1 = false;
         },
-        classOrentation:function(jiaoanid){       //课程定位打开
-            this.tcshow =! this.tcshow
-            this.addfasiId = jiaoanid;
-            
+        //课程定位打开
+        showOrentation: function(planId) {
+            this.lessonOntime = {
+                planId: "",
+                gradeId: "",
+                gradeName: "", //课程定位年级内容
+                className: "", //课程内定位班级内容
+                lessonDate: "", //课程定位设置课程时间
+                LessonId: "" //课程定位节次内容
+            };
+            this.tcshow = !this.tcshow;
             let that = this;
             let url = "/beike/api/Plan/GetGradeByPlanId";
-            let param= {planid:this.addfasiId};
-            that.$api.get(url,param,res => {
-                this.gradeValue = res.gradeName;
-                this.orientate = res;
+            let param = { planid: planId };
+            that.$api.get(url, param, res => {
+                that.lessonOntime.planId = planId;
+                that.lessonOntime.gradeId = res.gradeId;
+                that.lessonOntime.gradeName = res.gradeName;
             });
         },
-        setOrientate:function(){
-            let Orientates = {
-                planid:this.addfasiId,
-                schoolId:this.orientate.gradeId,
-                gradeName:this.orientate.gradeName,
-                className:this.classNumberDW,
-                lessonId:this.jieciValue
-            }
+        //保存课时定位
+        setOrientate: function() {
             let that = this;
+            if (that.$isNull(that.lessonOntime.className) == true) {
+                that.$vnotify("请填写班级名称");
+                return false;
+            }
+            if (that.$isNull(that.lessonOntime.lessonDate) == true) {
+                that.$vnotify("请选择定位日期");
+                return false;
+            }
+            if (that.$isNull(that.lessonOntime.lessonId) == true) {
+                that.$vnotify("请选择定位节次");
+                return false;
+            }
             let url = "/beike/api/Plan/AddPlanLesson";
-            that.$api.post(url,Orientates,res => {
-                console.log(res);
+            that.$api.post(url, that.lessonOntime, res => {
+                console.log(res.msg);
             });
             this.tcshow = false;
         }
@@ -366,7 +402,6 @@ export default {
             that.$api.get(url, { authorUserName: val }, res => {
                 this.myPlanList = res;
                 console.log(this.myPlanList);
-                
             });
         }
     }

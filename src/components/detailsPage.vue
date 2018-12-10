@@ -1,71 +1,102 @@
 <template>
     <div class="details bgmain mianScroll">
         <div class="establish mianScroll">
-            <div class="detailsBox" :data="fromMes">
+            <div class="detailsBox">
                 <section>
                     <h4>教案标题</h4>
-                    <article><p>标题标题标题标题标题标题标题标题标题</p></article>
+                    <article>
+                        <p>{{planDetails.planTitle}}</p>
+                    </article>
+                </section>
+                <section>
+                    <h4>教案位置</h4>
+                    <article>
+                        <p>{{planDetails.planRemark}}</p>
+                    </article>
                 </section>
                 <section>
                     <h4>基本信息</h4>
                     <ul>
-                        <li><em>发布人</em><div class="overHide"><div class="detailCon">内容内容内容内容内容内容内容</div></div></li>
-                        <li><em>发布时间</em><div class="overHide"><div class="detailCon">内容内容内容内容内容内容内容</div></div></li>
+                        <li>
+                            <em>发布人</em>
+                            <div class="overHide">
+                                <div class="detailCon">{{planDetails.belongUserName}}</div>
+                            </div>
+                        </li>
+                        <li>
+                            <em>发布时间</em>
+                            <div class="overHide">
+                                <div class="detailCon">{{planDetails.createTime}}</div>
+                            </div>
+                        </li>
                     </ul>
                 </section>
                 <section>
-                    <h4>课程定位</h4>
-                    <ul>
-                        <li><em>年级</em><div class="overHide"><div class="detailCon">内容内容内容内容内容内容内容</div></div></li>
-                        <li><em>班级</em><div class="overHide"><div class="detailCon">内容内容内容内容内容内容内容</div></div></li>
-                        <li><em>日期</em><div class="overHide"><div class="detailCon">内容内容内容内容内容内容内容</div></div></li>
-                        <li><em>节次</em><div class="overHide"><div class="detailCon">内容内容内容内容内容内容内容</div></div></li>
-                    </ul>
+                    <h4>教案设计</h4>
+                    <template v-for="f in planDetails.planFileList">
+                        <ul class="ImgList" :key="f.id">
+                            <li>
+                                <a class="fileImg" href="javascript:;">
+                                    <img v-if="f.fileType==1" :src="Imgtype">
+                                    <img v-else :src="wordtype">
+                                </a>
+                                <div class="overHide">
+                                    <a :href="'/beike'+f.path">{{f.name}}</a>
+                                </div>
+                                <div class="clear"></div>
+                            </li>
+                        </ul>
+                    </template>
                 </section>
-                <section>
-                    <h4>附件列表</h4>
-                    <ul class="fileList">
-                        <li><a class="fileImg" href=""><img :src="this.wordtype"></a><div class="overHide"><a href="">名称名称名称名称名称名称名称名称名称</a></div><div class="clear"></div></li>
-                    </ul>
-                    <ul class="ImgList">
-                        <li><a class="fileImg" href=""><img :src="this.wordtype"></a><div class="overHide"><a href="">名称名称名称名称名称名称名称名称名称</a></div><div class="clear"></div></li>
-                    </ul>
-                </section>
-
             </div>
         </div>
-         <div class="establishBut">
-            <el-button round  @click="pageBack()">返回</el-button>
+        <div class="establishBut">
+            <el-button round @click="pageBack()">返回</el-button>
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    name:'detailsPage',
-    data(){
-        return{
+    name: "detailsPage",
+    data() {
+        return {
             Imgtype: require("./../assets/images/imgTyle.png"),
             wordtype: require("./../assets/images/wordTyle.png"),
-            fromMes:''
-        }
+            planDetails: {
+                planId: "",
+                planTitle: "",
+                planRemark: "",
+                belongUserId: "",
+                belongUserName: "",
+                createTime: "",
+                planFileList: []
+            }
+        };
     },
-    mounted(){
-        this.getMes();
+    mounted() {
+        this.loadPlanDetails();
     },
-    methods:{
-        pageBack:function(){
-             this.$router.back(-1);
+    methods: {
+        pageBack: function() {
+            this.$router.back(-1);
         },
-        getMes:function(){
+        loadPlanDetails: function() {
             let that = this;
-            that.fromMes = that.$router.params.planId;
-            console.log(that.fromMes);
+            let pId = that.$route.query.planId;
+            let url = "/beike/api/Plan/GetPlanDetails";
+            let param = { planid: pId };
+            that.$api.get(url, param, res => {
+                console.log("成功加载备课详情");
+                that.planDetails = res;
+            });
         }
     }
-}
+};
 </script>
 
 <style>
-.details{ z-index:20;}
+.details {
+    z-index: 20;
+}
 </style>

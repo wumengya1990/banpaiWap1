@@ -22,7 +22,7 @@
                 <li>
                     <em>学科</em>
                     <div class="overHide">
-                        <el-select v-model="selStudy" @change="changeStudy" clearable placeholder="请选择" size="small">
+                        <el-select v-model="selStudy" @change="changeStudy" @focus="focusStudy" clearable placeholder="请选择" size="small">
                             <el-option v-for="item in StudyList" :key="item.studyId" :label="item.studyName" :value="item.studyId"></el-option>
                         </el-select>
                     </div>
@@ -30,7 +30,7 @@
                 <li>
                     <em>年级</em>
                     <div class="overHide">
-                        <el-select v-model="selGrade" @change="changeGrade" clearable placeholder="请选择" size="small">
+                        <el-select v-model="selGrade" @change="changeGrade" @focus="focusGrade" clearable placeholder="请选择" size="small">
                             <el-option v-for="item in GradeList" :key="item.gradeId" :label="item.gradeName" :value="item.gradeId"></el-option>
                         </el-select>
                     </div>
@@ -38,7 +38,7 @@
                 <li>
                     <em>册次</em>
                     <div class="overHide">
-                        <el-select v-model="selVolume" @change="changeVolume" clearable placeholder="请选择" size="small">
+                        <el-select v-model="selVolume" @change="changeVolume" @focus="focusVolume" clearable placeholder="请选择" size="small">
                             <el-option v-for="item in VolumeList" :key="item.volumeId" :label="item.volumeName" :value="item.volumeId"></el-option>
                         </el-select>
                     </div>
@@ -46,7 +46,7 @@
                 <li>
                     <em>章节</em>
                     <div class="overHide">
-                        <el-select v-model="selUnit" clearable placeholder="请选择" size="small">
+                        <el-select v-model="selUnit" @focus="focusUnit" clearable placeholder="请选择" size="small">
                             <el-option v-for="item in UnitList" :key="item.unitId" :label="item.unitName" :value="item.unitId"></el-option>
                         </el-select>
                     </div>
@@ -175,14 +175,14 @@ export default {
             let param = {};
             if (that.thePage == 1) {
                 if (that.selTerm == "") {
-                    that.$message("请选择学期");
+                    that.$vnotify("请选择学期");
                     return false;
                 }
-                url = "/beike/api/Plan/GetTeaStudyList";
                 param = { termId: that.selTerm };
+                url = "/beike/api/Plan/GetTeaStudyList";
             } else {
                 if (that.selStage == "") {
-                    that.$message("请选择学段");
+                    that.$vnotify("请选择学段");
                     return false;
                 }
                 param = { stageid: that.selStage };
@@ -192,6 +192,21 @@ export default {
                 console.log("学科加载成功");
                 that.StudyList = res;
             });
+        },
+        //进入学科选择框时触发
+        focusStudy() {
+            let that = this;
+            if (that.thePage == 1) {
+                if (that.selTerm == "") {
+                    that.$vnotify("请选择学期");
+                    return false;
+                }
+            } else {
+                if (that.selStage == "") {
+                    that.$vnotify("请选择学段");
+                    return false;
+                }
+            }
         },
         //学科变化
         changeStudy() {
@@ -205,29 +220,48 @@ export default {
             let that = this;
             let url = "/beike/api/Plan/GetGradeList";
             let param = {};
-            if (that.thePage == 3) {
+            if (that.thePage == 1) {
+                if (that.selStudy == "") {
+                    that.$vnotify("请选择学科");
+                    return false;
+                }
+                param = { termId: that.selTerm, studyId: that.selStudy };
+                url = "/beike/api/Plan/GetTeaGradeList";
+            } else {
                 if (that.selStage == "") {
-                    that.$message("请选择学段");
+                    that.$vnotify("请选择学段");
                     return false;
                 }
                 if (that.selStudy == "") {
-                    that.$message("请选择学科");
+                    that.$vnotify("请选择学科");
                     return false;
                 }
                 param = { stageid: that.selStage, studyId: that.selStudy };
                 url = "/beike/api/Plan/GetGradeList";
-            } else {
-                if (that.selStudy == "") {
-                    that.$message("请选择学科");
-                    return false;
-                }
-                url = "/beike/api/Plan/GetTeaGradeList";
-                param = { termId: that.selTerm, studyId: that.selStudy };
             }
             that.$api.get(url, param, res => {
                 console.log("年级加载成功");
                 that.GradeList = res;
             });
+        },
+        //进入年级选择框时触发
+        focusGrade() {
+            let that = this;
+            if (that.thePage == 1) {
+                if (that.selStudy == "") {
+                    that.$vnotify("请选择学科");
+                    return false;
+                }
+            } else {
+                if (that.selStage == "") {
+                    that.$vnotify("请选择学段");
+                    return false;
+                }
+                if (that.selStudy == "") {
+                    that.$vnotify("请选择学科");
+                    return false;
+                }
+            }
         },
         //年级变化
         changeGrade() {
@@ -239,7 +273,7 @@ export default {
         loadVolumeList: function() {
             let that = this;
             if (that.selGrade == "") {
-                that.$message("请选择年级");
+                that.$vnotify("请选择年级");
                 return false;
             }
             let url = "/beike/api/Plan/GetVolumeList";
@@ -250,6 +284,14 @@ export default {
                 that.VolumeList = res;
             });
         },
+        //进入册次选择框时触发
+        focusVolume() {
+            let that = this;
+            if (that.selGrade == "") {
+                that.$vnotify("请选择年级");
+                return false;
+            }
+        },
         //册次变化
         changeVolume() {
             this.loadUnitList();
@@ -259,7 +301,7 @@ export default {
         loadUnitList: function() {
             let that = this;
             if (that.selVolume == "") {
-                that.$message("请选择册次");
+                that.$vnotify("请选择册次");
                 return false;
             }
             let url = "/beike/api/Plan/GetUnitList";
@@ -268,6 +310,14 @@ export default {
                 console.log("章节目录加载成功");
                 that.UnitList = res;
             });
+        },
+        //进入教材章节选择框时触发
+        focusUnit() {
+            let that = this;
+            if (that.selVolume == "") {
+                that.$vnotify("请选择册次");
+                return false;
+            }
         },
         loadcondition: function() {
             let that = this;
@@ -287,6 +337,11 @@ export default {
         },
         //点击取消
         quxiao: function() {
+            this.selTerm = "";
+            this.selStudy = "";
+            this.selGrade = "";
+            this.selVolume = "";
+            this.selUnit = "";
             this.$store.commit("switch_dialog");
         }
     }

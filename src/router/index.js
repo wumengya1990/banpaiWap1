@@ -52,8 +52,8 @@ const router = new Router({
       Authorize: true // 添加该字段，表示进入这个路由是需要登录的
     },
     children: [{ //进入详情页面
+      path: '/detailsPage',
       name: 'detailsPage',
-      path: 'detailsPage',
       component: detailsPage,
     }],
   }, {
