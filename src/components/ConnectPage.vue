@@ -4,43 +4,58 @@
 
 <script>
 export default {
-name:'ConnectPage',
-data(){
-    return{
-        formData:[],
-    }
-},mounted(){
-    let that = this;
-    let url = "/beike/api/Account/home?source&uId=xxx&token=xxx";
-    let source = this.$route.query.source;
-    let uId = this.$route.query.uId;
-    let token = this.$route.query.token;
-    let that.formData ={
-        source:source,
-    };
-    axios.get(url).then(res=>{
-        this.formData=res
-        if( this.formData != null ){
-            let urlp = "/account/home?source&uId=xxx&token=xxx";
-            axios.get(urlp,this.formData).then(res=>{
-                if(res.success){
-                 let token = res.token;
-                that.$store.commit("saveToken", token); //保存 token
-                that.$router.replace(
-                    // that.$route.query.redirect ? that.$route.query.redirect : "/"
-                    that.$route.query.redirect ? that.$route.query.redirect : "/"
-                    );
-                }else{
-                    console.log(res.msg);
-                }
-            })
-        }
-    })
-}
+    name: "ConnectPage",
+    data() {
+        return {
+            formData: []
+        };
+    },
+    mounted() {
+        this.setList();
+    },
+    methods: {
+        getQueryString: function(name) {
+            let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            let r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
+        },
+        setList: function() {
+            let that = this;
+            let mySource = that.getQueryString("source");
+            let myuId = that.getQueryString("uId");
+            let mytoken = that.getQueryString("token");
+            let dataList = new Object();
+            if (!that.$isNull(mySource)) {
+                dataList.source = mySource;
+            }
+            if (!that.$isNull(myuId)) {
+                dataList.uId = myuId;
+            }
+            if (!that.$isNull(mytoken)) {
+                dataList.token = mytoken;
+            }
+            that.formData = dataList;
 
-}
+            let token = dataList.token;
+
+            if (dataList != null) {
+                let urlp = "/api/account/home";
+                that.$api.get(urlp, dataList, res => {
+                    if (res.success) {
+                        that.$store.commit("saveToken", res.token); //保存 token
+                        that.$router.push({ path: "/myLesson" });
+                    } else {
+                        that.$router.push({ path: "/errorPage" });
+                    }
+                });
+            } else {
+                that.$router.push({ path: "/errorPage" });
+            }
+        }
+    }
+};
 </script>
 
 <style>
-
 </style>

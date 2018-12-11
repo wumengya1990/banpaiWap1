@@ -31,17 +31,32 @@
                         </li>
                     </ul>
                 </section>
-                <section>
+                <section v-if="!$isNull(planDetails.planDesign)">
                     <h4>教案设计</h4>
+                    <ul class="ImgList">
+                        <li>
+                            <a class="fileImg" href="javascript:;">
+                                <img v-if="planDetails.fileType == 1" :src="Imgtype">
+                                <img v-else :src="wordtype">
+                            </a>
+                            <div class="overHide">
+                                <a :href="$store.state.rootUrl+'/'+planDetails.planDesignPath">{{planDetails.planDesign}}</a>
+                            </div>
+                            <div class="clear"></div>
+                        </li>
+                    </ul>
+                </section>
+                <section>
+                    <h4>教案素材</h4>
                     <template v-for="f in planDetails.planFileList">
-                        <ul class="ImgList" :key="f.id">
+                        <ul v-if="planDetails.planDesignPath!=f.path" class="ImgList" :key="f.id">
                             <li>
                                 <a class="fileImg" href="javascript:;">
                                     <img v-if="f.fileType==1" :src="Imgtype">
                                     <img v-else :src="wordtype">
                                 </a>
                                 <div class="overHide">
-                                    <a :href="'/beike'+f.path">{{f.name}}</a>
+                                    <a :href="$store.state.rootUrl+'/'+f.path">{{f.name}}</a>
                                 </div>
                                 <div class="clear"></div>
                             </li>
@@ -83,11 +98,13 @@ export default {
         },
         loadPlanDetails: function() {
             let that = this;
+            const vd = that.$vloading();
             let pId = that.$route.query.planId;
-            let url = "/beike/api/Plan/GetPlanDetails";
+            let url = "/api/Plan/GetPlanDetails";
             let param = { planid: pId };
             that.$api.get(url, param, res => {
                 console.log("成功加载备课详情");
+                vd.clear();
                 that.planDetails = res;
             });
         }

@@ -6,7 +6,8 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     rightLayerEstate: false,
-    token: ''
+    token: '',
+    rootUrl: 'https://localhost:44336'
   },
   mutations: {
     switch_dialog(state) { //这里的state对应着上面这个state

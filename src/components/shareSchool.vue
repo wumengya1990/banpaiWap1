@@ -8,8 +8,8 @@
             <!-- 右侧弹层筛选内容 -->
         </div>
         <div class="suspendTool">
-            <a @click="$store.commit('switch_dialog')">
-                <i class="el-icon-more"></i>
+            <a class="more" @click="$store.commit('switch_dialog')">
+                <i class="icon bpMobile bpMobile-shaixuan"></i>
             </a>
         </div>
 
@@ -17,15 +17,15 @@
             <ul>
                 <li v-for="(course,index) in myPlanList" :key="index">
                     <em v-if="course.shareState == true" class="shareState have">已共享</em>
-                    <div v-if="course.fileType == 2 " class="lessonImg">
-                        <img v-bind:src="Imgtype">
+                    <div v-if="course.fileType == 1 " class="lessonImg">
+                        <img @click="planDetail(course.planId)" :src="Imgtype">
                     </div>
-                    <div v-else>
-                        <img v-bind:src="wordtype" class="lessonImg">
+                    <div v-else class="lessonImg">
+                        <img @click="planDetail(course.planId)" :src="wordtype">
                     </div>
 
                     <div class="lessonContent">
-                        <h4>{{course.planTitle}}</h4>
+                        <h4 @click="planDetail(course.planId)">{{course.planTitle}}</h4>
                         <p class="synopsis">
                             <span>
                                 <i class="icon bpMobile bpMobile-wode2"></i>
@@ -63,32 +63,6 @@
                 </li>
             </ul>
         </van-list>
-
-        <!-- 填写教学反思 -->
-        <!-- <div class="tcLayer" v-show="tcshow1">
-            <div class="tcLayerMain">
-                <div class="closeBt">
-                    <em class="psnA" @click="tcshow1 =! tcshow1"></em>
-                </div>
-                <div class="LayerTop">
-                    <dl>
-                        <dt>
-                            <img :src="this.xuancengimg">
-                        </dt>
-                        <dd>教学反思</dd>
-                    </dl>
-                </div>
-                <div class="LayerCenter">
-                    <div class="textareaBox">
-                        <textarea v-model="planThinkCon" placeholder="请输入内容"></textarea>
-                    </div>
-                </div>
-                <div class="LayerBottom psnA psnAC">
-                    <el-button @click="savePlanThink()" type="primary" style="width:80%;">提交</el-button>
-                </div>
-            </div>
-        </div>-->
-        <!-- 填写教学反思结束 -->
         <!-- 查看教学反思 -->
         <div class="tcLayer" v-show="tcshow2">
             <div class="tcLayerMain">
@@ -154,6 +128,13 @@ export default {
         //this.loadPlanList();
     },
     methods: {
+        //跳转到详情页面
+        planDetail: function(planId) {
+            this.$router.push({
+                path: "/detailsPage",
+                query: { planId: planId }
+            });
+        },
         //加载列表(isInit:是否清空后重新加载数据)
         loadPlanList: function(isInit) {
             //加载学校分享
@@ -168,7 +149,7 @@ export default {
                 that.finished = false;
                 that.pageIndex = 1;
             }
-            let url = "/beike/api/Plan/GetSchoolSharingPlanList";
+            let url = "/api/Plan/GetSchoolSharingPlanList";
             let param = { pageindex: that.pageIndex, val: that.searchData };
             let mes = that.receive;
             if (mes != "") {
@@ -211,7 +192,7 @@ export default {
             let shareState = this.myPlanList[suoyin].flagSchool;
             console.log(shareState);
             let that = this;
-            let url = "/beike/api/Plan/GetAreaSharingPlanList";
+            let url = "/api/Plan/GetAreaSharingPlanList";
             let param = { planId: jiaoanid, val: !shareState };
             that.$api.get(url, param, res => {
                 this.myPlanList[suoyin].flagSchool = res;
@@ -230,34 +211,41 @@ export default {
                 that.$vnotify("您没有分享该教案的权限");
                 return false;
             }
-            let url = "/beike/api/Plan/SharedPlan";
+            let url = "/api/Plan/SharedPlan";
             let param = { planid: pid, sharetype: 2 };
+            let vdmsg = "分享中...";
             if (plan.isCountyShare) {
-                url = "/beike/api/Plan/SharedPlanCancel";
+                vdmsg = "取消分享中...";
+                url = "/api/Plan/SharedPlanCancel";
             }
+            const vd = that.$vloading(vdmsg);
             that.$api.get(url, param, res => {
                 plan.isCountyShare = !plan.isCountyShare;
+                vd.clear();
             });
         },
         //收藏教案
         mycollect: function(pid, rowIdx) {
-            let shareState = this.myPlanList[rowIdx].isFavor;
+            let that = this;
+            let shareState = that.myPlanList[rowIdx].isFavor;
             if (shareState == true) {
                 that.$vnotify("已经收藏过该教案");
                 return;
             }
-            let that = this;
-            let url = "/beike/api/Plan/CollectionPlan";
+            const vd = that.$vloading("正在收藏...");
+            let url = "/api/Plan/CollectionPlan";
             let param = { planId: pid };
             that.$api.get(url, param, res => {
                 this.myPlanList[rowIdx].isFavor = true;
+                vd.clear();
+                that.$vnotify("收藏成功");
             });
         },
         //查看教学反思
         watchReflect: function(pid) {
             this.tcshow2 = !this.tcshow2;
             let that = this;
-            let url = "/beike/api/Plan/GetPlanByPlanID";
+            let url = "/api/Plan/GetPlanByPlanID";
             let param = { planId: pid };
             that.$api.get(url, param, res => {
                 console.log("教学反思加载成功");
@@ -272,7 +260,7 @@ export default {
         savePlanThink: function() {
             //保存教学反思
             let that = this;
-            let url = "/beike/api/Plan/GetAreaSharingPlanList";
+            let url = "/api/Plan/GetAreaSharingPlanList";
             let param = { planId: this.addfasiId, val: planThinkCon };
             that.$api.post(url, param, res => {
                 console.log(res);

@@ -131,7 +131,7 @@ export default {
         //初始化加载学期
         loadTermList: function() {
             let that = this;
-            let url = "/beike/api/Plan/GetTermList";
+            let url = "/api/Plan/GetTermList";
             that.$api.get(url, null, res => {
                 console.log("学期加载成功");
                 that.TermList = res.terms;
@@ -154,7 +154,7 @@ export default {
         //初始化加载学段
         loadStageList: function() {
             let that = this;
-            let url = "/beike/api/Plan/GetStageList";
+            let url = "/api/Plan/GetStageList";
             that.$api.get(url, null, res => {
                 console.log("学段加载成功");
                 that.StageList = res;
@@ -171,7 +171,7 @@ export default {
         //加载学科
         loadStudyList: function() {
             let that = this;
-            let url = "/beike/api/Plan/GetStudyList";
+            let url = "/api/Plan/GetStudyList";
             let param = {};
             if (that.thePage == 1) {
                 if (that.selTerm == "") {
@@ -179,14 +179,14 @@ export default {
                     return false;
                 }
                 param = { termId: that.selTerm };
-                url = "/beike/api/Plan/GetTeaStudyList";
+                url = "/api/Plan/GetTeaStudyList";
             } else {
                 if (that.selStage == "") {
                     that.$vnotify("请选择学段");
                     return false;
                 }
                 param = { stageid: that.selStage };
-                url = "/beike/api/Plan/GetStudyList";
+                url = "/api/Plan/GetStudyList";
             }
             that.$api.get(url, param, res => {
                 console.log("学科加载成功");
@@ -218,7 +218,7 @@ export default {
         //加载年级
         loadGradeList: function() {
             let that = this;
-            let url = "/beike/api/Plan/GetGradeList";
+            let url = "/api/Plan/GetGradeList";
             let param = {};
             if (that.thePage == 1) {
                 if (that.selStudy == "") {
@@ -226,7 +226,7 @@ export default {
                     return false;
                 }
                 param = { termId: that.selTerm, studyId: that.selStudy };
-                url = "/beike/api/Plan/GetTeaGradeList";
+                url = "/api/Plan/GetTeaGradeList";
             } else {
                 if (that.selStage == "") {
                     that.$vnotify("请选择学段");
@@ -237,7 +237,7 @@ export default {
                     return false;
                 }
                 param = { stageid: that.selStage, studyId: that.selStudy };
-                url = "/beike/api/Plan/GetGradeList";
+                url = "/api/Plan/GetGradeList";
             }
             that.$api.get(url, param, res => {
                 console.log("年级加载成功");
@@ -276,7 +276,7 @@ export default {
                 that.$vnotify("请选择年级");
                 return false;
             }
-            let url = "/beike/api/Plan/GetVolumeList";
+            let url = "/api/Plan/GetVolumeList";
             let param = { gradeId: that.selGrade, studyId: that.selStudy };
             that.$api.get(url, param, res => {
                 console.log("册次加载成功");
@@ -304,7 +304,7 @@ export default {
                 that.$vnotify("请选择册次");
                 return false;
             }
-            let url = "/beike/api/Plan/GetUnitList";
+            let url = "/api/Plan/GetUnitList";
             let param = { volumeId: that.selVolume };
             that.$api.get(url, param, res => {
                 console.log("章节目录加载成功");
@@ -321,7 +321,7 @@ export default {
         },
         loadcondition: function() {
             let that = this;
-            let url = "/beike/api/Plan/ScreeningPlan";
+            let url = "/api/Plan/ScreeningPlan";
             that.$api.get(url, null, res => {
                 console.log(res);
                 that.myPlanList.concat(res);

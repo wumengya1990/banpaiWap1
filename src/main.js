@@ -34,7 +34,8 @@ import api from "./http.js";
 Vue.prototype.$api = api;
 
 import {
-  Notify
+  Notify,
+  Toast
 } from 'vant';
 //判断是否为空
 var isNullOrEmpty = function (value) {
@@ -52,8 +53,26 @@ var isNullOrZero = function (value) {
     return false;
   }
 }
+//加载loading数据
+var vload = function (msg, timeOut) {
+  let defMsg = "加载中...";
+  if (!isNullOrEmpty(msg)) {
+    defMsg = msg;
+  }
+  let defTimeOut = 0;
+  if (!isNullOrEmpty(timeOut)) {
+    defTimeOut = timeOut;
+  }
+  const toast = Toast.loading({
+    duration: defTimeOut, // 持续展示 toast
+    mask: true, // 是否显示背景蒙层
+    message: defMsg
+  });
+  return toast;
+}
 Vue.prototype.$isNull = isNullOrEmpty;
 Vue.prototype.$isZero = isNullOrZero;
+Vue.prototype.$vloading = vload;
 //全局通知方法
 Vue.prototype.$vnotify = function (msg, timeOut, bgColor, color) {
   if (isNullOrEmpty(msg)) {

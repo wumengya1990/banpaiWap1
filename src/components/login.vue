@@ -74,7 +74,7 @@ export default {
       let that = this;
       this.$refs[formName].validate(valid => {
         if (valid) {
-          let url = "/beike/api/Account/Login";
+          let url = "/api/Account/Login";
           //let pars = { userid: 20, pageindex: 1 };
           that.$api.get(url, that.loginForm, data => {
             if (data.success) {

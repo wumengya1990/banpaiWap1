@@ -24,8 +24,8 @@
                     <div v-if="course.fileType == 1 " class="lessonImg">
                         <img :src="Imgtype" @click="planDetail(course.planId)">
                     </div>
-                    <div v-else>
-                        <img :src="wordtype" @click="planDetail(course.planId)" class="lessonImg">
+                    <div v-else class="lessonImg">
+                        <img :src="wordtype" @click="planDetail(course.planId)">
                     </div>
 
                     <div class="lessonContent">
@@ -34,7 +34,7 @@
                             <!-- <em>
                                 <i v-if="course.isFavor==true" class="el-icon-star-on"></i>
                                 <i v-else @click="collectPlan(course)" class="el-icon-star-off"></i>
-                            </em> -->
+                            </em>-->
                         </h4>
                         <p class="synopsis">
                             <span>
@@ -267,7 +267,7 @@ export default {
                 that.finished = false;
                 that.pageIndex = 1;
             }
-            let url = "/beike/api/Plan/GetMyPlanList";
+            let url = "/api/Plan/GetMyPlanList";
             let param = { pageindex: that.pageIndex, val: that.searchData };
             let mes = that.receive;
             if (that.$isNull(mes) == false) {
@@ -305,7 +305,7 @@ export default {
                 return;
             }
             let kwd = { planid: plan.planId };
-            let url = "/beike/api/Plan/CollectionPlan";
+            let url = "/api/Plan/CollectionPlan";
             that.$api.get(url, kwd, res => {
                 console.log("添加收藏成功");
                 plan.isFavor = res;
@@ -316,7 +316,7 @@ export default {
             let that = this;
             that.planThinkCon = "";
             let kwd = { planId: mes };
-            let url = "/beike/api/Plan/GetPlanByPlanID";
+            let url = "/api/Plan/GetPlanByPlanID";
             that.$api.get(url, kwd, res => {
                 console.log("教学反思加载成功");
                 that.planThinkCon = res.planThink;
@@ -344,7 +344,7 @@ export default {
                 planid: that.editPlan.planId,
                 planthink: that.planThinkCon
             };
-            let url = "/beike/api/Plan/AddPlanThink";
+            let url = "/api/Plan/AddPlanThink";
             that.$api.post(url, pt, res => {
                 console.log("保存反思成功");
                 that.editPlan.planThink = res.planThink;
@@ -365,7 +365,7 @@ export default {
             };
             this.tcshow = !this.tcshow;
             let that = this;
-            let url = "/beike/api/Plan/GetGradeByPlanId";
+            let url = "/api/Plan/GetGradeByPlanId";
             let param = { planid: planId };
             that.$api.get(url, param, res => {
                 that.lessonOntime.planId = planId;
@@ -388,7 +388,7 @@ export default {
                 that.$vnotify("请选择定位节次");
                 return false;
             }
-            let url = "/beike/api/Plan/AddPlanLesson";
+            let url = "/api/Plan/AddPlanLesson";
             that.$api.post(url, that.lessonOntime, res => {
                 console.log(res.msg);
             });
@@ -398,7 +398,7 @@ export default {
     watch: {
         searchDataBox: function(val) {
             let that = this;
-            let url = "/beike/api/Plan/GetMyPlanList";
+            let url = "/api/Plan/GetMyPlanList";
             that.$api.get(url, { authorUserName: val }, res => {
                 this.myPlanList = res;
                 console.log(this.myPlanList);

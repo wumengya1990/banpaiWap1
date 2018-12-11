@@ -13,6 +13,8 @@ import shareCounty from '@/components/shareCounty'
 import newCourse from '@/components/newCourse'
 import appList from '@/components/appList'
 import screenPage from '@/components/screenPage'
+import ConnectPage from '@/components/ConnectPage'
+import errorPage from '@/components/errorPage'
 
 Vue.use(Router)
 
@@ -21,6 +23,10 @@ const router = new Router({
   routes: [{
     path: '/',
     redirect: 'links'
+  }, {
+    path: '/ConnectPage',
+    name: 'connectPage',
+    component: ConnectPage
   }, {
     path: '/login',
     name: 'login',
@@ -92,6 +98,10 @@ const router = new Router({
     path: '/screenPage',
     name: 'screenPage',
     component: screenPage
+  }, {
+    path: '/errorPage',
+    name: 'errorPage',
+    component: errorPage
   }]
 })
 

@@ -8,8 +8,8 @@
             <!-- 右侧弹层筛选内容 -->
         </div>
         <div class="suspendTool">
-            <a @click="$store.commit('switch_dialog')">
-                <i class="el-icon-more"></i>
+            <a class="more" @click="$store.commit('switch_dialog')">
+                <i class="icon bpMobile bpMobile-shaixuan"></i>
             </a>
         </div>
 
@@ -19,14 +19,14 @@
                     <em v-if="course.shareState == true" class="shareState have">已校共享</em>
 
                     <div v-if="course.fileType == 2 " class="lessonImg">
-                        <img v-bind:src="Imgtype">
+                        <img @click="planDetail(course.planId)" :src="Imgtype">
                     </div>
-                    <div v-else>
-                        <img v-bind:src="wordtype" class="lessonImg">
+                    <div v-else class="lessonImg">
+                        <img @click="planDetail(course.planId)" :src="wordtype">
                     </div>
 
                     <div class="lessonContent">
-                        <h4>{{course.planTitle}}</h4>
+                        <h4 @click="planDetail(course.planId)">{{course.planTitle}}</h4>
                         <p class="synopsis">
                             <span>
                                 <i class="icon bpMobile bpMobile-wode2"></i>
@@ -38,21 +38,49 @@
                             </span>
                         </p>
                         <div class="operate">
-                            <a v-if="course.haveReflect == false" @click="tcshow1 =! tcshow1">
-                                <i class="el-icon-edit"></i>添加反思
-                            </a>
-                            <a v-else @click="tcshow2 =! tcshow2">
+                            <a @click="watchThink(course.planId)">
                                 <i class="el-icon-view"></i>查看反思
                             </a>
-                            <a @click="classOrentation()">
-                                <i class="icon bpMobile bpMobile-yishiyong"></i>已使用{{course.UseCnt}}
-                            </a>
+                            <span v-if="course.useCnt!== undefined && course.useCnt.length > 0">
+                                <i class="icon bpMobile bpMobile-yishiyong"></i>
+                                已使用 {{course.useCnt}}
+                            </span>
+                            <div v-else>
+                                <i class="icon bpMobile bpMobile-yishiyong"></i>
+                                未使用
+                            </div>
                         </div>
                     </div>
                     <div class="clear"></div>
                 </li>
             </ul>
         </van-list>
+
+        <!-- 查看教学反思 -->
+        <div class="tcLayer" v-show="tcshow1">
+            <div class="tcLayerMain">
+                <div class="closeBt">
+                    <em class="psnA" @click="tcshow1 =! tcshow1"></em>
+                </div>
+                <div class="LayerTop">
+                    <dl>
+                        <dt>
+                            <img :src="this.xuancengimg">
+                        </dt>
+                        <dd>教学反思</dd>
+                    </dl>
+                </div>
+                <div class="LayerCenter">
+                    <div class="textareaBox">
+                        <p v-html="planThinkCon"></p>
+                    </div>
+                </div>
+                <div class="LayerBottom psnA psnAC">
+                    <el-button style="width:80%;" type="primary" @click="tcshow1 =! tcshow1">关闭</el-button>
+                </div>
+            </div>
+        </div>
+        <!-- 查看教学反思结束 -->
     </div>
 </template>
 
@@ -77,7 +105,8 @@ export default {
             thePage: 1, //1：我的备课/收藏,2：学校共享,3：区县贡献
             searchData: "",
             pageIndex: 1,
-            chaundishuju: "",
+            tcshow1: false,
+            planThinkCon: "",
             myPlanList: [],
             isLoading: false, //列表数据加载中
             loading: false, //列表加载数据
@@ -88,6 +117,13 @@ export default {
         // this.loadPlanList();
     },
     methods: {
+        //跳转到详情页面
+        planDetail: function(planId) {
+            this.$router.push({
+                path: "/detailsPage",
+                query: { planId: planId }
+            });
+        },
         //加载我的收藏列表(isInit:是否清空后重新加载数据)
         loadPlanList: function(isInit) {
             //加载我的收藏
@@ -102,7 +138,7 @@ export default {
                 that.finished = false;
                 that.pageIndex = 1;
             }
-            let url = "/beike/api/Plan/GetMyCollectPlanList";
+            let url = "/api/Plan/GetMyCollectPlanList";
             let param = { pageindex: that.pageIndex, val: that.searchData };
             let mes = that.receive;
             if (mes != "") {
@@ -140,6 +176,17 @@ export default {
         headCall: function(mes) {
             this.receive = mes;
             this.loadPlanList(true);
+        },
+        //查看教学反思
+        watchThink: function(mes) {
+            let that = this;
+            that.planThinkCon = "";
+            let kwd = { planId: mes };
+            let url = "/api/Plan/GetPlanByPlanID";
+            that.$api.get(url, kwd, res => {
+                that.planThinkCon = res.planThink;
+            });
+            that.tcshow1 = true;
         }
     }
 };

@@ -50,7 +50,7 @@
                         <div class="overHide" style="padding:0 0 0 10px">
                             <el-upload
                                 class="upload-demo"
-                                action="/beike/api/Plan/UploadPlanFile"
+                                action="/api/Plan/UploadPlanFile"
                                 :loadingTxt="loadTxt"
                                 :http-request="customUpload"
                                 :on-success="handleSuccess"
@@ -163,7 +163,7 @@ export default {
         },
         //加载教案位置的树
         loadTeachPlanSiteTree: function() {
-            let url = "/beike/api/Plan/GetTeachPlanSiteTree";
+            let url = "/api/Plan/GetTeachPlanSiteTree";
             let the = this;
             the.$api.get(url, null, data => {
                 the.treeNodes = data;
@@ -250,7 +250,7 @@ export default {
             let fOrder = the.teachPlan.PlanFileList.length + 1;
             let param = { files: obj.file, fileOrder: fOrder };
             the.$api.uploadFile(
-                "/beike/api/Plan/UploadPlanFile",
+                "/api/Plan/UploadPlanFile",
                 param,
                 data => {
                     the.importLoading.close();
@@ -296,11 +296,12 @@ export default {
                 });
                 return false;
             }
-
-            let url = "/beike/api/Plan/SaveTeachPlan";
+            const vd = the.$vloading("保存中...");
+            let url = "/api/Plan/SaveTeachPlan";
             the.$api.post(url, the.teachPlan, data => {
+                vd.clear();
                 console.log(data.msg);
-                this.$message(data.msg);
+                the.$vnotify(data.msg);
                 if (data.success) {
                     this.$router.push("myLesson");
                 }

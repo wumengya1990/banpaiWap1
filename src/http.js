@@ -1,7 +1,7 @@
 import router from './router'
 import axios from 'axios'
 // 配置API接口地址
-var root = "";
+var root = process.env.API_ROOT;
 // 引用axios
 // var axios = require("axios");
 // 自定义判断元素类型JS
