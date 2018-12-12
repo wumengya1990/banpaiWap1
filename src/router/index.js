@@ -15,6 +15,7 @@ import appList from '@/components/appList'
 import screenPage from '@/components/screenPage'
 import ConnectPage from '@/components/ConnectPage'
 import errorPage from '@/components/errorPage'
+import orientation from '@/components/orientation'
 
 Vue.use(Router)
 
@@ -102,6 +103,10 @@ const router = new Router({
     path: '/errorPage',
     name: 'errorPage',
     component: errorPage
+  }, {
+    path: '/orientation',
+    name: 'orientation',
+    component: orientation
   }]
 })
 

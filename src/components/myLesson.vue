@@ -20,7 +20,7 @@
             <!-- <van-cell v-for="item in list" :key="item" :title="item"/> -->
             <ul>
                 <li v-for="(course,index) in myPlanList" :key="index">
-                    <em v-if="course.isCountyShare == true" class="shareState have">已校共享</em>
+                    <em v-if="course.isCountyShare == true" class="shareState have">已共享</em>
                     <div v-if="course.fileType == 1 " class="lessonImg">
                         <img :src="Imgtype" @click="planDetail(course.planId)">
                     </div>

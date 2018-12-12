@@ -98,6 +98,13 @@ Vue.prototype.$vnotify = function (msg, timeOut, bgColor, color) {
   });
 };
 
+//配置文件读取demo
+axios.get(process.env.Config_Path).then((result) => {
+  localStorage.setItem('bkPCUrl', result.data.bkPCUrl);
+  console.log(localStorage.getItem('bkPCUrl'));
+}).catch((error) => {
+  console.log(error)
+});
 
 // 注册公共，并放置相关属性
 var bus = new Vue();
