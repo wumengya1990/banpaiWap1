@@ -31,16 +31,21 @@
                         </li>
                     </ul>
                 </section>
-                <section v-if="!$isNull(planDetails.planDesign)">
+                <section v-if="planDetails.fileType > 1 && !$isNull(planDetails.planDesign)">
                     <h4>教案设计</h4>
                     <ul class="ImgList">
                         <li>
                             <a class="fileImg" href="javascript:;">
-                                <img v-if="planDetails.fileType == 1" :src="Imgtype">
-                                <img v-else :src="wordtype">
+                                <img :src="wordtype">
+                                <!-- <img v-else :src="wordtype"> -->
                             </a>
                             <div class="overHide">
-                                <a :href="$store.state.rootUrl+'/'+planDetails.planDesignPath">{{planDetails.planDesign}}</a>
+                                <!-- <a
+                                    v-if="planDetails.fileType == 1"
+                                    href="javascript:;"
+                                    @click="ImgPreview(planDetails.itemOrder)"
+                                >{{planDetails.planDesign}}</a>-->
+                                <a :href="$store.state.rootUrl+planDetails.planDesignPath">{{planDetails.planDesign}}</a>
                             </div>
                             <div class="clear"></div>
                         </li>
@@ -56,7 +61,8 @@
                                     <img v-else :src="wordtype">
                                 </a>
                                 <div class="overHide">
-                                    <a :href="$store.state.rootUrl+'/'+f.path">{{f.name}}</a>
+                                    <a v-if="planDetails.fileType == 1" href="javascript:;" @click="ImgPreview(planDetails.itemOrder)">{{f.name}}</a>
+                                    <a v-else :href="$store.state.rootUrl+f.path">{{f.name}}</a>
                                 </div>
                                 <div class="clear"></div>
                             </li>
@@ -72,6 +78,7 @@
 </template>
 
 <script>
+import { ImagePreview } from "vant";
 export default {
     name: "detailsPage",
     data() {
@@ -86,7 +93,8 @@ export default {
                 belongUserName: "",
                 createTime: "",
                 planFileList: []
-            }
+            },
+            imglist: []
         };
     },
     mounted() {
@@ -105,7 +113,35 @@ export default {
             that.$api.get(url, param, res => {
                 console.log("成功加载备课详情");
                 vd.clear();
+                let imgIdx = 0;
+                let pcUrl = that.$store.state.rootUrl;
+                //处理教案设计中的附件
+                // if (
+                //     !that.$isNull(res.planDesignPath) &&
+                //     !that.$isNull(res.planDesign) &&
+                //     res.fileType == 1
+                // ) {
+                //     res.itemOrder = imgIdx;
+                //     that.imglist.push(pcUrl + res.planDesignPath);
+                //     imgIdx++;
+                // }
+                for (let i = 0; i < res.planFileList.length; i++) {
+                    let pf = res.planFileList[i];
+                    if (pf.fileType == 1) {
+                        pf.itemOrder = imgIdx;
+                        that.imglist.push(pcUrl + pf.path);
+                        imgIdx++;
+                    }
+                }
                 that.planDetails = res;
+            });
+        },
+        //显示图片预览
+        ImgPreview(imgIdx) {
+            let that = this;
+            const instance = ImagePreview({
+                images: that.imglist,
+                startPosition: typeof imgIdx === "number" ? imgIdx : 0
             });
         }
     }

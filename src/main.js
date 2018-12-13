@@ -15,6 +15,7 @@ import axios from 'axios'
 import store from "./vuex/store.js"
 import VueScroller from 'vue-scroller'
 require('./assets/fonts/iconfont.css')
+import 'vant/lib/index.css';
 // import './../static/fonts/iconfont.css'
 
 
@@ -39,7 +40,7 @@ import {
 } from 'vant';
 //判断是否为空
 var isNullOrEmpty = function (value) {
-  if (value == null || value == undefined || value == "") {
+  if (value == null || value == undefined || value.trim() == "") {
     return true;
   } else {
     return false;
@@ -47,7 +48,7 @@ var isNullOrEmpty = function (value) {
 }
 //判断是否为空或0
 var isNullOrZero = function (value) {
-  if (value == null || value == undefined || value == "" || value == 0) {
+  if (value == null || value == undefined || value.trim() == "" || value == 0) {
     return true;
   } else {
     return false;

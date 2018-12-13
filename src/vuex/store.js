@@ -7,6 +7,7 @@ const store = new Vuex.Store({
   state: {
     rightLayerEstate: false,
     token: '',
+    userRole: 0,
     rootUrl: localStorage.getItem("bkPCUrl")
   },
   mutations: {
@@ -17,6 +18,10 @@ const store = new Vuex.Store({
     saveToken(state, data) {
       state.token = data;
       window.localStorage.setItem("Token", data); //就是这里，保存到了 localStorage 中
+    },
+    saveRole(state, data) {
+      state.userRole = data;
+      window.localStorage.setItem("userRole", data);
     }
   },
   actions: {

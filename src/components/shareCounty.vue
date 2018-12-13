@@ -182,6 +182,7 @@ export default {
             if (isInit == true) {
                 that.finished = false;
                 that.pageIndex = 1;
+                that.myPlanList = [];
             }
             let url = "/api/Plan/GetAreaSharingPlanList";
             let param = { pageindex: that.pageIndex, val: that.searchData };
@@ -220,34 +221,37 @@ export default {
                 that.$vnotify("您没有分享该教案的权限");
                 return false;
             }
-            let shareState = plan.flagSchool;
             let url = "/api/Plan/SharedPlan";
+            let vdmsg = "分享中...";
             let param = { planid: pid, sharetype: 1 };
-            if (shareState == 1) {
+            if (plan.isSchoolShare) {
+                vdmsg = "取消分享中...";
                 url = "/api/Plan/SharedPlanCancel";
             }
+            const vd = that.$vloading(vdmsg);
             that.$api.get(url, param, res => {
-                plan.flagSchool = shareState == 1 ? 0 : 1;
+                plan.isSchoolShare = !plan.isSchoolShare;
+                vd.clear();
             });
         },
         //收藏教案
         collection: function(pid, rowIdx) {
-            let shareState = this.myPlanList[rowIdx].isFavor;
+            let that = this;
+            let shareState = that.myPlanList[rowIdx].isFavor;
             if (shareState == true) {
                 that.$vnotify("已经收藏过该教案");
                 return;
             }
             const vd = that.$vloading("正在收藏...");
-            let that = this;
             let url = "/api/Plan/CollectionPlan";
             let param = { planId: pid };
             that.$api.get(url, param, res => {
-                this.myPlanList[rowIdx].isFavor = true;
+                that.myPlanList[rowIdx].isFavor = true;
                 vd.clear();
             });
         },
         //查看教学反思
-        watchReflect: function(jiaoanid, suoyin) {
+        watchReflect: function(pid, suoyin) {
             this.tcshow2 = !this.tcshow2;
             let that = this;
             let url = "/api/Plan/GetPlanByPlanID";
@@ -256,21 +260,6 @@ export default {
                 console.log("教学反思加载成功");
                 that.planThinkCon = res.planThink;
             });
-        },
-        addReflect: function(jiaoanid, suoyin) {
-            //打开添加反思
-            this.tcshow1 = !this.tcshow1;
-            this.addfasiId = jiaoanid;
-        },
-        savePlanThink: function() {
-            //保存教学反思
-            let that = this;
-            let url = "/api/Plan/GetAreaSharingPlanList";
-            let param = { planid: this.addfasiId, val: planThinkCon };
-            that.$api.post(url, param, res => {
-                console.log(res);
-            });
-            this.tcshow1 = false;
         }
     }
 };

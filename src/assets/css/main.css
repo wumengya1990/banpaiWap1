@@ -49,6 +49,10 @@ body,html{height:100%}
 .topNav span.on{ color: #0096ff; border-bottom: 2px solid #0096ff; font-weight: bold;}
 .topNav a{ color: #666666; display: block; box-flex: 1; -webkit-box-flex: 1;  text-align: center;height: 3rem; line-height: 3rem; font-size: 1.1rem;}
 .topNav a.on{ color: #0096ff; border-bottom: 2px solid #0096ff; font-weight: bold;}
+.topNavMore{ overflow: hidden; overflow-x: auto; white-space: nowrap; font-size: 0}
+.topNavMore a{color: #666666; display: inline-block; width:22%; font-size: 1em; text-align: center;height: 3rem; line-height: 3rem; font-size: 1.1rem;}
+.topNavMore a.on{ color: #0096ff; border-bottom: 2px solid #0096ff; font-weight: bold;}
+
 
 /* 备课列表内容 */
 .lessonList{ background: #FFFFFF; position: absolute; left: 0; top: 7rem; right: 0; bottom: 0; margin: auto; overflow: hidden; overflow-y: auto;}
@@ -168,10 +172,18 @@ body,html{height:100%}
 
 
 /* 课堂定位内容 */
-.orientation ul li{ background: #FFFFFF; margin: 10px; border-radius: 3px;}
-.orientation ul li .introduction{ padding: 10px;}
-.orientation ul li .introduction h4{ font-size: 1.3em;}
-.orientation ul li{ padding: 0 0 10px;}
-.orientation ul li dl{ float: left; width: 50%; box-sizing: border-box; padding: 10px 10px 0;}
-.orientation ul li dl dt{ color: #999999;}
-.orientation ul li dl dd{ font-size: 1.1em; padding: 5px 0 0;}
+.orientationList{ position: absolute; left: 0; top: 8rem; right: 0; bottom:4rem; margin: auto; overflow: hidden; overflow-y: auto;}
+.orientation .orientationListBox li{ background: #FFFFFF; margin: 10px; border-radius:5px; overflow: hidden;}
+.orientation .orientationListBox li .introduction{ padding: 10px; background: rgba(0,0,0,0.1)}
+.orientation .orientationListBox li .introduction h4{ font-size: 1.3em;}
+.orientation .orientationListBox li{ padding: 0 0 10px;}
+.orientation .orientationListBox li dl{ float: left; width: 50%; box-sizing: border-box; padding: 10px 10px 0;}
+.orientation .orientationListBox li dl dt{ color: #999999; height: 20px; line-height: 20px;}
+.orientation .orientationListBox li dl dd{ font-size: 1.1em; padding: 5px 0 0; height: 25px; line-height: 25px;}
+
+
+.conditionBox{ background: #FFFFFF; }
+.conditionBox>div{ border-bottom: 1px solid #eaeaea; padding: 10px}
+.conditionBox>div em{ float: left; width:5em; text-align: right; height: 2.5rem; line-height: 2.5rem;}
+.conditionBox>div p{ display: inline-block; height: 2.5rem; line-height: 2.5rem; padding: 0 10px; box-sizing: border-box; border: 1px solid #eaeaea; width: 100%; border-radius: 3px;}
+.padLR10{ padding:0 10px;}

@@ -44,12 +44,19 @@ export default {
                 that.$api.get(urlp, dataList, res => {
                     if (res.success) {
                         that.$store.commit("saveToken", res.token); //保存 token
-                        that.$router.push({ path: "/myLesson" });
+                        that.$store.commit("saveRole", res.role); //保存 role
+                        if (res.role < 4) {
+                            that.$router.push({ path: "/myLesson" });
+                        } else {
+                            that.$router.push({ path: "/shareCounty" });
+                        }
                     } else {
+                        that.$vnotify(res.msg);
                         that.$router.push({ path: "/errorPage" });
                     }
                 });
             } else {
+                that.$vnotify("参数传递不完整");
                 that.$router.push({ path: "/errorPage" });
             }
         }

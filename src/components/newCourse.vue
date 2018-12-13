@@ -64,7 +64,7 @@
                                 accept=".jpg, .jpeg, .png, .gif, .bmp, .JPG, .JPEG, .PBG, .GIF, .BMP"
                             >
                                 <el-button size="small" type="primary">点击上传</el-button>
-                                <div slot="tip" class="el-upload__tip">只能上传图片文件，且不超过4MB</div>
+                                <div slot="tip" class="el-upload__tip">只能上传图片文件，且不超过10MB</div>
                             </el-upload>
                             <div class="clear"></div>
                         </div>
@@ -135,18 +135,6 @@ export default {
                 PlanDesign: "",
                 PlanDesignPath: "",
                 PlanFileList: []
-            },
-            rules: {
-                PlanRemark: [
-                    {
-                        required: true,
-                        message: "请选择教案位置",
-                        trigger: "blur"
-                    }
-                ],
-                password: [
-                    { required: true, message: "请输入密码", trigger: "blur" }
-                ]
             },
             dialogImageUrl: "",
             dialogVisible: false,
@@ -229,10 +217,10 @@ export default {
             const isLt2M = file.size / 1024 / 1024 < 10;
 
             if (!isJPG && !isGIF && !isPNG && !isBMP) {
-                this.message("上传图片必须是JPG/GIF/PNG/BMP 格式", "warning");
+                this.$vnotify("上传图片必须是JPG/GIF/PNG/BMP 格式");
             }
             if (!isLt2M) {
-                vmstu.$message.error("上传Excel大小不能超过2MB");
+                vmstu.$vnotify("上传Excel大小不能超过10MB");
             }
 
             let isPass = (isJPG || isGIF || isPNG || isBMP) && isLt2M;
@@ -249,18 +237,14 @@ export default {
             let the = this;
             let fOrder = the.teachPlan.PlanFileList.length + 1;
             let param = { files: obj.file, fileOrder: fOrder };
-            the.$api.uploadFile(
-                "/api/Plan/UploadPlanFile",
-                param,
-                data => {
-                    the.importLoading.close();
-                    if (!data.success) {
-                        the.$message("图片上传失败");
-                    } else {
-                        the.teachPlan.PlanFileList.push(data.planfile);
-                    }
+            the.$api.uploadFile("/api/Plan/UploadPlanFile", param, data => {
+                the.importLoading.close();
+                if (!data.success) {
+                    the.$vnotify("图片上传失败");
+                } else {
+                    the.teachPlan.PlanFileList.push(data.planfile);
                 }
-            );
+            });
         },
         ///on-error钩子，上传失败时的钩子
         handleError: function(err, file, fileList) {
@@ -271,7 +255,7 @@ export default {
         handleSuccess: function(response, file, fileList) {
             this.importLoading.close();
             if (!response.success) {
-                this.$message("图片上传失败");
+                this.$vnotify("图片上传失败");
             } else {
                 this.teachPlan.PlanFileList.push(file);
             }

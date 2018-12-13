@@ -137,6 +137,7 @@ export default {
             if (isInit == true) {
                 that.finished = false;
                 that.pageIndex = 1;
+                that.myPlanList = [];
             }
             let url = "/api/Plan/GetMyCollectPlanList";
             let param = { pageindex: that.pageIndex, val: that.searchData };

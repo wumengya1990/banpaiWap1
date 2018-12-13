@@ -148,6 +148,7 @@ export default {
             if (isInit == true) {
                 that.finished = false;
                 that.pageIndex = 1;
+                that.myPlanList = [];
             }
             let url = "/api/Plan/GetSchoolSharingPlanList";
             let param = { pageindex: that.pageIndex, val: that.searchData };
@@ -205,9 +206,7 @@ export default {
         areaShare: function(pid, rowIdx) {
             let that = this;
             let plan = that.myPlanList[rowIdx];
-            //let shareState = plan.flagArea;
             if (plan.userRole == 1 && plan.curUser != plan.belongUserId) {
-                //plan.flagArea = shareState;
                 that.$vnotify("您没有分享该教案的权限");
                 return false;
             }
@@ -236,7 +235,7 @@ export default {
             let url = "/api/Plan/CollectionPlan";
             let param = { planId: pid };
             that.$api.get(url, param, res => {
-                this.myPlanList[rowIdx].isFavor = true;
+                that.myPlanList[rowIdx].isFavor = true;
                 vd.clear();
                 that.$vnotify("收藏成功");
             });

@@ -9,59 +9,64 @@
             <!-- 右侧弹层筛选内容 -->
         </div>
         <div class="suspendTool">
-            <router-link to="/newCourse">
-                <i class="el-icon-plus"></i>
+            <router-link to="/newCourse" v-if="$store.state.userRole<4">
+                <!-- <i class="el-icon-plus"></i> -->
+                <i class="el-icon-edit"></i>
             </router-link>
             <a class="more" @click="$store.commit('switch_dialog')">
                 <i class="icon bpMobile bpMobile-shaixuan"></i>
             </a>
+            <router-link to="/orientation">
+                <i class="el-icon-location-outline"></i>
+            </router-link>
         </div>
-        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :offset="100" @load="loadPlanList" class="lessonList">
-            <!-- <van-cell v-for="item in list" :key="item" :title="item"/> -->
-            <ul>
-                <li v-for="(course,index) in myPlanList" :key="index">
-                    <em v-if="course.isCountyShare == true" class="shareState have">已共享</em>
-                    <div v-if="course.fileType == 1 " class="lessonImg">
-                        <img :src="Imgtype" @click="planDetail(course.planId)">
-                    </div>
-                    <div v-else class="lessonImg">
-                        <img :src="wordtype" @click="planDetail(course.planId)">
-                    </div>
+        <van-pull-refresh v-model="isRefresh" @refresh="onRefresh" :loading-text="loadText" :ref="refPull" class="lessonList">
+            <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :offset="100" @load="loadPlanList">
+                <ul>
+                    <li v-for="(course,index) in myPlanList" :key="index">
+                        <em v-if="course.isCountyShare == true" class="shareState have">已共享</em>
+                        <div v-if="course.fileType == 1 " class="lessonImg">
+                            <img :src="Imgtype" @click="planDetail(course.planId)">
+                        </div>
+                        <div v-else class="lessonImg">
+                            <img :src="wordtype" @click="planDetail(course.planId)">
+                        </div>
 
-                    <div class="lessonContent">
-                        <h4>
-                            <span @click="planDetail(course.planId)">{{course.planTitle}}</span>
-                            <!-- <em>
+                        <div class="lessonContent">
+                            <h4>
+                                <span @click="planDetail(course.planId)">{{course.planTitle}}</span>
+                                <!-- <em>
                                 <i v-if="course.isFavor==true" class="el-icon-star-on"></i>
                                 <i v-else @click="collectPlan(course)" class="el-icon-star-off"></i>
-                            </em>-->
-                        </h4>
-                        <p class="synopsis">
-                            <span>
-                                <i class="icon bpMobile bpMobile-wode2"></i>
-                                {{course.authorUserName}}
-                            </span>
-                            <span>
-                                <i class="icon bpMobile bpMobile-hs_h_Clock_h-naozhong"></i>
-                                {{course.createTime}}
-                            </span>
-                        </p>
-                        <div class="operate">
-                            <a v-if="course.hasPlanThink == false" @click="writeThink(course)">
-                                <i class="el-icon-edit"></i>添加反思
-                            </a>
-                            <a v-else @click="watchThink(course.planId)">
-                                <i class="el-icon-view"></i>查看反思
-                            </a>
-                            <a @click="showOrentation(course.planId)">
-                                <i class="el-icon-location-outline"></i>课程定位
-                            </a>
+                                </em>-->
+                            </h4>
+                            <p class="synopsis">
+                                <span>
+                                    <i class="icon bpMobile bpMobile-wode2"></i>
+                                    {{course.authorUserName}}
+                                </span>
+                                <span>
+                                    <i class="icon bpMobile bpMobile-hs_h_Clock_h-naozhong"></i>
+                                    {{course.createTime}}
+                                </span>
+                            </p>
+                            <div class="operate">
+                                <a v-if="course.hasPlanThink == false" @click="writeThink(course)">
+                                    <i class="el-icon-edit"></i>添加反思
+                                </a>
+                                <a v-else @click="watchThink(course.planId)">
+                                    <i class="el-icon-view"></i>查看反思
+                                </a>
+                                <a @click="showOrentation(course.planId)">
+                                    <i class="el-icon-location-outline"></i>课程定位
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="clear"></div>
-                </li>
-            </ul>
-        </van-list>
+                        <div class="clear"></div>
+                    </li>
+                </ul>
+            </van-list>
+        </van-pull-refresh>
 
         <!-- 填写教学反思 -->
         <div class="tcLayer" v-show="tcshow1">
@@ -200,7 +205,10 @@ export default {
             tcshow1: false, //填写教学反思的弹层显示隐藏
             tcshow2: false, //查看教学反思的弹层显示隐藏
             myPlanList: [], //装载读取的我的备课列表内容
+            loadText: "加载中...",
+            refPull: "",
             isLoading: false, //列表数据加载中
+            isRefresh: false, //正在刷新数据
             loading: false, //列表加载数据
             finished: false, //列表中是否加载了所有数据
             editPlan: "",
@@ -254,6 +262,15 @@ export default {
         TogglePopupMore() {
             this.tab.popupMoreTrigger = !this.tab.popupMoreTrigger;
         },
+        //刷新数据
+        onRefresh() {
+            if (this.myPlanList.length > 10) {
+                this.loadText = " ";
+            } else {
+                this.loadText = "加载中...";
+            }
+            this.loadPlanList(true);
+        },
         //加载我的备课列表(isInit:是否清空后重新加载数据)
         loadPlanList: function(isInit) {
             let that = this;
@@ -266,6 +283,7 @@ export default {
             if (isInit == true) {
                 that.finished = false;
                 that.pageIndex = 1;
+                that.myPlanList = [];
             }
             let url = "/api/Plan/GetMyPlanList";
             let param = { pageindex: that.pageIndex, val: that.searchData };
@@ -292,6 +310,7 @@ export default {
                 // 加载状态结束
                 that.loading = false;
                 that.isLoading = false;
+                that.isRefresh = false;
                 if (resCount < 10) {
                     that.finished = true;
                 }
@@ -332,11 +351,7 @@ export default {
         //保存教学反思
         savePlanThink() {
             let that = this;
-            if (
-                that.planThinkCon == "" ||
-                that.planThinkCon == null ||
-                that.planThinkCon == undefined
-            ) {
+            if (that.$isNull(that.planThinkCon)) {
                 that.$vnotify("请输入教学反思");
                 return false;
             }
@@ -396,14 +411,18 @@ export default {
         }
     },
     watch: {
-        searchDataBox: function(val) {
-            let that = this;
-            let url = "/api/Plan/GetMyPlanList";
-            that.$api.get(url, { authorUserName: val }, res => {
-                this.myPlanList = res;
-                console.log(this.myPlanList);
-            });
-        }
+        // isRefresh: function(val) {
+        //     if (val == true) {
+        //         var div = document.getElementsByClassName(
+        //             "van-pull-refresh__loading"
+        //         );
+        //         if (this.myPlanList.length > 10) {
+        //             div.setAttribute("style", "display: none");
+        //         } else {
+        //             div.setAttribute("style", "display: block");
+        //         }
+        //     }
+        // }
     }
 };
 </script>
