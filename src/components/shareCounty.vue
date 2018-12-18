@@ -7,11 +7,12 @@
             <right-screen :chaundishuju="chaundishuju" v-on:headCallBack="headCall" style="z-index:10;"></right-screen>
             <!-- 右侧弹层筛选内容 -->
         </div>
-        <div class="suspendTool">
+
+        <!-- <div class="suspendTool">
             <a class="more" @click="$store.commit('switch_dialog')">
                 <i class="icon bpMobile bpMobile-shaixuan"></i>
             </a>
-        </div>
+        </div> -->
 
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadPlanList" class="lessonList">
             <ul>
@@ -38,9 +39,13 @@
                             </span>
                         </p>
                         <div class="operate">
-                            <a @click="watchReflect(course.planId,index)">
+                            <a v-if="course.hasPlanThink" @click="watchReflect(course.planId,index)">
                                 <i class="el-icon-view"></i>查看反思
                             </a>
+                            <span>
+                                <i class="el-icon-view"></i>暂无反思
+                            </span>
+                            
                             <span>
                                 <i class="el-icon-download"></i>
                                 {{course.planDownNum}}
@@ -56,7 +61,11 @@
                         </div>
                         <div class="checkBox">
                             <el-checkbox v-model="course.isSchoolShare" @click.native.prevent="schoolShare(course.planId,index)">校共享</el-checkbox>
-                            <el-checkbox v-model="course.isFavor" @click.native.prevent="collection(course.planId,index)">收藏</el-checkbox>
+                            <el-checkbox
+                                v-if="$store.state.userRole<4"
+                                v-model="course.isFavor"
+                                @click.native.prevent="collection(course.planId,index)"
+                            >收藏</el-checkbox>
                         </div>
                     </div>
                     <div class="clear"></div>
@@ -64,31 +73,6 @@
             </ul>
         </van-list>
 
-        <!-- 填写教学反思 -->
-        <!-- <div class="tcLayer" v-show="tcshow1">
-            <div class="tcLayerMain">
-                <div class="closeBt">
-                    <em class="psnA" @click="tcshow1 =! tcshow1"></em>
-                </div>
-                <div class="LayerTop">
-                    <dl>
-                        <dt>
-                            <img :src="this.xuancengimg">
-                        </dt>
-                        <dd>教学反思</dd>
-                    </dl>
-                </div>
-                <div class="LayerCenter">
-                    <div class="textareaBox">
-                        <textarea v-model="planThinkCon" placeholder="请输入内容"></textarea>
-                    </div>
-                </div>
-                <div class="LayerBottom psnA psnAC">
-                    <el-button @click="savePlanThink" type="primary" style="width:80%;">提交</el-button>
-                </div>
-            </div>
-        </div>-->
-        <!-- 填写教学反思结束 -->
         <!-- 查看教学反思 -->
         <div class="tcLayer" v-show="tcshow2">
             <div class="tcLayerMain">

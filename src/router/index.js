@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import login from '@/components/login'
+import loginOff from '@/components/loginOff'
 import HelloWorld from '@/components/HelloWorld'
 import links from '@/components/links'
 import top from '@/components/top'
@@ -16,6 +17,7 @@ import screenPage from '@/components/screenPage'
 import ConnectPage from '@/components/ConnectPage'
 import errorPage from '@/components/errorPage'
 import orientation from '@/components/orientation'
+// import ceshi from '@/components/ceshi'
 
 Vue.use(Router)
 
@@ -23,7 +25,7 @@ const router = new Router({
   mode: "history",
   routes: [{
     path: '/',
-    redirect: 'links'
+    redirect: 'myLesson'
   }, {
     path: '/ConnectPage',
     name: 'connectPage',
@@ -33,6 +35,10 @@ const router = new Router({
     name: 'login',
     component: login
   }, {
+    path: '/loginOff',
+    name: 'loginOff',
+    component: loginOff
+  }, {
     path: '/HelloWorld',
     name: 'HelloWorld',
     component: HelloWorld
@@ -41,7 +47,8 @@ const router = new Router({
     name: 'links',
     component: links,
     meta: {
-      Authorize: true // 添加该字段，表示进入这个路由是需要登录的
+      Authorize: true, // 添加该字段，表示进入这个路由是需要登录的
+      userRole: 8
     }
   }, {
     path: '/top',
@@ -56,7 +63,8 @@ const router = new Router({
     name: 'myLesson',
     component: myLesson,
     meta: {
-      Authorize: true // 添加该字段，表示进入这个路由是需要登录的
+      Authorize: true, // 添加该字段，表示进入这个路由是需要登录的
+      userRole: 3
     },
     children: [{ //进入详情页面
       path: '/detailsPage',
@@ -68,28 +76,32 @@ const router = new Router({
     name: 'myCollect',
     component: myCollect,
     meta: {
-      Authorize: true // 添加该字段，表示进入这个路由是需要登录的
+      Authorize: true, // 添加该字段，表示进入这个路由是需要登录的
+      userRole: 3
     }
   }, {
     path: '/shareSchool',
     name: 'shareSchool',
     component: shareSchool,
     meta: {
-      Authorize: true // 添加该字段，表示进入这个路由是需要登录的
+      Authorize: true, // 添加该字段，表示进入这个路由是需要登录的
+      userRole: 8
     }
   }, {
     path: '/shareCounty',
     name: 'shareCounty',
     component: shareCounty,
     meta: {
-      Authorize: true // 添加该字段，表示进入这个路由是需要登录的
+      Authorize: true, // 添加该字段，表示进入这个路由是需要登录的
+      userRole: 8
     }
   }, {
     path: '/newCourse',
     name: 'newCourse',
     component: newCourse,
     meta: {
-      Authorize: true // 添加该字段，表示进入这个路由是需要登录的
+      Authorize: true, // 添加该字段，表示进入这个路由是需要登录的
+      userRole: 3
     }
   }, {
     path: '/appList',
@@ -106,7 +118,11 @@ const router = new Router({
   }, {
     path: '/orientation',
     name: 'orientation',
-    component: orientation
+    component: orientation,
+    meta: {
+      Authorize: true, // 添加该字段，表示进入这个路由是需要登录的
+      userRole: 3
+    }
   }]
 })
 
@@ -116,7 +132,17 @@ router.beforeEach((to, from, next) => {
     // 判断该路由是否需要登录权限
     if (window.localStorage.Token) {
       // 通过vuex state获取当前的token是否存在
-      next();
+      let uRole = Number(window.localStorage.userRole);
+      if (uRole <= to.meta.userRole) {
+        next();
+      } else {
+        next({
+          path: "/shareSchool",
+          query: {
+            redirect: to.fullPath
+          } // 将跳转的路由path作为参数，登录成功后跳转到该路由
+        });
+      }
     } else {
       window.localStorage.setItem("Token", "");
       next({

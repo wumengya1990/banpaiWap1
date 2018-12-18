@@ -1,7 +1,51 @@
 import router from './router'
 import axios from 'axios'
 // 配置API接口地址
-var root = process.env.API_ROOT;
+var nodeEnv = process.env.NODE_ENV;
+var root = getApiUrl();
+
+
+//配置文件读取
+function GetApiFromConfig() {
+  let that = this;
+  let url = axios.get(process.env.Config_Path).then((result) => {
+    localStorage.setItem('bkPCUrl', result.data.bkPCUrl);
+    // that.$store.commit("saveApiUrl", result.data.ApiUrl); //保存 ApiUrl
+    localStorage.setItem('ApiUrl', result.data.ApiUrl);
+    console.log(localStorage.getItem('bkPCUrl'));
+    console.log(localStorage.getItem('ApiUrl'));
+    return result.data.ApiUrl;
+  }).catch((error) => {
+    console.log(error)
+    return process.env.API_ROOT;
+  });
+  console.log("cfgUrl:" + url);
+  return url;
+}
+
+//获取API接口地址
+function getApiUrl() {
+  if (nodeEnv === 'production') { //生产环境
+    if (window.localStorage.ApiUrl != "" && window.localStorage.ApiUrl != undefined) {
+      let apiUrl = window.localStorage.ApiUrl;
+      console.log("读取localStorage中的api:" + apiUrl);
+      return apiUrl;
+    } else {
+      //获取配置文件中的地址
+      GetApiFromConfig().then((res) => {
+        let apiUrl = res;
+        console.log("读取配置中的api:" + apiUrl);
+        return res;
+      });
+    }
+  } else { //开发环境直接读取
+    let apiUrl = process.env.API_ROOT;
+    console.log("开发环境直接读取api:" + apiUrl);
+    GetApiFromConfig();
+    return apiUrl;
+  }
+}
+
 // 引用axios
 // var axios = require("axios");
 // 自定义判断元素类型JS
@@ -76,6 +120,9 @@ axios.interceptors.response.use(
 function apiAxios(method, url, params, success, failure) {
   if (params) {
     params = filterNull(params);
+  }
+  if (root == undefined || root == "") {
+    root = window.localStorage.ApiUrl;
   }
   axios({
       method: method,

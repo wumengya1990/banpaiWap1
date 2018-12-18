@@ -10,10 +10,18 @@ import Mint from 'mint-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'mint-ui/lib/style.css'
 import './assets/css/main.css'
+<<<<<<< .mine
+// import './../static/css/main.css'
+import axios from 'axios'
+||||||| .r155
+import axios from 'axios'
+=======
+>>>>>>> .r169
 import store from "./vuex/store.js"
 import VueScroller from 'vue-scroller'
 require('./assets/fonts/iconfont.css')
 import 'vant/lib/index.css';
+// import './../static/fonts/iconfont.css'
 
 
 
@@ -33,9 +41,11 @@ Vue.prototype.$api = api;
 String.prototype.Trim = function () {
   return this.replace(/(^\s*)|(\s*$)/g, "");
 }
+
 import {
   Notify,
-  Toast
+  Toast,
+  SwipeCell 
 } from 'vant';
 
 import { CellSwipe } from 'mint-ui';

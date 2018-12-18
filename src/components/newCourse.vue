@@ -92,6 +92,13 @@
                     </li>
                 </ul>
             </div>
+            
+            <div class="establishBox">
+                <h4><span>教案评价</span></h4>
+                <div class="textareaBox">
+                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="textarea"></el-input>
+                </div>
+            </div>
         </div>
 
         <div class="establishBut">

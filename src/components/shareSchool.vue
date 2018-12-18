@@ -7,11 +7,11 @@
             <right-screen :thePage="thePage" v-on:headCallBack="headCall" style="z-index:10;"></right-screen>
             <!-- 右侧弹层筛选内容 -->
         </div>
-        <div class="suspendTool">
+        <!-- <div class="suspendTool">
             <a class="more" @click="$store.commit('switch_dialog')">
                 <i class="icon bpMobile bpMobile-shaixuan"></i>
             </a>
-        </div>
+        </div> -->
 
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadPlanList" class="lessonList">
             <ul>
@@ -37,9 +37,11 @@
                             </span>
                         </p>
                         <div class="operate">
+                            
                             <a @click="watchReflect(course.planId,index)">
                                 <i class="el-icon-view"></i>查看反思
                             </a>
+
                             <span>
                                 <i class="el-icon-download"></i>
                                 {{course.planDownNum}}
@@ -163,10 +165,12 @@ export default {
                 }
             }
             that.$api.get(url, param, res => {
+                 console.log(res);
                 let resCount = res.length;
                 console.log("成功加载学校分享:" + resCount);
                 if (isInit == true) {
                     that.myPlanList = res;
+                    
                 } else {
                     that.myPlanList = that.myPlanList.concat(res);
                 }

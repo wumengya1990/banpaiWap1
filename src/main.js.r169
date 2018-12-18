@@ -13,7 +13,6 @@ import './assets/css/main.css'
 import store from "./vuex/store.js"
 import VueScroller from 'vue-scroller'
 require('./assets/fonts/iconfont.css')
-import 'vant/lib/index.css';
 
 
 
@@ -33,13 +32,11 @@ Vue.prototype.$api = api;
 String.prototype.Trim = function () {
   return this.replace(/(^\s*)|(\s*$)/g, "");
 }
+
 import {
   Notify,
   Toast
 } from 'vant';
-
-import { CellSwipe } from 'mint-ui';
-Vue.component(CellSwipe.name, CellSwipe);
 //判断是否为空
 var isNullOrEmpty = function (value) {
   if (value == null || value == undefined || value.toString().Trim() == "") {
@@ -53,7 +50,7 @@ var isNullOrZero = function (value) {
   if (value == null || value == undefined || value.toString().Trim() == "" || value == 0) {
     return true;
   } else {
-    return false; 
+    return false;
   }
 }
 //加载loading数据

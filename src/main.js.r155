@@ -10,10 +10,10 @@ import Mint from 'mint-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'mint-ui/lib/style.css'
 import './assets/css/main.css'
+import axios from 'axios'
 import store from "./vuex/store.js"
 import VueScroller from 'vue-scroller'
 require('./assets/fonts/iconfont.css')
-import 'vant/lib/index.css';
 
 
 
@@ -24,25 +24,20 @@ Vue.use(Vant);
 Vue.use(VueScroller);
 
 // 处理ajax请求
+// axios.defaults.baseURL = process.env.NODE_ENV==='production'?'':'/api/api'
+Vue.prototype.$ajax = axios
 // 引用API文件
 import api from "./http.js";
 // 将API方法绑定到全局
 Vue.prototype.$api = api;
 
-//清空字符串前后的空格
-String.prototype.Trim = function () {
-  return this.replace(/(^\s*)|(\s*$)/g, "");
-}
 import {
   Notify,
   Toast
 } from 'vant';
-
-import { CellSwipe } from 'mint-ui';
-Vue.component(CellSwipe.name, CellSwipe);
 //判断是否为空
 var isNullOrEmpty = function (value) {
-  if (value == null || value == undefined || value.toString().Trim() == "") {
+  if (value == null || value == undefined || value.trim() == "") {
     return true;
   } else {
     return false;
@@ -50,10 +45,10 @@ var isNullOrEmpty = function (value) {
 }
 //判断是否为空或0
 var isNullOrZero = function (value) {
-  if (value == null || value == undefined || value.toString().Trim() == "" || value == 0) {
+  if (value == null || value == undefined || value.trim() == "" || value == 0) {
     return true;
   } else {
-    return false; 
+    return false;
   }
 }
 //加载loading数据
@@ -101,6 +96,14 @@ Vue.prototype.$vnotify = function (msg, timeOut, bgColor, color) {
   });
 };
 
+//配置文件读取demo
+axios.get(process.env.Config_Path).then((result) => {
+  localStorage.setItem('bkPCUrl', result.data.bkPCUrl);
+  console.log(localStorage.getItem('bkPCUrl'));
+}).catch((error) => {
+  console.log(error)
+});
+
 // 注册公共，并放置相关属性
 var bus = new Vue();
 Vue.prototype.bus = bus;
@@ -113,9 +116,6 @@ new Vue({
   store,
   components: {
     index
-  },
-  mounted() {
-    this.$store.commit("saveApiUrl", window.localStorage.ApiUrl); //保存 ApiUrl
   },
   template: '<index/>'
 })

@@ -10,26 +10,36 @@
         </div>
         <div class="suspendTool">
             <router-link to="/newCourse" v-if="$store.state.userRole<4">
-                <!-- <i class="el-icon-plus"></i> -->
-                <i class="el-icon-edit"></i>
+                <i class="el-icon-plus"></i>
+                <!-- <i class="el-icon-edit"></i> -->
             </router-link>
-            <a class="more" @click="$store.commit('switch_dialog')">
+            <!-- <a class="more" @click="$store.commit('switch_dialog')">
                 <i class="icon bpMobile bpMobile-shaixuan"></i>
-            </a>
+            </a> -->
             <router-link to="/orientation">
                 <i class="el-icon-location-outline"></i>
             </router-link>
         </div>
-        <van-pull-refresh v-model="isRefresh" @refresh="onRefresh" :loading-text="loadText" :ref="refPull" class="lessonList">
+        <van-pull-refresh v-model="isRefresh" @refresh="onRefresh" class="lessonList">
             <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :offset="100" @load="loadPlanList">
                 <ul>
                     <li v-for="(course,index) in myPlanList" :key="index">
+                        
                         <em v-if="course.isCountyShare == true" class="shareState have">已共享</em>
                         <div v-if="course.fileType == 1 " class="lessonImg">
                             <img :src="Imgtype" @click="planDetail(course.planId)">
                         </div>
-                        <div v-else class="lessonImg">
+                        <div v-if="course.fileType == 2 " class="lessonImg">
                             <img :src="wordtype" @click="planDetail(course.planId)">
+                        </div>
+                        <div v-if="course.fileType == 3 " class="lessonImg">
+                            <img :src="exceltype" @click="planDetail(course.planId)">
+                        </div>
+                        <div v-if="course.fileType == 4 " class="lessonImg">
+                            <img :src="ppttype" @click="planDetail(course.planId)">
+                        </div>
+                        <div v-if="course.fileType == 5 " class="lessonImg">
+                            <img :src="pdftype" @click="planDetail(course.planId)">
                         </div>
 
                         <div class="lessonContent">
@@ -155,7 +165,14 @@
                                 <i>*</i>日期
                             </em>
                             <div class="overHide">
-                                <el-date-picker v-model="lessonOntime.lessonDate" size="small" type="date" placeholder="选择日期" style="width:90%;"></el-date-picker>
+                                <el-date-picker
+                                    v-model="lessonOntime.lessonDate"
+                                    size="small"
+                                    type="date"
+                                    placeholder="选择日期"
+                                    :picker-options="pickerOptions"
+                                    style="width:90%;"
+                                ></el-date-picker>
                             </div>
                         </li>
                         <li>
@@ -197,6 +214,9 @@ export default {
             pageIndex: 1,
             Imgtype: require("./../assets/images/imgTyle.png"),
             wordtype: require("./../assets/images/wordTyle.png"),
+            exceltype: require("./../assets/images/excel.png"),
+            ppttype: require("./../assets/images/ppt.png"),
+            pdftype: require("./../assets/images/pdf.png"),
             xuancengimg: require("./../assets/images/gongnengTb_03.png"), //教学反思的弹层公共的额图片导入
             thePage: 1, //1：我的备课,2：学校共享,3：区县贡献
             receive: "",
@@ -205,15 +225,13 @@ export default {
             tcshow1: false, //填写教学反思的弹层显示隐藏
             tcshow2: false, //查看教学反思的弹层显示隐藏
             myPlanList: [], //装载读取的我的备课列表内容
-            loadText: "加载中...",
-            refPull: "",
             isLoading: false, //列表数据加载中
             isRefresh: false, //正在刷新数据
             loading: false, //列表加载数据
             finished: false, //列表中是否加载了所有数据
             editPlan: "",
             planThinkCon: "", //装载点击的的备课的教学反思的内
-            //课程定位列表
+            //课程定位信息
             lessonOntime: {
                 planId: "",
                 gradeId: "",
@@ -221,6 +239,12 @@ export default {
                 className: "", //课程内定位班级内容
                 lessonDate: "", //课程定位设置课程时间
                 LessonId: "" //课程定位节次内容
+            },
+            //日期设置选项
+            pickerOptions: {
+                disabledDate(time) {
+                    return time.getTime() < Date.now() - 8.64e7;
+                }
             },
             classNumberDW: "",
             lessonOptions: [
@@ -256,6 +280,7 @@ export default {
         },
         //筛选后的查询
         headCall: function(mes) {
+            console.log(mes);
             this.receive = mes;
             this.loadPlanList(true);
         },
@@ -264,11 +289,7 @@ export default {
         },
         //刷新数据
         onRefresh() {
-            if (this.myPlanList.length > 10) {
-                this.loadText = " ";
-            } else {
-                this.loadText = "加载中...";
-            }
+            this.loading = false;
             this.loadPlanList(true);
         },
         //加载我的备课列表(isInit:是否清空后重新加载数据)
@@ -405,6 +426,7 @@ export default {
             }
             let url = "/api/Plan/AddPlanLesson";
             that.$api.post(url, that.lessonOntime, res => {
+                that.$vnotify(res.msg);
                 console.log(res.msg);
             });
             this.tcshow = false;
@@ -427,5 +449,6 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.lessonList >>> .van-cell{ line-height: normal;}
 </style>

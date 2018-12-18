@@ -7,54 +7,55 @@
             <right-screen :thePage="thePage" v-on:headCallBack="headCall" style="z-index:10;"></right-screen>
             <!-- 右侧弹层筛选内容 -->
         </div>
-        <div class="suspendTool">
+        <!-- <div class="suspendTool">
             <a class="more" @click="$store.commit('switch_dialog')">
                 <i class="icon bpMobile bpMobile-shaixuan"></i>
             </a>
-        </div>
+        </div> -->
+        <van-pull-refresh v-model="isRefresh" @refresh="onRefresh" class="lessonList">
+            <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadPlanList">
+                <ul>
+                    <li v-for="(course,index) in myPlanList" :key="index">
+                        <em v-if="course.shareState == true" class="shareState have">已校共享</em>
 
-        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadPlanList" class="lessonList">
-            <ul>
-                <li v-for="(course,index) in myPlanList" :key="index">
-                    <em v-if="course.shareState == true" class="shareState have">已校共享</em>
+                        <div v-if="course.fileType == 1" class="lessonImg">
+                            <img @click="planDetail(course.planId)" :src="Imgtype">
+                        </div>
+                        <div v-else class="lessonImg">
+                            <img @click="planDetail(course.planId)" :src="wordtype">
+                        </div>
 
-                    <div v-if="course.fileType == 2 " class="lessonImg">
-                        <img @click="planDetail(course.planId)" :src="Imgtype">
-                    </div>
-                    <div v-else class="lessonImg">
-                        <img @click="planDetail(course.planId)" :src="wordtype">
-                    </div>
-
-                    <div class="lessonContent">
-                        <h4 @click="planDetail(course.planId)">{{course.planTitle}}</h4>
-                        <p class="synopsis">
-                            <span>
-                                <i class="icon bpMobile bpMobile-wode2"></i>
-                                {{course.authorUserName}}
-                            </span>
-                            <span>
-                                <i class="icon bpMobile bpMobile-hs_h_Clock_h-naozhong"></i>
-                                {{course.createTime}}
-                            </span>
-                        </p>
-                        <div class="operate">
-                            <a @click="watchThink(course.planId)">
-                                <i class="el-icon-view"></i>查看反思
-                            </a>
-                            <span v-if="course.useCnt!== undefined && course.useCnt.length > 0">
-                                <i class="icon bpMobile bpMobile-yishiyong"></i>
-                                已使用 {{course.useCnt}}
-                            </span>
-                            <div v-else>
-                                <i class="icon bpMobile bpMobile-yishiyong"></i>
-                                未使用
+                        <div class="lessonContent">
+                            <h4 @click="planDetail(course.planId)">{{course.planTitle}}</h4>
+                            <p class="synopsis">
+                                <span>
+                                    <i class="icon bpMobile bpMobile-wode2"></i>
+                                    {{course.authorUserName}}
+                                </span>
+                                <span>
+                                    <i class="icon bpMobile bpMobile-hs_h_Clock_h-naozhong"></i>
+                                    {{course.createTime}}
+                                </span>
+                            </p>
+                            <div class="operate">
+                                <a @click="watchThink(course.planId)">
+                                    <i class="el-icon-view"></i>查看反思
+                                </a>
+                                <span v-if="course.useCnt!== undefined && course.useCnt > 0">
+                                    <i class="icon bpMobile bpMobile-yishiyong"></i>
+                                    已使用
+                                </span>
+                                <span v-else>
+                                    <i class="icon bpMobile bpMobile-yishiyong"></i>
+                                    未使用
+                                </span>
                             </div>
                         </div>
-                    </div>
-                    <div class="clear"></div>
-                </li>
-            </ul>
-        </van-list>
+                        <div class="clear"></div>
+                    </li>
+                </ul>
+            </van-list>
+        </van-pull-refresh>
 
         <!-- 查看教学反思 -->
         <div class="tcLayer" v-show="tcshow1">
@@ -108,6 +109,7 @@ export default {
             tcshow1: false,
             planThinkCon: "",
             myPlanList: [],
+            isRefresh: false, //正在刷新数据
             isLoading: false, //列表数据加载中
             loading: false, //列表加载数据
             finished: false //列表中是否加载了所有数据
@@ -123,6 +125,11 @@ export default {
                 path: "/detailsPage",
                 query: { planId: planId }
             });
+        },
+        //刷新数据
+        onRefresh() {
+            this.loading = false;
+            this.loadPlanList(true);
         },
         //加载我的收藏列表(isInit:是否清空后重新加载数据)
         loadPlanList: function(isInit) {
@@ -163,6 +170,7 @@ export default {
                 // 加载状态结束
                 that.loading = false;
                 that.isLoading = false;
+                that.isRefresh = false;
                 if (resCount < 10) {
                     that.finished = true;
                 }

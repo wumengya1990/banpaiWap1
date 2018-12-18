@@ -45,7 +45,7 @@
                                     href="javascript:;"
                                     @click="ImgPreview(planDetails.itemOrder)"
                                 >{{planDetails.planDesign}}</a>-->
-                                <a :href="$store.state.rootUrl+planDetails.planDesignPath">{{planDetails.planDesign}}</a>
+                                <a :href="$store.state.apiUrl+ '/BKFiles/'+planDetails.planDesignPath">{{planDetails.planDesign}}</a>
                             </div>
                             <div class="clear"></div>
                         </li>
@@ -61,13 +61,43 @@
                                     <img v-else :src="wordtype">
                                 </a>
                                 <div class="overHide">
-                                    <a v-if="planDetails.fileType == 1" href="javascript:;" @click="ImgPreview(planDetails.itemOrder)">{{f.name}}</a>
-                                    <a v-else :href="$store.state.rootUrl+f.path">{{f.name}}</a>
+                                    <a v-if="f.fileType == 1" href="javascript:;" @click="ImgPreview(f.itemOrder)">{{f.name}}</a>
+                                    <a v-else :href="$store.state.apiUrl+ '/BKFiles/'+f.path">{{f.name}}</a>
                                 </div>
                                 <div class="clear"></div>
                             </li>
                         </ul>
                     </template>
+                </section>
+                <section>
+                    <h4>教案评论</h4>
+                    <div class="commentBox">
+                        <article>
+                            <dl>
+                                <dt><img :src="morentouxiang"></dt>
+                                <dd>
+                                    <h5><span>张洋</span><time>13:00</time></h5>
+                                    <div class="nrCon">
+                                        <p>这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容</p>
+                                    </div>
+                                </dd>
+                            </dl>
+                            <div class="clear"></div>
+                        </article>
+                        <article>
+                            <dl>
+                                <dt><img :src="morentouxiang"></dt>
+                                <dd>
+                                    <h5><span>张洋</span><time>13:00</time></h5>
+                                    <div class="nrCon">
+                                        <p>这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容</p>
+                                    </div>
+                                </dd>
+                            </dl>
+                            <div class="clear"></div>
+                        </article>
+                    </div>
+                    
                 </section>
             </div>
         </div>
@@ -85,6 +115,7 @@ export default {
         return {
             Imgtype: require("./../assets/images/imgTyle.png"),
             wordtype: require("./../assets/images/wordTyle.png"),
+            morentouxiang: require("./../assets/images/userImg.png"),
             planDetails: {
                 planId: "",
                 planTitle: "",
@@ -98,6 +129,7 @@ export default {
         };
     },
     mounted() {
+        // this.$store.commit("saveApiUrl", window.localStorage.ApiUrl); //保存 ApiUrl
         this.loadPlanDetails();
     },
     methods: {
@@ -114,7 +146,7 @@ export default {
                 console.log("成功加载备课详情");
                 vd.clear();
                 let imgIdx = 0;
-                let pcUrl = that.$store.state.rootUrl;
+                let pcUrl = that.$store.state.apiUrl;
                 //处理教案设计中的附件
                 // if (
                 //     !that.$isNull(res.planDesignPath) &&
@@ -129,11 +161,12 @@ export default {
                     let pf = res.planFileList[i];
                     if (pf.fileType == 1) {
                         pf.itemOrder = imgIdx;
-                        that.imglist.push(pcUrl + pf.path);
+                        that.imglist.push(pcUrl + "/BKFiles/" + pf.path);
                         imgIdx++;
                     }
                 }
                 that.planDetails = res;
+                console.log(that.planDetails);
             });
         },
         //显示图片预览

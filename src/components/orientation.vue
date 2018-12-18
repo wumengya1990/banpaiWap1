@@ -2,17 +2,22 @@
     <div class="orientation bgmain mianScroll">
         <div class="conditionBox">
             <div>
-                <em>开始日期</em>
-                <div class="overHide padLR10">
+                <em>定位时间</em>
+                <div class="overHide padLR10 timeChoBox">
                     <p @click="chouseTimeB()">{{beginDate}}</p>
                 </div>
+                <span>至</span>
+                <div class="overHide padLR10 timeChoBox">
+                    <p @click="chouseTimeE()">{{endDate}}</p>
+                </div>
+
             </div>
-            <div>
+            <!-- <div>
                 <em>结束日期</em>
                 <div class="overHide padLR10">
                     <p @click="chouseTimeE()">{{endDate}}</p>
                 </div>
-            </div>
+            </div> -->
         </div>
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :offset="100" @load="getOrientation" class="orientationList">
             <ul class="orientationListBox">
@@ -42,7 +47,7 @@
             </ul>
         </van-list>
         <div class="establishBut">
-                <el-button style="width:80%;" @click="pageBack()" round>返回</el-button>
+            <el-button style="width:80%;" @click="pageBack()" round>返回</el-button>
             <!-- <el-button type="primary" round @click="savePlan()">保存教案</el-button> -->
         </div>
         <van-popup v-model="bottomShow" position="bottom" :overlay="true">
@@ -124,10 +129,10 @@ export default {
             this.bottomShow1 = !this.bottomShow1;
             this.getOrientation(true);
         },
-        
-    pageBack: function() {
-        this.$router.back(-1);
-    },
+
+        pageBack: function() {
+            this.$router.back(-1);
+        },
         //加载定位记录列表
         getOrientation: function(isInit) {
             let that = this;
@@ -161,15 +166,16 @@ export default {
 
             that.$api.get(url, param, res => {
                 let resCount = res.length;
-                console.log(res);
+                // console.log(res);
                 console.log("加载课程定位成功:" + resCount);
                 // console.log(res);
                 if (isInit == true) {
                     that.orientationList = res;
                 } else {
-                    that.orientationList = that.orientationList.concat(res);
+                    // that.orientationList = that.orientationList.concat(res);
+                    that.orientationList = res;
                 }
-                that.pageIndex++;
+                // that.pageIndex++;
                 // 加载状态结束
                 that.loading = false;
                 that.isLoading = false;
