@@ -92,13 +92,70 @@
                     </li>
                 </ul>
             </div>
-            
-            <div class="establishBox">
-                <h4><span>教案评价</span></h4>
+            <!-- 教案分析 -->
+            <div v-if="this.creatJurisdiction.PlanGoal" class="establishBox">
+                <h4><span>教案分析</span></h4>
                 <div class="textareaBox">
                     <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="textarea"></el-input>
                 </div>
             </div>
+            <!-- 教案分析结束 -->
+            <!-- 教案设计 -->
+            <div v-if="this.creatJurisdiction.PlanDesign" class="establishBox">
+                <h4><span>教案设计</span></h4>
+                <div class="textareaBox">
+                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="textarea"></el-input>
+                </div>
+            </div>
+            <!-- 教案设计结束 -->
+            <!-- 课堂练习 -->
+            <div v-if="this.creatJurisdiction.PlanExe" class="establishBox">
+                <h4><span>课堂练习</span></h4>
+                <div class="textareaBox">
+                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="textarea"></el-input>
+                </div>
+            </div>
+            <!-- 课堂练习结束 -->
+            <!-- 板书设计 -->
+            <div v-if="this.creatJurisdiction.PlanBlack" class="establishBox">
+                <h4><span>板书设计</span></h4>
+                <div class="textareaBox">
+                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="textarea"></el-input>
+                </div>
+            </div>
+            <!-- 板书设计结束 -->
+            <!-- 作业布置 -->
+            <div v-if="this.creatJurisdiction.PlanWork" class="establishBox">
+                <h4><span>作业布置</span></h4>
+                <div class="textareaBox">
+                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="textarea"></el-input>
+                </div>
+            </div>
+            <!-- 作业布置结束 -->
+            <!-- 教学反思 -->
+            <div v-if="this.creatJurisdiction.PlanThink" class="establishBox">
+                <h4><span>教学反思</span></h4>
+                <div class="textareaBox">
+                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="textarea"></el-input>
+                </div>
+            </div>
+            <!-- 教学反思结束 -->
+            <!-- 学案设计 -->
+            <div v-if="this.creatJurisdiction.PlanLearn" class="establishBox">
+                <h4><span>学案设计</span></h4>
+                <div class="textareaBox">
+                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="textarea"></el-input>
+                </div>
+            </div>
+            <!-- 学案设计结束 -->
+            <!-- 课堂素材 -->
+            <div v-if="this.creatJurisdiction.PlanMat" class="establishBox">
+                <h4><span>课堂素材</span></h4>
+                <div class="textareaBox">
+                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="textarea"></el-input>
+                </div>
+            </div>
+            <!-- 课堂素材结束 -->
         </div>
 
         <div class="establishBut">
@@ -141,12 +198,30 @@ export default {
                 PlanFileType: 1,
                 PlanDesign: "",
                 PlanDesignPath: "",
-                PlanFileList: []
+                PlanFileList: [],
+                Planjiaoanfenxi:"",                     //教案分析
+                Planjiaoansheji:"",                     //教案设计
+                Planketanglianxi:"",                    //课堂练习
+                Planbanshusheji:"",                     //板书设计
+                Planzuoyebuzhi:"",                      //作业布置
+                Planjiaoxuefansi:"",                    //教学反思
+                Planxueansheji:"",                      //学案设计
+                Planketangsucai:""                      //课堂素材
             },
             dialogImageUrl: "",
             dialogVisible: false,
             filePics: [],
-            importLoading: ""
+            importLoading: "",
+            creatJurisdiction:{
+                PlanDesign:true,                
+                PlanGoal:true,
+                PlanExe:true,
+                PlanBlack:true,
+                PlanWork:true,
+                PlanThink:true,
+                PlanLearn:true,
+                PlanMat:true
+            }
         };
     },
     mounted() {

@@ -102,7 +102,10 @@
             </div>
         </div>
         <div class="establishBut">
-            <el-button round @click="pageBack()">返回</el-button>
+            <el-button-group style="width:80%;">
+                <el-button style="width:50%;" @click="pageBack()">返回</el-button>
+                <el-button style="width:50%;" type="primary">编辑</el-button>
+            </el-button-group>
         </div>
     </div>
 </template>
@@ -125,12 +128,14 @@ export default {
                 createTime: "",
                 planFileList: []
             },
-            imglist: []
+            imglist: [],
+            planLeaveMessage:[],
         };
     },
     mounted() {
         // this.$store.commit("saveApiUrl", window.localStorage.ApiUrl); //保存 ApiUrl
         this.loadPlanDetails();
+        this.loadLeaveMessage();
     },
     methods: {
         pageBack: function() {
@@ -168,6 +173,18 @@ export default {
                 that.planDetails = res;
                 console.log(that.planDetails);
             });
+        },
+        loadLeaveMessage:function(){                    //读取本教案啊的评价留言
+            let that = this;
+            let pId = that.$route.query.planId;
+            let url = "/api/Plan/GetForumByPlanId";
+            let param = { planid: pId };
+            that.$api.get(url,param,res=>{
+                console.log(res);
+                that.planLeaveMessage = res;
+                
+            })
+
         },
         //显示图片预览
         ImgPreview(imgIdx) {

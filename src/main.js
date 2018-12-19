@@ -38,8 +38,11 @@ import {
   Toast
 } from 'vant';
 
+//使用mint-ui右侧滑动显示按钮组件
 import { CellSwipe } from 'mint-ui';
 Vue.component(CellSwipe.name, CellSwipe);
+
+
 //判断是否为空
 var isNullOrEmpty = function (value) {
   if (value == null || value == undefined || value.toString().Trim() == "") {

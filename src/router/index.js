@@ -17,7 +17,7 @@ import screenPage from '@/components/screenPage'
 import ConnectPage from '@/components/ConnectPage'
 import errorPage from '@/components/errorPage'
 import orientation from '@/components/orientation'
-// import ceshi from '@/components/ceshi'
+import ceshi from '@/components/ceshi'
 
 Vue.use(Router)
 
@@ -123,6 +123,10 @@ const router = new Router({
       Authorize: true, // 添加该字段，表示进入这个路由是需要登录的
       userRole: 3
     }
+  },{
+    path: '/ceshi',
+    name: 'ceshi',
+    component: ceshi
   }]
 })
 

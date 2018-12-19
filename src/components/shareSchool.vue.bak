@@ -13,13 +13,37 @@
             </a>
         </div> -->
 
-            <van-pull-refresh v-model="isRefresh" @refresh="onRefresh" class="lessonList">
-            <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadPlanList">
+<<<<<<< .mine
+        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadPlanList" class="lessonList">
             <ul>
                 <li v-for="(course,index) in myPlanList" :key="index">
-                    <div class="lessonListNBox">
                     <em v-if="course.shareState == true" class="shareState have">已共享</em>
+||||||| .r169
+        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadPlanList" class="lessonList">
+            <ul>
+                <li v-for="(course,index) in myPlanList" :key="index">
+                    <em v-if="course.shareState == true" class="shareState have">已共享</em>
+                    <div v-if="course.fileType == 1 " class="lessonImg">
+                        <img @click="planDetail(course.planId)" :src="Imgtype">
+                    </div>
+                    <div v-else class="lessonImg">
+                        <img @click="planDetail(course.planId)" :src="wordtype">
+                    </div>
+=======
+        <van-pull-refresh v-model="isRefresh" @refresh="onRefresh" class="lessonList">
+            <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadPlanList">
+                <ul>
+                    <li v-for="(course,index) in myPlanList" :key="index">
+                        <em v-if="course.shareState == true" class="shareState have">已共享</em>
+                        <div v-if="course.fileType == 1 " class="lessonImg">
+                            <img @click="planDetail(course.planId)" :src="Imgtype">
+                        </div>
+                        <div v-else class="lessonImg">
+                            <img @click="planDetail(course.planId)" :src="wordtype">
+                        </div>
+>>>>>>> .r177
 
+<<<<<<< .mine
                     <!-- 文件类型图片展示 -->
                         <div v-if="course.fileType == 1 " class="lessonImg">
                             <img :src="Imgtype" @click="planDetail(course.planId)">
@@ -68,19 +92,81 @@
                                 <i class="icon bpMobile bpMobile-duihuakuang"></i>
                                 {{course.planForumNum}}
                             </span>
+||||||| .r169
+                    <div class="lessonContent">
+                        <h4 @click="planDetail(course.planId)">{{course.planTitle}}</h4>
+                        <p class="synopsis">
+                            <span>
+                                <i class="icon bpMobile bpMobile-wode2"></i>
+                                {{course.authorUserName}}
+                            </span>
+                            <span>
+                                <i class="icon bpMobile bpMobile-hs_h_Clock_h-naozhong"></i>
+                                {{course.createTime}}
+                            </span>
+                        </p>
+                        <div class="operate">
+                            
+                            <a @click="watchReflect(course.planId,index)">
+                                <i class="el-icon-view"></i>查看反思
+                            </a>
+                            
+
+                            <span>
+                                <i class="el-icon-download"></i>
+                                {{course.planDownNum}}
+                            </span>
+                            <span>
+                                <i class="el-icon-star-off"></i>
+                                {{course.planFavNum}}
+                            </span>
+                            <span>
+                                <i class="icon bpMobile bpMobile-duihuakuang"></i>
+                                {{course.planForumNum}}
+                            </span>
+=======
+                        <div class="lessonContent">
+                            <h4 @click="planDetail(course.planId)">{{course.planTitle}}</h4>
+                            <p class="synopsis">
+                                <span>
+                                    <i class="icon bpMobile bpMobile-wode2"></i>
+                                    {{course.authorUserName}}
+                                </span>
+                                <span>
+                                    <i class="icon bpMobile bpMobile-hs_h_Clock_h-naozhong"></i>
+                                    {{course.createTime}}
+                                </span>
+                            </p>
+                            <div class="operate">
+                                <a @click="watchReflect(course.planId,index)">
+                                    <i class="el-icon-view"></i>查看反思
+                                </a>
+                                
+                                <span>
+                                    <i class="el-icon-download"></i>
+                                    {{course.planDownNum}}
+                                </span>
+                                <span>
+                                    <i class="el-icon-star-off"></i>
+                                    {{course.planFavNum}}
+                                </span>
+                                <span>
+                                    <i class="icon bpMobile bpMobile-duihuakuang"></i>
+                                    {{course.planForumNum}}
+                                </span>
+                            </div>
+                            <div class="checkBox">
+                                <!-- <el-checkbox :checked="course.flagSchool == 1" @change="schoolshare(course.planId,index)">校共享</el-checkbox> -->
+                                <el-checkbox v-model="course.isCountyShare" @click.native.prevent="areaShare(course.planId,index)">区共享</el-checkbox>
+                                <el-checkbox v-model="course.isFavor" @click.native.prevent="mycollect(course.planId,index)">收藏</el-checkbox>
+                            </div>
+>>>>>>> .r177
                         </div>
-                        <div class="checkBox">
-                            <!-- <el-checkbox :checked="course.flagSchool == 1" @change="schoolshare(course.planId,index)">校共享</el-checkbox> -->
-                            <el-checkbox v-model="course.isCountyShare" @click.native.prevent="areaShare(course.planId,index)">区共享</el-checkbox>
-                            <el-checkbox v-model="course.isFavor" @click.native.prevent="mycollect(course.planId,index)">收藏</el-checkbox>
-                        </div>
-                    </div>
-                    <div class="clear"></div>
-                    </div>
-                </li>
-            </ul>
-        </van-list>
-         </van-pull-refresh>
+                        <div class="clear"></div>
+                    </li>
+                </ul>
+            </van-list>
+        </van-pull-refresh>
         <!-- 查看教学反思 -->
         <div class="tcLayer" v-show="tcshow2">
             <div class="tcLayerMain">
@@ -134,7 +220,7 @@ export default {
             wordtype: require("./../assets/images/wordTyle.png"),
             xuancengimg: require("./../assets/images/gongnengTb_03.png"), //教学反思的弹层公共的额图片导入
             myPlanList: [],
-             isRefresh: false, //正在刷新数据
+            isRefresh: false, //正在刷新数据
             isLoading: false, //列表数据加载中
             loading: false, //列表加载数据
             finished: false, //列表中是否加载了所有数据
@@ -187,12 +273,11 @@ export default {
                 }
             }
             that.$api.get(url, param, res => {
-                 console.log(res);
+                console.log(res);
                 let resCount = res.length;
                 console.log("成功加载学校分享:" + resCount);
                 if (isInit == true) {
                     that.myPlanList = res;
-                    
                 } else {
                     that.myPlanList = that.myPlanList.concat(res);
                 }
@@ -301,5 +386,4 @@ export default {
 .checkBox >>> .el-checkbox + .el-checkbox {
     margin-left: 5px;
 }
-.lessonList ul li .lessonListNBox{ padding: 10px; border-bottom: 1px solid #eaeaea;}
 </style>

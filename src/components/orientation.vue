@@ -79,9 +79,9 @@ export default {
     data() {
         return {
             pageIndex: 1,
-            isLoading: false, //列表数据加载中
-            loading: false, //列表加载数据
-            finished: false, //列表中是否加载了所有数据
+            isLoading: false,          //列表数据加载中
+            loading: false,            //列表加载数据
+            finished: false,           //列表中是否加载了所有数据
             receive: "",
             bottomShow: false,
             bottomShow1: false,
@@ -89,12 +89,18 @@ export default {
             orientationList: [], //获取
             //时间内容
             minDate: new Date(),
-            selBeginDate: new Date(),
-            selEndDate: new Date((new Date() / 1000 + 86400) * 1000),
+            // selBeginDate: new Date(),
+            selBeginDate:this.getBeginTime(),
+            selEndDate:this.getEndTime(),
+
             beginDate: new Date().toLocaleDateString(),
             endDate: new Date(
                 (new Date() / 1000 + 86400) * 1000
-            ).toLocaleDateString()
+            ).toLocaleDateString(),
+            InterceptNumber:{               //截取列表内容
+                beginNum:0,
+                endNum:10
+            }
         };
     },
     mounted() {},
@@ -109,6 +115,7 @@ export default {
     methods: {
         //确认开始时间并查询课时定位
         confirmBegin: function(value) {
+            console.log(value);
             this.selBeginDate = value;
             if (this.selBeginDate > this.selEndDate) {
                 this.$vnotify("开始日期不能大于结束日期");
@@ -126,6 +133,7 @@ export default {
                 return false;
             }
             this.endDate = value.toLocaleDateString();
+            console.log(this.endDate);
             this.bottomShow1 = !this.bottomShow1;
             this.getOrientation(true);
         },
@@ -142,7 +150,8 @@ export default {
             } else {
                 return false;
             }
-            if (isInit == true) {
+
+            if (isInit == true) {             //默认加载不用有条件的时候使用
                 that.finished = false;
                 that.pageIndex = 1;
             }
@@ -166,14 +175,21 @@ export default {
 
             that.$api.get(url, param, res => {
                 let resCount = res.length;
-                // console.log(res);
                 console.log("加载课程定位成功:" + resCount);
-                // console.log(res);
                 if (isInit == true) {
                     that.orientationList = res;
                 } else {
-                    // that.orientationList = that.orientationList.concat(res);
-                    that.orientationList = res;
+                
+                    if(this.InterceptNumber.beginNum >= res.length ){
+                        that.orientationList = that.orientationList;
+                         that.finished = true;
+                        
+                    }else{
+                        that.orientationList = that.orientationList.concat(res.slice(that.InterceptNumber.beginNum,that.InterceptNumber.endNum));
+                        that.InterceptNumber.beginNum += 10;
+                        that.InterceptNumber.endNum += 10;
+                    }
+                    
                 }
                 // that.pageIndex++;
                 // 加载状态结束
@@ -191,9 +207,20 @@ export default {
         chouseTimeE: function() {
             //结束时间显示
             this.bottomShow1 = !this.bottomShow1;
-        }
+        },
+        getBeginTime:function(){
+            let date = new Date();
+            var myDate = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate()
+            return myDate;
+        },
+        getEndTime:function(){
+            let date = new Date();
+            var myDate = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + (date.getDate()+1)
+            return myDate;
+        },
     }
-};
+}
+
 </script>
 
 <style>

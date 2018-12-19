@@ -24,8 +24,18 @@
             <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :offset="100" @load="loadPlanList">
                 <ul>
                     <li v-for="(course,index) in myPlanList" :key="index">
-                        
+                        <mt-cell-swipe
+                        :right="[
+                            {
+                                content: '删除',
+                                style: { background: '#ff7900', color: '#fff'},
+                                handler: () => deleteSection(course.planId)
+                            }
+                        ]">
+                        <div class="lessonListNBox">
                         <em v-if="course.isCountyShare == true" class="shareState have">已共享</em>
+
+                        <!-- 文件类型图片展示 -->
                         <div v-if="course.fileType == 1 " class="lessonImg">
                             <img :src="Imgtype" @click="planDetail(course.planId)">
                         </div>
@@ -41,6 +51,7 @@
                         <div v-if="course.fileType == 5 " class="lessonImg">
                             <img :src="pdftype" @click="planDetail(course.planId)">
                         </div>
+                        <!-- 文件类型图片展示结束 -->
 
                         <div class="lessonContent">
                             <h4>
@@ -73,6 +84,8 @@
                             </div>
                         </div>
                         <div class="clear"></div>
+                        </div>
+                        </mt-cell-swipe>
                     </li>
                 </ul>
             </van-list>
@@ -430,6 +443,9 @@ export default {
                 console.log(res.msg);
             });
             this.tcshow = false;
+        },
+        deleteSection:function(pid){                       //删除教案
+            
         }
     },
     watch: {
@@ -451,4 +467,7 @@ export default {
 
 <style scoped>
 .lessonList >>> .van-cell{ line-height: normal;}
+.lessonList >>> .mint-cell-wrapper{ background: none;}
+.lessonList >>> .mint-cell-title{ display: none;}
+.lessonList >>> .mint-cell-swipe-button{ line-height: 90px;}
 </style>

@@ -16,14 +16,26 @@
             <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadPlanList">
                 <ul>
                     <li v-for="(course,index) in myPlanList" :key="index">
+                        <div class="lessonListNBox">
                         <em v-if="course.shareState == true" class="shareState have">已校共享</em>
-
-                        <div v-if="course.fileType == 1" class="lessonImg">
-                            <img @click="planDetail(course.planId)" :src="Imgtype">
+                        
+                        <!-- 文件类型图片展示 -->
+                        <div v-if="course.fileType == 1 " class="lessonImg">
+                            <img :src="Imgtype" @click="planDetail(course.planId)">
                         </div>
-                        <div v-else class="lessonImg">
-                            <img @click="planDetail(course.planId)" :src="wordtype">
+                        <div v-if="course.fileType == 2 " class="lessonImg">
+                            <img :src="wordtype" @click="planDetail(course.planId)">
                         </div>
+                        <div v-if="course.fileType == 3 " class="lessonImg">
+                            <img :src="exceltype" @click="planDetail(course.planId)">
+                        </div>
+                        <div v-if="course.fileType == 4 " class="lessonImg">
+                            <img :src="ppttype" @click="planDetail(course.planId)">
+                        </div>
+                        <div v-if="course.fileType == 5 " class="lessonImg">
+                            <img :src="pdftype" @click="planDetail(course.planId)">
+                        </div>
+                        <!-- 文件类型图片展示结束 -->
 
                         <div class="lessonContent">
                             <h4 @click="planDetail(course.planId)">{{course.planTitle}}</h4>
@@ -52,6 +64,7 @@
                             </div>
                         </div>
                         <div class="clear"></div>
+                        </div>
                     </li>
                 </ul>
             </van-list>
@@ -202,4 +215,5 @@ export default {
 </script>
 
 <style>
+.lessonList ul li .lessonListNBox{ padding: 10px; border-bottom: 1px solid #eaeaea;}
 </style>

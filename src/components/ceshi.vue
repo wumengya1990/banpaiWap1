@@ -2,7 +2,7 @@
     <div class="ceshi">
 
 <ul class="list">
-    <li class="item" v-for="section in sectionList">
+    <li class="item" v-for="(section,index) in sectionList" :key="index">
         <mt-cell-swipe
             :right="[
                 {
