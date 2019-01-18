@@ -1,50 +1,8 @@
+import Vue from 'vue'
 import router from './router'
 import axios from 'axios'
 // 配置API接口地址
-var nodeEnv = process.env.NODE_ENV;
-var root = getApiUrl();
-
-
-//配置文件读取
-function GetApiFromConfig() {
-  let that = this;
-  let url = axios.get(process.env.Config_Path).then((result) => {
-    localStorage.setItem('bkPCUrl', result.data.bkPCUrl);
-    // that.$store.commit("saveApiUrl", result.data.ApiUrl); //保存 ApiUrl
-    localStorage.setItem('ApiUrl', result.data.ApiUrl);
-    console.log(localStorage.getItem('bkPCUrl'));
-    console.log(localStorage.getItem('ApiUrl'));
-    return result.data.ApiUrl;
-  }).catch((error) => {
-    console.log(error)
-    return process.env.API_ROOT;
-  });
-  console.log("cfgUrl:" + url);
-  return url;
-}
-
-//获取API接口地址
-function getApiUrl() {
-  if (nodeEnv === 'production') { //生产环境
-    if (window.localStorage.ApiUrl != "" && window.localStorage.ApiUrl != undefined) {
-      let apiUrl = window.localStorage.ApiUrl;
-      console.log("读取localStorage中的api:" + apiUrl);
-      return apiUrl;
-    } else {
-      //获取配置文件中的地址
-      GetApiFromConfig().then((res) => {
-        let apiUrl = res;
-        console.log("读取配置中的api:" + apiUrl);
-        return res;
-      });
-    }
-  } else { //开发环境直接读取
-    let apiUrl = process.env.API_ROOT;
-    console.log("开发环境直接读取api:" + apiUrl);
-    GetApiFromConfig();
-    return apiUrl;
-  }
-}
+var root = window.localStorage.ApiUrl;
 
 // 引用axios
 // var axios = require("axios");
@@ -122,7 +80,8 @@ function apiAxios(method, url, params, success, failure) {
     params = filterNull(params);
   }
   if (root == undefined || root == "") {
-    root = window.localStorage.ApiUrl;
+    root = Vue.prototype.apiUrl;
+    console.log("root未取得值，获取全局变量apiUrl:" + root);
   }
   axios({
       method: method,
@@ -189,6 +148,55 @@ function axiosFile(url, params, success, failure) {
       }
     });
 }
+//附件下载
+function downloadFile(url, params) {
+  axios({
+      method: "GET",
+      url: url,
+      params: params,
+      responseType: "blob",
+      baseURL: root, //"http://192.168.0.112:8086",
+      // `headers` 是即将被发送的自定义请求头
+      withCredentials: false
+    })
+    .then(res => {
+      if (res.status === 200 && res.data) {
+        let urlObject = window.URL || window.webkitURL || window;
+        let blob = new Blob([res.data]); // 假设文件为pdf
+        //let ahref = root + "/BKFiles/" + params.filePath;
+        let link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+        link.href = urlObject.createObjectURL(blob);
+        link.download = params.fileName;
+        link.click();
+        link.remove();
+      } else {
+        // 其它情况
+      }
+    })
+    .catch(err => {
+      if (err.hasOwnProperty("response")) {
+        let res = err.response;
+        if (err.hasOwnProperty("status")) {
+          console.log("Api接口错误, HTTP CODE: " + res.status);
+        }
+        console.log(res);
+      } else {
+        console.log(err);
+      }
+    });
+
+}
+//打开下载文件
+function openFile(name, path) {
+  window.open(
+    root +
+    "/api/Base/DownLoad" +
+    "?fileName=" +
+    name +
+    "&filePath=" +
+    path
+  );
+}
 
 // 返回在vue模板中的调用接口
 export default {
@@ -206,5 +214,12 @@ export default {
   },
   uploadFile: function (url, params, success, failure) {
     return axiosFile(url, params, success, failure);
-  }
+  },
+  downloadFile: function (url, params) {
+    return downloadFile(url, params);
+  },
+  openFile: function (name, path) {
+    return openFile(name, path);
+  },
+  apiUrl: root
 };

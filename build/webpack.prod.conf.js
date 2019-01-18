@@ -10,14 +10,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-const GeneraterAssetPlugin = require('generate-asset-webpack-plugin')
-const serverConfig = require('../src/appConfig.json')
 
 const env = require('../config/prod.env')
-
-const createJson = function (compilation) {
-  return JSON.stringify(serverConfig);
-};
 
 const webpackConfig = merge(baseWebpackConfig, {
   module: {
@@ -124,14 +118,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       from: path.resolve(__dirname, '../static'),
       to: config.build.assetsSubDirectory,
       ignore: ['.*']
-    }]),
-    //打包时输出配置文件
-    new GeneraterAssetPlugin({
-      filename: 'appConfig.json', //输出到dist根目录下的appConfig.json文件,名字可以按需改
-      fn: (compilation, cb) => {
-        cb(null, createJson(compilation));
-      }
-    })
+    }])
 
   ]
 })

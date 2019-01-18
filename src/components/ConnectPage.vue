@@ -11,6 +11,7 @@ export default {
         };
     },
     mounted() {
+        console.log("进入用户授权登录页面");
         this.setList();
     },
     methods: {
@@ -36,13 +37,13 @@ export default {
                 dataList.token = mytoken;
             }
             that.formData = dataList;
-
             let token = dataList.token;
-
+            console.log("开始授权登录");
             if (dataList != null) {
                 let urlp = "/api/account/home";
                 that.$api.get(urlp, dataList, res => {
                     if (res.success) {
+                        console.log("授权登录成功");
                         that.$store.commit("saveToken", res.token); //保存 token
                         that.$store.commit("saveRole", res.role); //保存 role
                         if (res.role < 4) {
@@ -51,6 +52,7 @@ export default {
                             that.$router.push({ path: "/shareCounty" });
                         }
                     } else {
+                        console.log("授权登录失败");
                         that.$vnotify(res.msg);
                         that.$router.push({ path: "/errorPage" });
                     }

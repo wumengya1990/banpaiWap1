@@ -41,7 +41,8 @@
                 </ul>
             </div>
 
-            <div class="establishBox">
+            <!-- 教案设计 -->
+            <div v-if="bkConfig.planDesign" class="establishBox">
                 <h4>
                     <span>教案设计</span>
                 </h4>
@@ -52,18 +53,18 @@
                                 class="upload-demo"
                                 action="/api/Plan/UploadPlanFile"
                                 :loadingTxt="loadTxt"
-                                :http-request="customUpload"
+                                :http-request="pdUpload"
                                 :on-success="handleSuccess"
                                 :on-error="handleError"
                                 :on-preview="handlePreview"
                                 :on-remove="handleRemove"
-                                :on-change="fileUpload"
+                                :on-change="pdfileChange"
                                 :before-upload="beforeUpload"
-                                :file-list="filePics"
+                                :file-list="pdfiles"
                                 list-type="picture"
                                 accept=".jpg, .jpeg, .png, .gif, .bmp, .JPG, .JPEG, .PBG, .GIF, .BMP"
                             >
-                                <el-button size="small" type="primary">点击上传</el-button>
+                                <el-button size="small" type="primary">上传设计</el-button>
                                 <div slot="tip" class="el-upload__tip">只能上传图片文件，且不超过10MB</div>
                             </el-upload>
                             <div class="clear"></div>
@@ -71,7 +72,117 @@
                     </li>
                 </ul>
             </div>
-
+            <!-- 教案设计结束 -->
+            <!-- 课堂素材 -->
+            <div v-if="bkConfig.planMat && showMat" class="establishBox">
+                <h4>
+                    <span>课堂素材</span>
+                </h4>
+                <ul>
+                    <li>
+                        <div class="overHide" style="padding:0 0 0 10px">
+                            <el-upload
+                                class="upload-demo"
+                                action="/api/Plan/UploadPlanFile"
+                                :loadingTxt="loadTxt"
+                                :http-request="pmUpload"
+                                :on-success="handleSuccess"
+                                :on-error="handleError"
+                                :on-preview="handlePreview"
+                                :on-remove="handleRemove"
+                                :on-change="pmfileChange"
+                                :before-upload="beforeUpload"
+                                :file-list="pmfiles"
+                                list-type="picture"
+                                accept=".jpg, .jpeg, .png, .gif, .bmp, .JPG, .JPEG, .PBG, .GIF, .BMP"
+                            >
+                                <el-button size="small" type="primary">上传素材</el-button>
+                                <div slot="tip" class="el-upload__tip">只能上传图片文件，且不超过10MB</div>
+                            </el-upload>
+                            <div class="clear"></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!-- 课堂素材结束 -->
+            <!-- 教材分析 -->
+            <div v-if="bkConfig.planGoal" class="establishBox">
+                <h4>
+                    <span>教案分析</span>
+                </h4>
+                <ul>
+                    <li>
+                        <em>教学目标</em>
+                        <div class="overHide">
+                            <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="teachPlan.planGoal"></el-input>
+                        </div>
+                    </li>
+                    <li>
+                        <em>重点难点</em>
+                        <div class="overHide">
+                            <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="teachPlan.planImport"></el-input>
+                        </div>
+                    </li>
+                    <li>
+                        <em>教学准备</em>
+                        <div class="overHide">
+                            <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="teachPlan.planReady"></el-input>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!-- 教材分析结束 -->
+            <!-- 板书设计 -->
+            <div v-if="bkConfig.planBlack" class="establishBox">
+                <h4>
+                    <span>板书设计</span>
+                </h4>
+                <div class="textareaBox">
+                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="teachPlan.planBlack"></el-input>
+                </div>
+            </div>
+            <!-- 板书设计结束 -->
+            <!-- 课堂练习 -->
+            <div v-if="bkConfig.planExe" class="establishBox">
+                <h4>
+                    <span>课堂练习</span>
+                </h4>
+                <div class="textareaBox">
+                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="teachPlan.planExe"></el-input>
+                </div>
+            </div>
+            <!-- 课堂练习结束 -->
+            <!-- 作业布置 -->
+            <div v-if="bkConfig.planWork" class="establishBox">
+                <h4>
+                    <span>作业布置</span>
+                </h4>
+                <div class="textareaBox">
+                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="teachPlan.planWork"></el-input>
+                </div>
+            </div>
+            <!-- 作业布置结束 -->
+            <!-- 教学反思 -->
+            <div v-if="bkConfig.planThink" class="establishBox">
+                <h4>
+                    <span>教学反思</span>
+                </h4>
+                <div class="textareaBox">
+                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="teachPlan.planThink"></el-input>
+                </div>
+            </div>
+            <!-- 教学反思结束 -->
+            <!-- 学案设计 -->
+            <div v-if="bkConfig.planLearn" class="establishBox">
+                <h4>
+                    <span>学案设计</span>
+                </h4>
+                <div class="textareaBox">
+                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="teachPlan.planLearn"></el-input>
+                </div>
+            </div>
+            <!-- 学案设计结束 -->
+            <!-- 资源共享 -->
             <div class="establishBox">
                 <h4>
                     <span>资源共享</span>
@@ -85,77 +196,12 @@
                         </div>
                     </li>-->
                     <li style="margin:0 0 0 10px;">
-                        <!-- <el-checkbox-group v-model="checkList" style="margin:0 0 0 10px;"> -->
                         <el-checkbox true-label="1" false-label="0" v-model="teachPlan.FlagSchool">学校共享</el-checkbox>
                         <el-checkbox true-label="1" false-label="0" v-model="teachPlan.FlagArea">区县共享</el-checkbox>
-                        <!-- </el-checkbox-group> -->
                     </li>
                 </ul>
             </div>
-            <!-- 教案分析 -->
-            <div v-if="this.creatJurisdiction.PlanGoal" class="establishBox">
-                <h4><span>教案分析</span></h4>
-                <div class="textareaBox">
-                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="textarea"></el-input>
-                </div>
-            </div>
-            <!-- 教案分析结束 -->
-            <!-- 教案设计 -->
-            <div v-if="this.creatJurisdiction.PlanDesign" class="establishBox">
-                <h4><span>教案设计</span></h4>
-                <div class="textareaBox">
-                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="textarea"></el-input>
-                </div>
-            </div>
-            <!-- 教案设计结束 -->
-            <!-- 课堂练习 -->
-            <div v-if="this.creatJurisdiction.PlanExe" class="establishBox">
-                <h4><span>课堂练习</span></h4>
-                <div class="textareaBox">
-                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="textarea"></el-input>
-                </div>
-            </div>
-            <!-- 课堂练习结束 -->
-            <!-- 板书设计 -->
-            <div v-if="this.creatJurisdiction.PlanBlack" class="establishBox">
-                <h4><span>板书设计</span></h4>
-                <div class="textareaBox">
-                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="textarea"></el-input>
-                </div>
-            </div>
-            <!-- 板书设计结束 -->
-            <!-- 作业布置 -->
-            <div v-if="this.creatJurisdiction.PlanWork" class="establishBox">
-                <h4><span>作业布置</span></h4>
-                <div class="textareaBox">
-                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="textarea"></el-input>
-                </div>
-            </div>
-            <!-- 作业布置结束 -->
-            <!-- 教学反思 -->
-            <div v-if="this.creatJurisdiction.PlanThink" class="establishBox">
-                <h4><span>教学反思</span></h4>
-                <div class="textareaBox">
-                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="textarea"></el-input>
-                </div>
-            </div>
-            <!-- 教学反思结束 -->
-            <!-- 学案设计 -->
-            <div v-if="this.creatJurisdiction.PlanLearn" class="establishBox">
-                <h4><span>学案设计</span></h4>
-                <div class="textareaBox">
-                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="textarea"></el-input>
-                </div>
-            </div>
-            <!-- 学案设计结束 -->
-            <!-- 课堂素材 -->
-            <div v-if="this.creatJurisdiction.PlanMat" class="establishBox">
-                <h4><span>课堂素材</span></h4>
-                <div class="textareaBox">
-                    <el-input type="textarea" :rows="3" placeholder="请输入内容" v-model="textarea"></el-input>
-                </div>
-            </div>
-            <!-- 课堂素材结束 -->
+            <!-- 资源共享结束 -->
         </div>
 
         <div class="establishBut">
@@ -176,7 +222,7 @@ export default {
     components: { elTreeselect },
     data() {
         return {
-            loadTxt: "数据加载中....",
+            loadTxt: "文件上传中....",
             treeNodes: [],
             treeprops: { label: "nodeLabel", value: "nodeData" },
             nodeSearch: false,
@@ -196,43 +242,56 @@ export default {
                 FlagSchool: 0,
                 FlagArea: 0,
                 PlanFileType: 1,
-                PlanDesign: "",
-                PlanDesignPath: "",
-                PlanFileList: [],
-                Planjiaoanfenxi:"",                     //教案分析
-                Planjiaoansheji:"",                     //教案设计
-                Planketanglianxi:"",                    //课堂练习
-                Planbanshusheji:"",                     //板书设计
-                Planzuoyebuzhi:"",                      //作业布置
-                Planjiaoxuefansi:"",                    //教学反思
-                Planxueansheji:"",                      //学案设计
-                Planketangsucai:""                      //课堂素材
+                planDesign: "", //教案设计文档信息
+                planDesignPath: "", //教案设计文档路径
+                PlanFileList: [], //教案设计附件列表
+                PlanMatList: [], //课堂素材附件列表
+                planGoal: "", //教学目标
+                planImport: "", //重点难点
+                planReady: "", //教学准备
+                planExe: "", //课堂练习
+                planBlack: "", //板书设计
+                planWork: "", //作业布置
+                planThink: "", //教学反思
+                planLearn: "", //学案设计
+                planketangsucai: "" //课堂素材
             },
             dialogImageUrl: "",
             dialogVisible: false,
-            filePics: [],
+            pdfiles: [],
+            pmfiles: [],
             importLoading: "",
-            creatJurisdiction:{
-                PlanDesign:true,                
-                PlanGoal:true,
-                PlanExe:true,
-                PlanBlack:true,
-                PlanWork:true,
-                PlanThink:true,
-                PlanLearn:true,
-                PlanMat:true
+            showMat: false,
+            bkConfig: {
+                planDesign: true,
+                planGoal: true, //教材分析(教学目标、重点难点、教学准备)
+                planExe: true,
+                planBlack: true,
+                planWork: true,
+                planThink: true,
+                planLearn: true,
+                planMat: true
             }
         };
     },
     mounted() {
+        this.loadConfig();
         this.loadTeachPlanSiteTree();
     },
     methods: {
         pageBack: function() {
             this.$router.back(-1);
         },
+        //加载配置
+        loadConfig() {
+            let url = "/api/Plan/GetPlanConfig";
+            let the = this;
+            the.$api.get(url, null, data => {
+                the.bkConfig = data;
+            });
+        },
         //加载教案位置的树
-        loadTeachPlanSiteTree: function() {
+        loadTeachPlanSiteTree() {
             let url = "/api/Plan/GetTeachPlanSiteTree";
             let the = this;
             the.$api.get(url, null, data => {
@@ -279,6 +338,7 @@ export default {
                     break;
             }
         },
+        /////开始附件上传相关功能
         handleRemove(file, fileList) {
             console.log(file, fileList);
         },
@@ -287,8 +347,8 @@ export default {
             this.dialogVisible = true;
         },
         ///on-change钩子，文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用。
-        fileUpload: function(file, fileList) {
-            this.filePics = fileList;
+        pdfileChange: function(file, fileList) {
+            this.pdfiles = fileList;
         },
         ///文件上传之前的验证操作
         beforeUpload: function(file) {
@@ -314,8 +374,8 @@ export default {
             }
             return isPass;
         },
-        //自定义上传(axios)
-        customUpload(obj) {
+        //axios自定义上传(教案设计)
+        pdUpload(obj) {
             let the = this;
             let fOrder = the.teachPlan.PlanFileList.length + 1;
             let param = { files: obj.file, fileOrder: fOrder };
@@ -325,6 +385,24 @@ export default {
                     the.$vnotify("图片上传失败");
                 } else {
                     the.teachPlan.PlanFileList.push(data.planfile);
+                }
+            });
+        },
+        ///on-change钩子，文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用。
+        pmfileChange: function(file, fileList) {
+            this.pmfiles = fileList;
+        },
+        //axios自定义上传(课堂素材)
+        pmUpload(obj) {
+            let the = this;
+            let fOrder = the.teachPlan.PlanMatList.length + 1;
+            let param = { files: obj.file, fileOrder: fOrder };
+            the.$api.uploadFile("/api/Plan/UploadPlanFile", param, data => {
+                the.importLoading.close();
+                if (!data.success) {
+                    the.$vnotify("图片上传失败");
+                } else {
+                    the.teachPlan.PlanMatList.push(data.planfile);
                 }
             });
         },

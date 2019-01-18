@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import about from '@/components/about'
 import login from '@/components/login'
 import loginOff from '@/components/loginOff'
 import HelloWorld from '@/components/HelloWorld'
@@ -17,6 +18,7 @@ import screenPage from '@/components/screenPage'
 import ConnectPage from '@/components/ConnectPage'
 import errorPage from '@/components/errorPage'
 import orientation from '@/components/orientation'
+import about from '@/components/about'
 import ceshi from '@/components/ceshi'
 
 Vue.use(Router)
@@ -30,6 +32,10 @@ const router = new Router({
     path: '/ConnectPage',
     name: 'connectPage',
     component: ConnectPage
+  }, {
+    path: '/about',
+    name: 'about',
+    component: about
   }, {
     path: '/login',
     name: 'login',
@@ -127,6 +133,10 @@ const router = new Router({
     path: '/ceshi',
     name: 'ceshi',
     component: ceshi
+  },{
+    path: '/about',
+    name: 'about',
+    component: about
   }]
 })
 

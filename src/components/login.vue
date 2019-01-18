@@ -76,8 +76,10 @@ export default {
                             that.$store.commit("saveToken", token); //保存 token
                             that.$store.commit("saveRole", data.role); //保存 role
                             that.$vnotify(data.msg);
+                            console.log(
+                                "开始跳转：" + that.$route.query.redirect
+                            );
                             that.$router.replace(
-                                // that.$route.query.redirect ? that.$route.query.redirect : "/"
                                 that.$route.query.redirect
                                     ? that.$route.query.redirect
                                     : "/"

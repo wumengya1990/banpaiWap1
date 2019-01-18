@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import index from './index'
 import router from './router'
+import axios from 'axios'
 import Vant from 'vant';
 import 'vant/lib/index.css';
 import ElementUI from 'element-ui'
@@ -44,7 +45,7 @@ Vue.component(CellSwipe.name, CellSwipe);
 
 
 //判断是否为空
-var isNullOrEmpty = function (value) {
+let isNullOrEmpty = function (value) {
   if (value == null || value == undefined || value.toString().Trim() == "") {
     return true;
   } else {
@@ -52,7 +53,7 @@ var isNullOrEmpty = function (value) {
   }
 }
 //判断是否为空或0
-var isNullOrZero = function (value) {
+let isNullOrZero = function (value) {
   if (value == null || value == undefined || value.toString().Trim() == "" || value == 0) {
     return true;
   } else {
@@ -60,7 +61,7 @@ var isNullOrZero = function (value) {
   }
 }
 //加载loading数据
-var vload = function (msg, timeOut) {
+let vload = function (msg, timeOut) {
   let defMsg = "加载中...";
   if (!isNullOrEmpty(msg)) {
     defMsg = msg;
@@ -105,20 +106,58 @@ Vue.prototype.$vnotify = function (msg, timeOut, bgColor, color) {
 };
 
 // 注册公共，并放置相关属性
-var bus = new Vue();
+let bus = new Vue();
 Vue.prototype.bus = bus;
 // Vue.prototype.devId = process.env.NODE_ENV==='production'?window.jsobj.getDevId():'b622dc9bce3b4100'
 
+//vue初始化
+let initVue = function () {
+  new Vue({
+    el: '#index',
+    router,
+    store,
+    components: {
+      index
+    },
+    mounted() {
+      console.log("开始初始化Vue");
+      this.$store.commit("saveApiUrl", Vue.prototype.apiUrl); //保存 ApiUrl
+    },
+    template: '<index/>'
+  });
+}
 
-new Vue({
-  el: '#index',
-  router,
-  store,
-  components: {
-    index
-  },
-  mounted() {
-    this.$store.commit("saveApiUrl", window.localStorage.ApiUrl); //保存 ApiUrl
-  },
-  template: '<index/>'
-})
+//app初始化(首先读取配置信息)
+let initApp = function () {
+  console.log("开始初始化app");
+  let nodeEnv = process.env.NODE_ENV;
+  if (nodeEnv === 'production') { //生产环境
+    if (window.localStorage.ApiUrl != "" && window.localStorage.ApiUrl != undefined) {
+      let apiUrl = window.localStorage.ApiUrl;
+      console.log("读取localStorage中的api:" + apiUrl);
+      Vue.prototype.apiUrl = apiUrl;
+      initVue();
+    } else {
+      //获取配置文件中的地址
+      axios.get('/static/appConfig.json').then((res) => {
+        let apiUrl = res.data.ApiUrl;
+        console.log("读取配置文件中的api:" + apiUrl);
+        Vue.prototype.apiUrl = apiUrl;
+        initVue();
+      }).catch((err) => {
+        console.log("配置文件读取失败:" + err);
+        let apiUrl = process.env.API_ROOT;
+        console.log("读取process中的api:" + apiUrl);
+        Vue.prototype.apiUrl = apiUrl;
+        initVue();
+      });
+    }
+  } else { //开发环境直接读取
+    let apiUrl = process.env.API_ROOT;
+    console.log("开发环境直接读取process中的api:" + apiUrl);
+    Vue.prototype.apiUrl = apiUrl;
+    initVue();
+  }
+}
+
+initApp();

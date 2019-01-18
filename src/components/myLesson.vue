@@ -15,7 +15,7 @@
             </router-link>
             <!-- <a class="more" @click="$store.commit('switch_dialog')">
                 <i class="icon bpMobile bpMobile-shaixuan"></i>
-            </a> -->
+            </a>-->
             <router-link to="/orientation">
                 <i class="el-icon-location-outline"></i>
             </router-link>
@@ -24,68 +24,69 @@
             <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :offset="100" @load="loadPlanList">
                 <ul>
                     <li v-for="(course,index) in myPlanList" :key="index">
-                        <mt-cell-swipe
+                        <!-- <div class="plr10"> -->
+                            <mt-cell-swipe
                         :right="[
                             {
                                 content: '删除',
                                 style: { background: '#ff7900', color: '#fff'},
                                 handler: () => deleteSection(course.planId)
                             }
-                        ]">
-                        <div class="lessonListNBox">
-                        <em v-if="course.isCountyShare == true" class="shareState have">已共享</em>
+                            ]">
+                            <div class="lessonListNBox">
+                                <em v-if="course.isCountyShare == true" class="shareState have">已共享</em>
 
-                        <!-- 文件类型图片展示 -->
-                        <div v-if="course.fileType == 1 " class="lessonImg">
-                            <img :src="Imgtype" @click="planDetail(course.planId)">
-                        </div>
-                        <div v-if="course.fileType == 2 " class="lessonImg">
-                            <img :src="wordtype" @click="planDetail(course.planId)">
-                        </div>
-                        <div v-if="course.fileType == 3 " class="lessonImg">
-                            <img :src="exceltype" @click="planDetail(course.planId)">
-                        </div>
-                        <div v-if="course.fileType == 4 " class="lessonImg">
-                            <img :src="ppttype" @click="planDetail(course.planId)">
-                        </div>
-                        <div v-if="course.fileType == 5 " class="lessonImg">
-                            <img :src="pdftype" @click="planDetail(course.planId)">
-                        </div>
-                        <!-- 文件类型图片展示结束 -->
-
-                        <div class="lessonContent">
-                            <h4>
-                                <span @click="planDetail(course.planId)">{{course.planTitle}}</span>
-                                <!-- <em>
+                                <!-- 文件类型图片展示 -->
+                                <div v-if="course.fileType == 1 " class="lessonImg">
+                                    <img :src="Imgtype" @click="planDetail(course.planId)">
+                                </div>
+                                <div v-if="course.fileType == 2 " class="lessonImg">
+                                    <img :src="wordtype" @click="planDetail(course.planId)">
+                                </div>
+                                <div v-if="course.fileType == 3 " class="lessonImg">
+                                    <img :src="exceltype" @click="planDetail(course.planId)">
+                                </div>
+                                <div v-if="course.fileType == 4 " class="lessonImg">
+                                    <img :src="ppttype" @click="planDetail(course.planId)">
+                                </div>
+                                <div v-if="course.fileType == 5 " class="lessonImg">
+                                    <img :src="pdftype" @click="planDetail(course.planId)">
+                                </div>
+                                <!-- 文件类型图片展示结束 -->
+                                <div class="lessonContent">
+                                    <h4>
+                                        <span @click="planDetail(course.planId)">{{course.planTitle}}</span>
+                                        <!-- <em>
                                 <i v-if="course.isFavor==true" class="el-icon-star-on"></i>
                                 <i v-else @click="collectPlan(course)" class="el-icon-star-off"></i>
-                                </em>-->
-                            </h4>
-                            <p class="synopsis">
-                                <span>
-                                    <i class="icon bpMobile bpMobile-wode2"></i>
-                                    {{course.authorUserName}}
-                                </span>
-                                <span>
-                                    <i class="icon bpMobile bpMobile-hs_h_Clock_h-naozhong"></i>
-                                    {{course.createTime}}
-                                </span>
-                            </p>
-                            <div class="operate">
-                                <a v-if="course.hasPlanThink == false" @click="writeThink(course)">
-                                    <i class="el-icon-edit"></i>添加反思
-                                </a>
-                                <a v-else @click="watchThink(course.planId)">
-                                    <i class="el-icon-view"></i>查看反思
-                                </a>
-                                <a @click="showOrentation(course.planId)">
-                                    <i class="el-icon-location-outline"></i>课程定位
-                                </a>
+                                        </em>-->
+                                    </h4>
+                                    <p class="synopsis">
+                                        <span>
+                                            <i class="icon bpMobile bpMobile-wode2"></i>
+                                            {{course.authorUserName}}
+                                        </span>
+                                        <span>
+                                            <i class="icon bpMobile bpMobile-hs_h_Clock_h-naozhong"></i>
+                                            {{course.createTime}}
+                                        </span>
+                                    </p>
+                                    <div class="operate">
+                                        <a v-if="course.hasPlanThink == false" @click="writeThink(course)">
+                                            <i class="el-icon-edit"></i>添加反思
+                                        </a>
+                                        <a v-else @click="watchThink(course.planId)">
+                                            <i class="el-icon-view"></i>查看反思
+                                        </a>
+                                        <a @click="showOrentation(course.planId)">
+                                            <i class="el-icon-location-outline"></i>课程定位
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="clear"></div>
                             </div>
-                        </div>
-                        <div class="clear"></div>
-                        </div>
-                        </mt-cell-swipe>
+                            </mt-cell-swipe>
+                        <!-- </div> -->
                     </li>
                 </ul>
             </van-list>
@@ -254,9 +255,18 @@ export default {
                 LessonId: "" //课程定位节次内容
             },
             //日期设置选项
+            // pickerOptions: {
+            //     disabledDate(time) {
+            //         return time.getTime() < Date.now() - 8.64e7;
+            //     }
+            // },
             pickerOptions: {
+                //日期为一周内的选择时间
                 disabledDate(time) {
-                    return time.getTime() < Date.now() - 8.64e7;
+                    let _now = Date.now(),
+                        seven = 7 * 24 * 60 * 60 * 1000,
+                        sevenDays = _now + seven;
+                    return time.getTime() < _now || time.getTime() > sevenDays; //大于当前的禁止，小于7天前的禁止
                 }
             },
             classNumberDW: "",
@@ -444,8 +454,10 @@ export default {
             });
             this.tcshow = false;
         },
-        deleteSection:function(pid){                       //删除教案
+        deleteSection: function(pid) {
             
+            alert(123);
+            //删除教案
         }
     },
     watch: {
@@ -466,8 +478,16 @@ export default {
 </script>
 
 <style scoped>
-.lessonList >>> .van-cell{ line-height: normal;}
-.lessonList >>> .mint-cell-wrapper{ background: none;}
-.lessonList >>> .mint-cell-title{ display: none;}
-.lessonList >>> .mint-cell-swipe-button{ line-height: 90px;}
+.lessonList >>> .van-cell {
+    line-height: normal;
+}
+.lessonList >>> .mint-cell-wrapper {
+    background: none;
+}
+.lessonList >>> .mint-cell-title {
+    display: none;
+}
+.lessonList >>> .mint-cell-swipe-button {
+    line-height: 90px;
+}
 </style>
