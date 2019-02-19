@@ -366,13 +366,25 @@ export default {
             });
         },
         dropMyLeaveMessage(leaveID){                //删除内容
-            let that = this;
-            let url = "/api/Plan/ForumPlan";
-            let param = {forumId:leaveID};
-            that.$api.post(url, param, data => {
+            // let that = this;
+            // let url = "/api/Plan/ForumPlan";
+            // let param = {forumId:leaveID};
+            // that.$api.post(url, param, data => {
 
-                that.loadLeaveMessage();
-             });
+            //     that.loadLeaveMessage();
+            //  });
+
+             let that = this;
+            let url = "/api/Plan/DelPlan";
+            let param = { planid: planId };
+            that.$api.post(url, param, res => {
+                if(res== "success"){
+                    that.planForum.splice(pindex,1);
+                }else{
+                    that.$vnotify("删除失败");
+                }
+                
+            });
 
         }
     }

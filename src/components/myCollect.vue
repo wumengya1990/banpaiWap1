@@ -16,6 +16,14 @@
             <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadPlanList">
                 <ul>
                     <li v-for="(course,index) in myPlanList" :key="index">
+                        <mt-cell-swipe
+                        :right="[
+                            {
+                                content: '删除',
+                                style: { background: '#ff7900', color: '#fff'},
+                                handler: () => deleteSection(index,course.planId)
+                            }
+                            ]">
                         <div class="lessonListNBox">
                         <em v-if="course.shareState == true" class="shareState have">已校共享</em>
                         
@@ -65,6 +73,7 @@
                         </div>
                         <div class="clear"></div>
                         </div>
+                        </mt-cell-swipe>
                     </li>
                 </ul>
             </van-list>
@@ -209,11 +218,38 @@ export default {
                 that.planThinkCon = res.planThink;
             });
             that.tcshow1 = true;
+        },
+        deleteSection: function(pindex,pid) {
+            console.log(pindex+'、'+pid);
+            let that = this;
+            let url = "/api/Plan/DelFavPlan";
+            let param = {planid:pid};
+            that.$api.post(url, param, res => {
+                console.log(res);
+                if(res== "success"){
+                    that.myPlanList.splice(pindex,1);
+                }else{
+                    that.$vnotify("删除失败");
+                }
+                
+            });
         }
     }
 };
 </script>
 
-<style>
-.lessonList ul li .lessonListNBox{ padding: 10px; border-bottom: 1px solid #eaeaea;}
+<style scoped>
+/* .lessonList ul li .lessonListNBox{ padding: 10px; border-bottom: 1px solid #eaeaea;} */
+.lessonList >>> .van-cell {
+    line-height: normal;
+}
+.lessonList >>> .mint-cell-wrapper {
+    background: none;
+}
+.lessonList >>> .mint-cell-title {
+    display: none;
+}
+.lessonList >>> .mint-cell-swipe-button {
+    line-height: 90px;
+}
 </style>

@@ -80,6 +80,7 @@ let vload = function (msg, timeOut) {
 Vue.prototype.$isNull = isNullOrEmpty;
 Vue.prototype.$isZero = isNullOrZero;
 Vue.prototype.$vloading = vload;
+
 //全局通知方法
 Vue.prototype.$vnotify = function (msg, timeOut, bgColor, color) {
   if (isNullOrEmpty(msg)) {

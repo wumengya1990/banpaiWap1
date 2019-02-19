@@ -18,7 +18,7 @@ import screenPage from '@/components/screenPage'
 import ConnectPage from '@/components/ConnectPage'
 import errorPage from '@/components/errorPage'
 import orientation from '@/components/orientation'
-import about from '@/components/about'
+// import about from '@/components/about'
 import ceshi from '@/components/ceshi'
 
 Vue.use(Router)

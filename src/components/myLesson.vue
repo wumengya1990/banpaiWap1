@@ -30,7 +30,7 @@
                             {
                                 content: '删除',
                                 style: { background: '#ff7900', color: '#fff'},
-                                handler: () => deleteSection(course.planId)
+                                handler: () => deleteSection(index,course.planId)
                             }
                             ]">
                             <div class="lessonListNBox">
@@ -454,10 +454,20 @@ export default {
             });
             this.tcshow = false;
         },
-        deleteSection: function(pid) {
-            
-            alert(123);
-            //删除教案
+        deleteSection: function(pindex,pid) {
+            console.log(pindex+'、'+pid);
+            let that = this;
+            let url = "/api/Plan/DelPlan";
+            let param = {planid:80662};
+            that.$api.post(url, param, res => {
+                console.log(res);
+                // if(res== "success"){
+                //     that.myPlanList.splice(pindex,1);
+                // }else{
+                //     that.$vnotify("删除失败");
+                // }
+                
+            });
         }
     },
     watch: {
