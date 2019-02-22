@@ -170,7 +170,7 @@
                                     <h5>
                                         <span>{{pinglun.forumUserName}}</span>
                                         <time>{{pinglun.forumTime}}</time>
-                                        <a class="drop" v-show="pinglun.isMe" @click="dropMyLeaveMessage(pinglun.forumId)">
+                                        <a class="drop" v-show="pinglun.isMe" @click="dropMyLeaveMessage(index,pinglun.forumId)">
                                             <i class="el-icon-delete"></i>
                                         </a>
                                     </h5>
@@ -185,6 +185,12 @@
                             </dl>
                             <div class="clear"></div>
                         </article>
+                    </div>
+                </section>
+                <section>
+                    <div class="changeButton" v-if="planDetails.isMine">
+                        <!-- <div class="changeButton"> -->
+                        <el-button style="width:80%;" type="primary" @click="changeContent()">修改备课内容</el-button>
                     </div>
                 </section>
             </div>
@@ -290,7 +296,6 @@ export default {
             let url = "/api/Plan/GetForumByPlanId";
             let param = { planid: pId };
             that.$api.get(url, param, res => {
-                console.log(res);
                 that.planForum = res;
             });
         },
@@ -334,6 +339,7 @@ export default {
         ImgPreview(pimglist, imgIdx) {
             let that = this;
             const instance = ImagePreview({
+                
                 images: pimglist,
                 startPosition: typeof imgIdx === "number" ? imgIdx : 0
             });
@@ -364,28 +370,29 @@ export default {
                 //console.log(data.msg);
                 that.$vnotify(data.msg);
             });
+            that.writeLeaveMessage="";
         },
-        dropMyLeaveMessage(leaveID){                //删除内容
-            // let that = this;
-            // let url = "/api/Plan/ForumPlan";
-            // let param = {forumId:leaveID};
-            // that.$api.post(url, param, data => {
-
-            //     that.loadLeaveMessage();
-            //  });
-
-             let that = this;
-            let url = "/api/Plan/DelPlan";
-            let param = { planid: planId };
-            that.$api.post(url, param, res => {
-                if(res== "success"){
-                    that.planForum.splice(pindex,1);
+        dropMyLeaveMessage(leaveIndex,leaveID){                //删除内容
+            let that = this;
+            let url = "/api/Plan/DelPlanForum";
+            let params = { planforumid:leaveID };
+            that.$api.get(url, params, res => {
+                if(res){
+                    that.planForum.splice(leaveIndex,1);
                 }else{
                     that.$vnotify("删除失败");
                 }
                 
             });
 
+        },
+        changeContent(){                //修改备课内容
+            let that = this;
+            let pId = that.$route.query.planId;
+            this.$router.push({
+                path: "/reviseCourse",
+                query: { planId: pId }
+            });
         }
     }
 };

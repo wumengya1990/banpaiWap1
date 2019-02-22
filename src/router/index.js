@@ -13,6 +13,7 @@ import myCollect from '@/components/myCollect'
 import shareSchool from '@/components/shareSchool'
 import shareCounty from '@/components/shareCounty'
 import newCourse from '@/components/newCourse'
+import reviseCourse from '@/components/reviseCourse'
 import appList from '@/components/appList'
 import screenPage from '@/components/screenPage'
 import ConnectPage from '@/components/ConnectPage'
@@ -101,10 +102,18 @@ const router = new Router({
       Authorize: true, // 添加该字段，表示进入这个路由是需要登录的
       userRole: 8
     }
-  }, {
+  },{
     path: '/newCourse',
     name: 'newCourse',
     component: newCourse,
+    meta: {
+      Authorize: true, // 添加该字段，表示进入这个路由是需要登录的
+      userRole: 3
+    }
+  },{
+    path: '/reviseCourse',
+    name: 'reviseCourse',
+    component: reviseCourse,
     meta: {
       Authorize: true, // 添加该字段，表示进入这个路由是需要登录的
       userRole: 3

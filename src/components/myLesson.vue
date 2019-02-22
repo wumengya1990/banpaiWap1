@@ -33,24 +33,24 @@
                                 handler: () => deleteSection(index,course.planId)
                             }
                             ]">
-                            <div class="lessonListNBox">
+                            <div class="lessonListNBox" @click="planDetail(course.planId)">
                                 <em v-if="course.isCountyShare == true" class="shareState have">已共享</em>
 
                                 <!-- 文件类型图片展示 -->
                                 <div v-if="course.fileType == 1 " class="lessonImg">
-                                    <img :src="Imgtype" @click="planDetail(course.planId)">
+                                    <img :src="Imgtype">
                                 </div>
                                 <div v-if="course.fileType == 2 " class="lessonImg">
-                                    <img :src="wordtype" @click="planDetail(course.planId)">
+                                    <img :src="wordtype">
                                 </div>
                                 <div v-if="course.fileType == 3 " class="lessonImg">
-                                    <img :src="exceltype" @click="planDetail(course.planId)">
+                                    <img :src="exceltype">
                                 </div>
                                 <div v-if="course.fileType == 4 " class="lessonImg">
-                                    <img :src="ppttype" @click="planDetail(course.planId)">
+                                    <img :src="ppttype">
                                 </div>
                                 <div v-if="course.fileType == 5 " class="lessonImg">
-                                    <img :src="pdftype" @click="planDetail(course.planId)">
+                                    <img :src="pdftype">
                                 </div>
                                 <!-- 文件类型图片展示结束 -->
                                 <div class="lessonContent">
@@ -72,13 +72,13 @@
                                         </span>
                                     </p>
                                     <div class="operate">
-                                        <a v-if="course.hasPlanThink == false" @click="writeThink(course)">
+                                        <a v-if="course.hasPlanThink == false" @click.stop="writeThink(course)">
                                             <i class="el-icon-edit"></i>添加反思
                                         </a>
-                                        <a v-else @click="watchThink(course.planId)">
+                                        <a v-else @click.stop="watchThink(course.planId)">
                                             <i class="el-icon-view"></i>查看反思
                                         </a>
-                                        <a @click="showOrentation(course.planId)">
+                                        <a @click.stop="showOrentation(course.planId)">
                                             <i class="el-icon-location-outline"></i>课程定位
                                         </a>
                                     </div>
@@ -455,17 +455,15 @@ export default {
             this.tcshow = false;
         },
         deleteSection: function(pindex,pid) {
-            console.log(pindex+'、'+pid);
             let that = this;
             let url = "/api/Plan/DelPlan";
-            let param = {planid:80662};
-            that.$api.post(url, param, res => {
-                console.log(res);
-                // if(res== "success"){
-                //     that.myPlanList.splice(pindex,1);
-                // }else{
-                //     that.$vnotify("删除失败");
-                // }
+            let param = {planid:pid};
+            that.$api.get(url, param, res => {
+                if(res){
+                    that.myPlanList.splice(pindex,1);
+                }else{
+                    that.$vnotify("删除失败");
+                }
                 
             });
         }

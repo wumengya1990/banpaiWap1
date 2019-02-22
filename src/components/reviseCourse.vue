@@ -18,7 +18,7 @@
                                 placeholder="请选择教案位置"
                                 :search="nodeSearch"
                                 :clickParent="selParent"
-                                v-model="teachPlan.PlanRemark"
+                                v-model="teachPlan.planRemark"
                                 @nodeClick="nodeClick"
                                 style="width:100%;"
                             ></el-treeselect>
@@ -29,13 +29,13 @@
                             <i>*</i>教案名称
                         </em>
                         <div class="overHide">
-                            <el-input v-model="teachPlan.PlanTitle" placeholder="请输入内容"></el-input>
+                            <el-input v-model="teachPlan.planTitle" placeholder="请输入内容"></el-input>
                         </div>
                     </li>
                     <li>
                         <em>课时数</em>
                         <div class="overHide">
-                            <el-input-number v-model="teachPlan.TimeId" :min="1" :max="50" label="课时数量"></el-input-number>
+                            <el-input-number v-model="teachPlan.timeId" :min="1" :max="50" label="课时数量"></el-input-number>
                         </div>
                     </li>
                 </ul>
@@ -44,7 +44,7 @@
             <!-- 教案设计 -->
             <div v-if="bkConfig.planDesign" class="establishBox">
                 <h4>
-                    <span>教案设计</span>
+                    <span>教案设计1</span>
                 </h4>
                 <ul>
                     <li>
@@ -60,7 +60,7 @@
                                 :on-remove="handleRemove"
                                 :on-change="pdfileChange"
                                 :before-upload="beforeUpload"
-                                :file-list="pdfiles"
+                                :file-list="teachPlan.planFileList"
                                 list-type="picture"
                                 accept=".jpg, .jpeg, .png, .gif, .bmp, .JPG, .JPEG, .PBG, .GIF, .BMP"
                             >
@@ -260,6 +260,8 @@ export default {
             dialogVisible: false,
             pdfiles: [],
             pmfiles: [],
+            pdimglist: [],
+            pmimglist: [],
             importLoading: "",
             showMat: false,
             bkConfig: {
@@ -276,9 +278,48 @@ export default {
     },
     mounted() {
         this.loadConfig();
+        this.loadPlanDetails();
         this.loadTeachPlanSiteTree();
     },
     methods: {
+        loadPlanDetails: function() {
+            let that = this;
+            const vd = that.$vloading();
+            let pId = that.$route.query.planId;
+            let url = "/api/Plan/GetPlanDetails";
+            let param = { planid: pId };
+            that.$api.get(url, param, res => {
+                console.log("成功加载备课详情");
+                console.log(res);
+                vd.clear();
+                let imgIdx = 0;
+                let pcUrl = that.$store.state.apiUrl;
+                //处理教案设计中的附件
+                for (let i = 0; i < res.planFileList.length; i++) {
+                    let pf = res.planFileList[i];
+                    that.pmfiles.push(pf);
+                    if (pf.fileType == 1) {
+                        pf.itemOrder = imgIdx;
+                        that.pdimglist.push(pcUrl + "/BKFiles/" + pf.path);
+                        // that.pmfiles.push(pcUrl + "/BKFiles/" + pf.path);
+                        imgIdx++;
+                    }
+                }
+                //处理课堂素材附件
+                imgIdx = 0;
+                for (let i = 0; i < res.planMatList.length; i++) {
+                    let mf = res.planMatList[i];
+                    if (mf.matTypeId == 1) {
+                        mf.itemOrder = imgIdx;
+                        that.pmimglist.push(pcUrl + "/BKFiles/" + mf.matPath);
+                        // that.pmfiles.push(pcUrl + "/BKFiles/" + mf.matPath);
+                        imgIdx++;
+                    }
+                }
+                that.teachPlan =res;
+                // console.log(that.teachPlan)
+            });
+        },
         pageBack: function() {
             this.$router.back(-1);
         },
@@ -340,7 +381,8 @@ export default {
         },
         /////开始附件上传相关功能
         handleRemove(file, fileList) {
-            console.log(file, fileList);
+            console.log(file+"你好");
+            
         },
         handlePreview(file) {
             this.dialogImageUrl = file.url;
@@ -377,14 +419,14 @@ export default {
         //axios自定义上传(教案设计)
         pdUpload(obj) {
             let the = this;
-            let fOrder = the.teachPlan.PlanFileList.length + 1;
+            let fOrder = the.teachPlan.planFileList.length + 1;
             let param = { files: obj.file, fileOrder: fOrder };
             the.$api.uploadFile("/api/Plan/UploadPlanFile", param, data => {
                 the.importLoading.close();
                 if (!data.success) {
                     the.$vnotify("图片上传失败");
                 } else {
-                    the.teachPlan.PlanFileList.push(data.planfile);
+                    the.teachPlan.planFileList.push(data.planfile);
                 }
             });
         },
@@ -395,14 +437,14 @@ export default {
         //axios自定义上传(课堂素材)
         pmUpload(obj) {
             let the = this;
-            let fOrder = the.teachPlan.PlanMatList.length + 1;
+            let fOrder = the.teachPlan.planMatList.length + 1;
             let param = { files: obj.file, fileOrder: fOrder };
             the.$api.uploadFile("/api/Plan/UploadPlanFile", param, data => {
                 the.importLoading.close();
                 if (!data.success) {
                     the.$vnotify("图片上传失败");
                 } else {
-                    the.teachPlan.PlanMatList.push(data.planfile);
+                    the.teachPlan.planMatList.push(data.planfile);
                 }
             });
         },
@@ -417,17 +459,17 @@ export default {
             if (!response.success) {
                 this.$vnotify("图片上传失败");
             } else {
-                this.teachPlan.PlanFileList.push(file);
+                this.teachPlan.planFileList.push(file);
             }
         },
         //保存教案信息
         savePlan: function() {
             let the = this;
             let errMsg = "";
-            if (the.teachPlan.studyId == "") {
+            if (the.teachPlan.StudyId == "") {
                 errMsg += "请选择教案位置<br>";
             }
-            if (the.teachPlan.planTitle == "") {
+            if (the.teachPlan.PlanTitle == "") {
                 errMsg += "请输入教案名称<br>";
             }
             if (errMsg != "") {
@@ -441,7 +483,7 @@ export default {
                 return false;
             }
             const vd = the.$vloading("保存中...");
-            let url = "/api/Plan/SaveTeachPlan";
+            let url = "/api/Plan/UpdPlan";
             the.$api.post(url, the.teachPlan, data => {
                 vd.clear();
                 console.log(data.msg);

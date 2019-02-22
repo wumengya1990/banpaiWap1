@@ -33,7 +33,7 @@ name:"ceshi",
 data(){
     return{
         sectionList:[
-            {PartName:"adasasdasda",TeacherName:"dadasdada"}
+            {"PartName":"你妹","TeacherName":"你奶奶"}
         ],
         mes:"草草草草草草草草草草草草"
     }

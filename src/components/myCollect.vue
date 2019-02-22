@@ -220,13 +220,11 @@ export default {
             that.tcshow1 = true;
         },
         deleteSection: function(pindex,pid) {
-            console.log(pindex+'、'+pid);
             let that = this;
             let url = "/api/Plan/DelFavPlan";
             let param = {planid:pid};
-            that.$api.post(url, param, res => {
-                console.log(res);
-                if(res== "success"){
+            that.$api.get(url, param, res => {
+                if(res){
                     that.myPlanList.splice(pindex,1);
                 }else{
                     that.$vnotify("删除失败");

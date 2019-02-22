@@ -187,7 +187,7 @@ body,html{height:100%}
 .detailsBox section .commentBox article dl dd h5 a.drop{ float: right;}
 .detailsBox section .commentBox article dl dd .star{ padding: 0 0 5px;}
 .detailsBox section .commentBox article dl dd .nrCon{ background: #f5f5f5; border-radius: 5px; padding: 8px; line-height: 1.5em;}
-
+.detailsBox section .changeButton{ text-align: center; padding: 10px 0 0;}
 /* 筛选右侧弹层 */
 .rightLayerW{ position: absolute; left:0; top: 0; right: 0; bottom: 0; margin: auto;  background: rgba(0,0,0,0.5);}
 .rightLayer{ position: absolute; left:100%; top: 0; right: 0; bottom: 0; margin: auto; z-index:20;}
@@ -197,9 +197,9 @@ body,html{height:100%}
 
 /* 课堂定位内容 */
 .orientationList{ position: absolute; left: 0; top: 4rem; right: 0; bottom:4rem; margin: auto; overflow: hidden; overflow-y: auto;}
-.orientation .orientationListBox li{ background: #FFFFFF; margin: 10px; border-radius:5px; overflow: hidden;}
-.orientation .orientationListBox li .introduction{ padding: 10px; border-bottom: 1px solid #eaeaea;}
-.orientation .orientationListBox li .introduction h4{ font-size: 1.2em;}
+.orientation .orientationListBox li{ background: #FFFFFF; margin: 10px; border-radius:5px; overflow: hidden; box-shadow: 0 1px 2px #c5c5c5;}
+.orientation .orientationListBox li .introduction{ padding: 10px; border-bottom: 1px solid #eaeaea; background: #dedede;}
+.orientation .orientationListBox li .introduction h4{ font-size:16px;}
 .orientation .orientationListBox li{ padding: 0 0 10px;}
 .orientation .orientationListBox li dl{ float: left; width: 50%; box-sizing: border-box; padding: 10px 10px 0;}
 .orientation .orientationListBox li dl dt{ color: #999999; height: 20px; line-height: 20px;}
