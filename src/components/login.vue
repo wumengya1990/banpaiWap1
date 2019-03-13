@@ -71,6 +71,7 @@ export default {
                     let url = "/api/Account/Login";
                     //let pars = { userid: 20, pageindex: 1 };
                     that.$api.get(url, that.loginForm, data => {
+                        console.log(data);
                         if (data.success) {
                             let token = data.token;
                             that.$store.commit("saveToken", token); //保存 token

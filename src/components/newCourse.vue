@@ -62,8 +62,9 @@
                                 :before-upload="beforeUpload"
                                 :file-list="pdfiles"
                                 list-type="picture"
-                                accept=".jpg, .jpeg, .png, .gif, .bmp, .JPG, .JPEG, .PBG, .GIF, .BMP"
-                            >
+                                accept=".jpg, .jpeg, .png, .gif, .bmp, .JPG, .JPEG, .PBG, .GIF, .BMP, image/*"
+                                capture="camera" 
+                                >
                                 <el-button size="small" type="primary">上传设计</el-button>
                                 <div slot="tip" class="el-upload__tip">只能上传图片文件，且不超过10MB</div>
                             </el-upload>
@@ -94,7 +95,9 @@
                                 :before-upload="beforeUpload"
                                 :file-list="pmfiles"
                                 list-type="picture"
-                                accept=".jpg, .jpeg, .png, .gif, .bmp, .JPG, .JPEG, .PBG, .GIF, .BMP"
+                                accept=".jpg, .jpeg, .png, .gif, .bmp, .JPG, .JPEG, .PBG, .GIF, .BMP, video/*"
+                                capture="camera" 
+                                window.Android.setFlag(1)
                             >
                                 <el-button size="small" type="primary">上传素材</el-button>
                                 <div slot="tip" class="el-upload__tip">只能上传图片文件，且不超过10MB</div>
@@ -413,6 +416,7 @@ export default {
         },
         ///文件上传成功时的钩子
         handleSuccess: function(response, file, fileList) {
+            Console.log(response)
             this.importLoading.close();
             if (!response.success) {
                 this.$vnotify("图片上传失败");

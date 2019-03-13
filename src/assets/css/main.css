@@ -148,8 +148,8 @@ body,html{height:100%}
 .rightSuspension a{ display: block; width: 3rem; height: 3rem; line-height: 3rem; margin: 5px; background: rgba(255,255,255,0.6); border-radius: 50%; overflow: hidden; text-align: center; box-shadow: 0 1px 2px #c5c5c5; color: #0097fe; font-size: 1.8rem;}
 
 .suspendTool{ position: absolute; right: 0; bottom: 4rem; z-index: 10;}
-.suspendTool a{ display: block; background: rgba(255,255,255,0.8); box-shadow: 0 1px 2px #c5c5c5; width:2.5rem; height:2.5rem; line-height:2.8rem; text-align: center; border-radius: 50%; margin: 10px;}
-.suspendTool a i{ font-size:18px; color: #007AFF;}
+.suspendTool a{ display: block; background: rgba(65, 176, 255, .4); box-shadow: 0 1px 2px #1d84e8; width:2.5rem; height:2.5rem; line-height:3rem; text-align: center; border-radius: 50%; margin: 10px;}
+.suspendTool a i{ font-size:18px; color: #FFF;}
 .suspendTool a.more i{ font-size: 18px;}
 
 /* 详情页面 */
@@ -198,15 +198,18 @@ body,html{height:100%}
 /* 课堂定位内容 */
 .orientationList{ position: absolute; left: 0; top: 4rem; right: 0; bottom:4rem; margin: auto; overflow: hidden; overflow-y: auto;}
 .orientation .orientationListBox li{ background: #FFFFFF; margin: 10px; border-radius:5px; overflow: hidden; box-shadow: 0 1px 2px #c5c5c5;}
-.orientation .orientationListBox li .introduction{ padding: 10px; border-bottom: 1px solid #eaeaea; background: #dedede;}
-.orientation .orientationListBox li .introduction h4{ font-size:16px;}
+.orientation .orientationListBox li .introduction{ padding: 10px; border-bottom: 1px solid #6c97d0; background: #89bcff;}
+.orientation .orientationListBox li .introduction h4{ font-size:16px; color: #FFFFFF;}
 .orientation .orientationListBox li{ padding: 0 0 10px;}
-.orientation .orientationListBox li dl{ float: left; width: 50%; box-sizing: border-box; padding: 10px 10px 0;}
-.orientation .orientationListBox li dl dt{ color: #999999; height: 20px; line-height: 20px;}
+.orientation .orientationListBox li dl{ float: left; width: 50%; box-sizing: border-box; padding: 10px 10px 0 60px;}
+.orientation .orientationListBox li dl dt{ position: relative; color: #999999; height: 20px; line-height: 20px;}
+.orientation .orientationListBox li dl dt span{ position: absolute; width: 60px; height: 50px; line-height: 50px; left: -60px; display: block; text-align:center;}
+.orientation .orientationListBox li dl dt span i{ font-size: 26px; color: #6c97d0;}
 .orientation .orientationListBox li dl dd{ font-size: 1.1em; padding: 5px 0 0; height: 25px; line-height: 25px;}
 
 
 .conditionBox{ background: #FFFFFF; }
+
 .conditionBox>div{ border-bottom: 1px solid #eaeaea; padding: 10px}
 .conditionBox>div em{ float: left; width:5em; text-align: right; height: 2.5rem; line-height: 2.5rem;}
 .conditionBox>div span{ vertical-align: middle; display: inline-block; margin: -2em 0 0;}

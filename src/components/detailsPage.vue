@@ -62,7 +62,7 @@
                         <a :href="gethref(f,2)" :key="f.matId" :download="f.matTitle + '.' + f.matExt" @click="fileClick(f,2)">
                             <ul class="ImgList">
                                 <li>
-                                    <a cl ass="fileImg" :href="gethref(f,2)">
+                                    <a class="fileImg" :href="gethref(f,2)">
                                         <img v-if="f.matTypeId==1" :src="Imgtype">
                                         <img v-else-if="f.matTypeId==2" :src="wordtype">
                                         <img v-else-if="f.matTypeId==3" :src="exceltype">

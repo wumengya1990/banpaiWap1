@@ -19,8 +19,8 @@
                         <mt-cell-swipe
                         :right="[
                             {
-                                content: '删除',
-                                style: { background: '#ff7900', color: '#fff'},
+                                content: '<span class=\' icon bpMobile bpMobile-delete \'></span>',
+                                style: { background: '#FFF', color: '#FFF'},
                                 handler: () => deleteSection(index,course.planId)
                             }
                             ]">
@@ -250,4 +250,6 @@ export default {
 .lessonList >>> .mint-cell-swipe-button {
     line-height: 90px;
 }
+.lessonList >>> .mint-cell-swipe-button span{ margin:27px 0 0; font-size: 22px; width: 40px; height: 40px; display: block; line-height: 40px; text-align: center; border-radius: 50%; background: #F00;}
+
 </style>

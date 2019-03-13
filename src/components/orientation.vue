@@ -26,19 +26,19 @@
                         <h4>{{dingwei.planTitle}}</h4>
                     </div>
                     <dl>
-                        <dt>班级</dt>
+                        <dt><span><i class="icon bpMobile bpMobile-xuexiao_banji"></i></span>班级</dt>
                         <dd>{{dingwei.gradeName+dingwei.className}}班</dd>
                     </dl>
                     <dl>
-                        <dt>上课时间</dt>
+                        <dt><span><i class="icon bpMobile bpMobile-shijian1"></i></span>上课时间</dt>
                         <dd>{{dingwei.lessonDateValue}}</dd>
                     </dl>
                     <dl>
-                        <dt>科目</dt>
+                        <dt><span><i class="icon bpMobile bpMobile-xuexiao_kemu"></i></span>科目</dt>
                         <dd>{{dingwei.studyName}}</dd>
                     </dl>
                     <dl>
-                        <dt>节次</dt>
+                        <dt><span><i class="icon bpMobile bpMobile-webicon03"></i></span>节次</dt>
                         <dd>{{dingwei.lessonId}}</dd>
                     </dl>
 

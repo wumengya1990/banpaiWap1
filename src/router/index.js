@@ -19,6 +19,7 @@ import screenPage from '@/components/screenPage'
 import ConnectPage from '@/components/ConnectPage'
 import errorPage from '@/components/errorPage'
 import orientation from '@/components/orientation'
+import firstPage from '@/components/firstPage'
 // import about from '@/components/about'
 import ceshi from '@/components/ceshi'
 
@@ -68,11 +69,12 @@ const router = new Router({
   }, {
     path: '/myLesson',
     name: 'myLesson',
-    component: myLesson,
-    meta: {
-      Authorize: true, // 添加该字段，表示进入这个路由是需要登录的
-      userRole: 3
-    },
+    component: myLesson
+    // meta: {
+    //   Authorize: true, // 添加该字段，表示进入这个路由是需要登录的
+    //   userRole: 3
+    // }
+    ,
     children: [{ //进入详情页面
       path: '/detailsPage',
       name: 'detailsPage',
@@ -146,6 +148,10 @@ const router = new Router({
     path: '/about',
     name: 'about',
     component: about
+  },{
+    path: '/firstPage',
+    name: 'firstPage',
+    component:firstPage
   }]
 })
 

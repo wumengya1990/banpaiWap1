@@ -1,5 +1,5 @@
 <template>
-    <div class="connectPage">
+    <div class="firstPage">
         <router-link v-if="$store.state.role < 4" to="myLesson">进入我的备课</router-link>
         <router-link v-else to="myLesson">进入我的备课</router-link>
     </div>
@@ -7,18 +7,16 @@
 
 <script>
 export default {
-    name: "ConnectPage",
-    data() {
-        return {
-            formData: []
-        };
+    name:'firstPage',
+    data(){
+        return{
+            
+        }
     },
-    mounted() {
-        // this.$vnotify("进入用户授权登录页面");
-        console.log("进入用户授权登录页面");
+    mounted(){
         this.setList();
     },
-    methods: {
+    methods:{
         getQueryString: function(name) {
             let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
             let r = window.location.search.substr(1).match(reg);
@@ -73,8 +71,9 @@ export default {
             }
         }
     }
-};
+}
 </script>
 
 <style>
+
 </style>

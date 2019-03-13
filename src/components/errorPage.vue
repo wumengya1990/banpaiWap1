@@ -2,7 +2,7 @@
     <div class="errorPage bgmain mianScroll">
         <dl>
             <dt><img :src="cuowuImg"></dt>
-            <dd>服务器异常，<br />请尝试重新登录！</dd>
+            <dd>连接断开，<br />请刷新尝试重新登录！</dd>
         </dl>
     </div>
 </template>

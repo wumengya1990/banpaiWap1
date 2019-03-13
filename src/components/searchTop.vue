@@ -12,7 +12,8 @@
                 </div>
             </div>
             <div class="topNav">
-                <router-link v-if="userRole<4" active-class="on" to="/myLesson">我的备课</router-link>
+                <!-- <router-link v-if="userRole<4" active-class="on" to="/myLesson">我的备课</router-link> -->
+                <router-link active-class="on" to="/myLesson">我的备课</router-link>
                 <!-- <router-link active-class="on" to="/orientation">课程定位</router-link> -->
                 <router-link active-class="on" to="/shareSchool">学校共享</router-link>
                 <router-link active-class="on" to="/shareCounty">区县共享</router-link>

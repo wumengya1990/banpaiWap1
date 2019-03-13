@@ -24,6 +24,8 @@ Vue.use(Mint);
 Vue.use(Vant);
 Vue.use(VueScroller);
 
+Vue.prototype.$axios = axios
+
 // 处理ajax请求
 // 引用API文件
 import api from "./http.js";

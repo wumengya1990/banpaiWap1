@@ -64,6 +64,7 @@
                                 list-type="picture"
                                 accept=".jpg, .jpeg, .png, .gif, .bmp, .JPG, .JPEG, .PBG, .GIF, .BMP"
                             >
+                            <!-- :file-list="teachPlan.planFileList" -->
                                 <el-button size="small" type="primary">上传设计</el-button>
                                 <div slot="tip" class="el-upload__tip">只能上传图片文件，且不超过10MB</div>
                             </el-upload>
@@ -94,7 +95,8 @@
                                 :before-upload="beforeUpload"
                                 :file-list="pmfiles"
                                 list-type="picture"
-                                accept=".jpg, .jpeg, .png, .gif, .bmp, .JPG, .JPEG, .PBG, .GIF, .BMP"
+                                accept=".jpg, .jpeg, .png, .gif, .bmp, .JPG, .JPEG, .PBG, .GIF, .BMP, image/*"
+                                 capture="camera" 
                             >
                                 <el-button size="small" type="primary">上传素材</el-button>
                                 <div slot="tip" class="el-upload__tip">只能上传图片文件，且不超过10MB</div>
@@ -216,6 +218,7 @@
 
 <script>
 import elTreeselect from "el-tree-select";
+import axios from 'axios'
 
 export default {
     name: "newCourse",
@@ -273,8 +276,9 @@ export default {
                 planThink: true,
                 planLearn: true,
                 planMat: true
-            }
-        };
+            },
+            huoquFujianList:[]
+        }
     },
     mounted() {
         this.loadConfig();
@@ -294,30 +298,45 @@ export default {
                 vd.clear();
                 let imgIdx = 0;
                 let pcUrl = that.$store.state.apiUrl;
+                //  console.log(pcUrl);
                 //处理教案设计中的附件
-                for (let i = 0; i < res.planFileList.length; i++) {
-                    let pf = res.planFileList[i];
-                    that.pmfiles.push(pf);
-                    if (pf.fileType == 1) {
+                // for (let i = 0; i < res.planFileList.length; i++) {             //循环获取获取数据列表
+                //     let pf = res.planFileList[i];               
+                //     that.pmfiles.push(pf);
+                //     if (pf.fileType == 1) {
+                //         pf.itemOrder = imgIdx;
+                //         that.pdimglist.push(pcUrl + "/BKFiles/" + pf.path);
+                //         // that.pmfiles.push(pcUrl + "/BKFiles/" + pf.path);
+                //         imgIdx++;
+                //     }
+                // }
+                //处理课堂素材附件
+                // imgIdx = 0;
+                // for (let i = 0; i < res.planMatList.length; i++) {
+                //     let mf = res.planMatList[i];
+                //     if (mf.matTypeId == 1) {
+                //         mf.itemOrder = imgIdx;
+                //         that.pmimglist.push(pcUrl + "/BKFiles/" + mf.matPath);
+                //         // that.pmfiles.push(pcUrl + "/BKFiles/" + mf.matPath);
+                //         imgIdx++;
+                //     }
+                // }
+                that.teachPlan =res;
+                
+                for (let i = 0; i < that.teachPlan.planFileList.length; i++) {             //循环获取获取数据列表
+                    let pf = that.teachPlan.planFileList[i];                                //当前循环索引的数据       
+                    that.pmfiles.push(pf);                                                  //pmfiles数据另外加载当前循环索引的数据
+                    if (pf.fileType == 1) {                                                 //如果是图片
                         pf.itemOrder = imgIdx;
+                        
                         that.pdimglist.push(pcUrl + "/BKFiles/" + pf.path);
                         // that.pmfiles.push(pcUrl + "/BKFiles/" + pf.path);
+                        that.teachPlan.planFileList[i].path = pcUrl + "/BKFiles/" + pf.path;
                         imgIdx++;
                     }
                 }
-                //处理课堂素材附件
-                imgIdx = 0;
-                for (let i = 0; i < res.planMatList.length; i++) {
-                    let mf = res.planMatList[i];
-                    if (mf.matTypeId == 1) {
-                        mf.itemOrder = imgIdx;
-                        that.pmimglist.push(pcUrl + "/BKFiles/" + mf.matPath);
-                        // that.pmfiles.push(pcUrl + "/BKFiles/" + mf.matPath);
-                        imgIdx++;
-                    }
-                }
-                that.teachPlan =res;
-                // console.log(that.teachPlan)
+                console.log(that.teachPlan);
+               
             });
         },
         pageBack: function() {
@@ -391,13 +410,11 @@ export default {
         ///on-change钩子，文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用。
         pdfileChange: function(file, fileList) {
             this.pdfiles = fileList;
+            console.log(this.pdfiles);
         },
         ///文件上传之前的验证操作
         beforeUpload: function(file) {
-            const isJPG = file.type === "image/jpeg";
-            const isGIF = file.type === "image/gif";
-            const isPNG = file.type === "image/png";
-            const isBMP = file.type === "image/bmp";
+            const isJPG = file.type === "application/vnd.ms-excel";
             const isLt2M = file.size / 1024 / 1024 < 10;
 
             if (!isJPG && !isGIF && !isPNG && !isBMP) {
@@ -426,7 +443,9 @@ export default {
                 if (!data.success) {
                     the.$vnotify("图片上传失败");
                 } else {
-                    the.teachPlan.planFileList.push(data.planfile);
+                    // the.teachPlan.planFileList = {}
+                    // the.teachPlan.planFileList.push(data.planfile);
+                    the.huoquFujianList.push(data.planfile);
                 }
             });
         },
@@ -484,6 +503,7 @@ export default {
             }
             const vd = the.$vloading("保存中...");
             let url = "/api/Plan/UpdPlan";
+         the.teachPlan.planFileList = the.huoquFujianList;
             the.$api.post(url, the.teachPlan, data => {
                 vd.clear();
                 console.log(data.msg);

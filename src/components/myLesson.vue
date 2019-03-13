@@ -21,15 +21,15 @@
             </router-link>
         </div>
         <van-pull-refresh v-model="isRefresh" @refresh="onRefresh" class="lessonList">
-            <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :offset="100" @load="loadPlanList">
+            <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :offset="100">
                 <ul>
                     <li v-for="(course,index) in myPlanList" :key="index">
                         <!-- <div class="plr10"> -->
                             <mt-cell-swipe
                         :right="[
                             {
-                                content: '删除',
-                                style: { background: '#ff7900', color: '#fff'},
+                                content: '<span class=\' icon bpMobile bpMobile-delete \'></span>',
+                                style: { background: '#FFF', color: '#FFF'},
                                 handler: () => deleteSection(index,course.planId)
                             }
                             ]">
@@ -284,10 +284,76 @@ export default {
             searchDataBox: ""
         };
     },
+    created(){
+        this.setList();
+    },
     mounted() {
-        //this.loadPlanList(true);
+        // this.loadPlanList(true);
+        this.$nextTick(function () {
+            this.loadPlanList(true);
+        });
     },
     methods: {
+        //是否请求用户登录
+        getQueryString: function(name) {
+            let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            let r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
+        },
+        setList: function() {
+            let that = this;
+            if(that.$store.state.haveLogin){
+                return;
+            }
+            // let that = this;
+            let mySource = that.getQueryString("source");
+            let myuId = that.getQueryString("uId");
+            let mytoken = that.getQueryString("token");
+            let dataList = new Object();
+            if (!that.$isNull(mySource)) {
+                dataList.source = mySource;
+            }
+            if (!that.$isNull(myuId)) {
+                dataList.uId = myuId;
+            }
+            if (!that.$isNull(mytoken)) {
+                dataList.token = mytoken;
+            }
+            that.formData = dataList;
+            let token = dataList.token;
+            console.log("开始授权登录");
+            const vd = that.$vloading("开始用户中心授权登录...");
+            if (dataList != null) {
+                let urlp = "/api/account/home";
+                that.$api.get(urlp, dataList, res => {
+                    if (res.success) {
+                        vd.clear();
+                        console.log("授权登录成功");
+                        // that.$vnotify("授权登录成功，页面跳转中...");
+                        that.$store.commit("saveToken", res.token); //保存 token
+                        that.$store.commit("saveRole", res.role); //保存 role
+                        that.$store.commit("saveLogin", true);
+                        // setTimeout(function() {
+                        //     if (res.role < 4) {
+                        //         that.$router.push({ path: "/myLesson" });
+                        //     } else {
+                        //         that.$router.push({ path: "/shareCounty" });
+                        //     }
+                        // }, 1500);
+                    } else {
+                        console.log("授权登录失败");
+                        vd.clear();
+                        that.$vnotify(res.msg);
+                        that.$router.push({ path: "/errorPage" });
+                    }
+                });
+            } else {
+                that.$vnotify("参数传递不完整");
+                that.$router.push({ path: "/errorPage" });
+            }
+        },
+
         //跳转到详情页面
         planDetail: function(planId) {
             this.$router.push({
@@ -317,6 +383,7 @@ export default {
         },
         //加载我的备课列表(isInit:是否清空后重新加载数据)
         loadPlanList: function(isInit) {
+           
             let that = this;
             //判断是否正在加载数据
             if (that.isLoading == false) {
@@ -498,4 +565,5 @@ export default {
 .lessonList >>> .mint-cell-swipe-button {
     line-height: 90px;
 }
+.lessonList >>> .mint-cell-swipe-button span{ margin:27px 0 0; font-size: 22px; width: 40px; height: 40px; display: block; line-height: 40px; text-align: center; border-radius: 50%; background: #F00;}
 </style>

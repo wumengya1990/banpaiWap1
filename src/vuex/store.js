@@ -8,6 +8,7 @@ const store = new Vuex.Store({
     rightLayerEstate: false,
     token: '',
     userRole: 0,
+    haveLogin:false,
     apiUrl: window.localStorage.ApiUrl
   },
   mutations: {
@@ -28,6 +29,11 @@ const store = new Vuex.Store({
     saveRole(state, data) {
       state.userRole = data;
       window.localStorage.setItem("userRole", data);
+      console.log("userRole写入Store与localStorage中：" + data);
+    },
+    saveLogin(state, data) {
+      state.haveLogin = data;
+      window.localStorage.setItem("haveLogin", data);
       console.log("userRole写入Store与localStorage中：" + data);
     }
   },
