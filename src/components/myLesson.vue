@@ -304,6 +304,7 @@ export default {
         setList: function() {
             let that = this;
             if(that.$store.state.haveLogin){
+                this.loadPlanList(true);
                 return;
             }
             // let that = this;
@@ -334,6 +335,7 @@ export default {
                         that.$store.commit("saveToken", res.token); //保存 token
                         that.$store.commit("saveRole", res.role); //保存 role
                         that.$store.commit("saveLogin", true);
+                        this.loadPlanList(true);
                         // setTimeout(function() {
                         //     if (res.role < 4) {
                         //         that.$router.push({ path: "/myLesson" });
